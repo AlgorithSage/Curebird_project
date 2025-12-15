@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import { UploadCloud, FileText, Loader, AlertTriangle, Pill, Stethoscope, Bot } from 'lucide-react';
 
+// Use the environment variable for production, or fallback to localhost for development
+// We use a safe check for 'process' to avoid ReferenceErrors in browser environments that don't polyfill it
+const API_BASE_URL = (typeof process !== 'undefined' && process.env && process.env.REACT_APP_API_URL) 
+  ? process.env.REACT_APP_API_URL 
+  : 'http://127.0.0.1:5001';
+
 const CureAnalyzer = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [analysisResult, setAnalysisResult] = useState(null);
@@ -27,7 +33,8 @@ const CureAnalyzer = () => {
         formData.append('file', selectedFile);
 
         try {
-            const response = await fetch('http://127.0.0.1:5001/api/analyze-report', {
+            // Updated to use the dynamic API_BASE_URL
+            const response = await fetch(`${API_BASE_URL}/api/analyze-report`, {
                 method: 'POST',
                 body: formData,
             });
