@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { collection, onSnapshot, doc, deleteDoc, query, orderBy } from 'firebase/firestore';
 import { AnimatePresence } from 'framer-motion';
 import { BarChart2, Hash, Pill, Calendar, ShieldCheck, UserPlus } from 'lucide-react';
@@ -9,6 +9,7 @@ import RecordsChart from './RecordsChart';
 import RecordCard from './RecordCard';
 import { RecordFormModal, ShareModal, DeleteConfirmModal } from './Modals';
 import { SkeletonDashboard, SkeletonCard } from './SkeletonLoaders';
+import HeroSection from './HeroSection';
 
 const MedicalPortfolio = ({ user, db, appId, formatDate, capitalize, onLogout, onLoginClick, onToggleSidebar }) => {
     const [records, setRecords] = useState([]);
@@ -18,6 +19,11 @@ const MedicalPortfolio = ({ user, db, appId, formatDate, capitalize, onLogout, o
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [recordToDelete, setRecordToDelete] = useState(null);
     const [editingRecord, setEditingRecord] = useState(null);
+    const dashboardRef = useRef(null);
+
+    const scrollToDashboard = () => {
+        dashboardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
 
     const userId = user ? user.uid : null;
 
@@ -98,9 +104,14 @@ const MedicalPortfolio = ({ user, db, appId, formatDate, capitalize, onLogout, o
             />
 
             <main className="mt-8">
+                {/* Flashy Hero Section - Always visible */}
+                <div className="mb-10">
+                    <HeroSection onOverviewClick={scrollToDashboard} />
+                </div>
+
                 {isLoading ? <SkeletonDashboard /> : (
                     <>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div ref={dashboardRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 scroll-mt-24">
                             <StatCard icon={<Hash size={24} className="text-white" />} label="Total Records" value={records.length} color="bg-sky-500" />
                             <StatCard icon={<Pill size={24} className="text-white" />} label="Prescriptions" value={totalPrescriptions} color="bg-rose-500" />
                             <StatCard icon={<Calendar size={24} className="text-white" />} label="Last Visit" value={lastVisit} color="bg-amber-500" />
@@ -112,7 +123,7 @@ const MedicalPortfolio = ({ user, db, appId, formatDate, capitalize, onLogout, o
                     </>
                 )}
 
-                <h2 className="text-2xl font-bold mt-12 mb-6 text-white">Medical History</h2>
+                <h2 className="text-2xl font-bold mt-12 mb-6 text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400">Medical History</h2>
                 {isLoading ? (
                     <div className="space-y-4">
                         <SkeletonCard /><SkeletonCard />
@@ -132,10 +143,18 @@ const MedicalPortfolio = ({ user, db, appId, formatDate, capitalize, onLogout, o
                             </AnimatePresence>
                         </div>
                     ) : (
-                        <div className="text-center py-20 bg-slate-900 border border-slate-800 rounded-lg shadow-sm">
-                            <BarChart2 size={48} className="mx-auto text-slate-400" />
-                            <h3 className="mt-4 text-xl text-slate-300">No medical records found.</h3>
-                            <p className="text-slate-500 mt-2">Click "Add Record" to get started.</p>
+                        <div className="glass-card text-center py-20 rounded-2xl border-dashed border-2 border-white/20">
+                            <div className="bg-white/5 p-4 rounded-full w-20 h-20 mx-auto flex items-center justify-center mb-4">
+                                <BarChart2 size={40} className="text-slate-400" />
+                            </div>
+                            <h3 className="text-xl font-bold text-white">No medical records found.</h3>
+                            <p className="text-slate-400 mt-2 max-w-sm mx-auto">Your health journey starts here. Add your first record to begin tracking your medical history.</p>
+                            <button
+                                onClick={() => { setEditingRecord(null); setIsFormModalOpen(true); }}
+                                className="mt-6 px-6 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg font-medium transition-colors"
+                            >
+                                Add First Record
+                            </button>
                         </div>
                     )
                 )}
@@ -146,7 +165,7 @@ const MedicalPortfolio = ({ user, db, appId, formatDate, capitalize, onLogout, o
                 {isShareModalOpen && <ShareModal onClose={() => setIsShareModalOpen(false)} userId={userId} />}
                 {isDeleteModalOpen && <DeleteConfirmModal onClose={() => setIsDeleteModalOpen(false)} onConfirm={handleDeleteRecord} />}
             </AnimatePresence>
-        </div>
+        </div >
     );
 };
 

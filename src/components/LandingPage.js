@@ -2,18 +2,14 @@ import React from 'react';
 import { HeartPulse, LogIn, Dna, Pill, Stethoscope, Syringe, Activity } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-// --- Video Background Component ---
-const VideoBackground = () => (
-    <div className="absolute inset-0 z-0 overflow-hidden">
-        <video
-            className="w-full h-full object-cover"
-            src="/medical-bg.mp4" // This video must be in your `public` folder
-            autoPlay
-            loop
-            muted
-            playsInline
-        ></video>
-        <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/70 to-amber-900/20 backdrop-blur-[2px]"></div>
+// --- Gradient Background Component ---
+const GradientBackground = () => (
+    <div className="absolute inset-0 z-0 overflow-hidden bg-slate-900">
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-slate-900 animate-gradient-xy opacity-80"></div>
+        <div className="absolute top-0 -left-4 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+        <div className="absolute top-0 -right-4 w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-20 w-96 h-96 bg-sky-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150"></div>
     </div>
 );
 
@@ -47,8 +43,8 @@ const LandingPage = ({ onLoginClick }) => {
 
     return (
         <div className="relative min-h-screen w-full flex flex-col items-center justify-center text-white overflow-hidden font-sans">
-            {/* Background Video */}
-            <VideoBackground />
+            {/* Background Gradient */}
+            <GradientBackground />
 
             {/* Decorative Floating Icons */}
             <FloatingIcon icon={<Dna size={120} />} className="top-16 left-16" duration={12} delay={0} />
@@ -62,7 +58,7 @@ const LandingPage = ({ onLoginClick }) => {
             <motion.div
                 initial="hidden"
                 animate="visible"
-                className="text-center z-10 flex flex-col items-center bg-black/30 backdrop-blur-xl border border-amber-500/30 p-10 sm:p-14 rounded-3xl shadow-[0_0_60px_rgba(245,158,11,0.15)] max-w-3xl"
+                className="text-center z-10 flex flex-col items-center glass p-10 sm:p-14 rounded-3xl shadow-[0_0_60px_rgba(56,189,248,0.2)] max-w-3xl border border-white/10"
             >
                 {/* Logo & Title */}
                 <motion.div custom={0} variants={textVariants} className="flex justify-center items-center gap-5 mb-8">

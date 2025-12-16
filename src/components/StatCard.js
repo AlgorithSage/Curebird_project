@@ -7,33 +7,32 @@ const StatCard = ({ icon, label, value, color, change }) => (
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-gradient-to-br from-slate-900 to-sky-900 border border-slate-800 p-6 rounded-xl shadow-lg flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 hover:border-sky-500/50 transition-all duration-300"
+        className="glass-card p-6 rounded-2xl flex flex-col justify-between group hover:-translate-y-1"
     >
         <div className="flex justify-between items-start">
-            <div className={`p-3 rounded-lg ${color} relative`}>
-                {/* Gradient overlay for the icon */}
-                <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent rounded-lg"></div>
-                <div className="relative">
+            <div className={`p-3 rounded-xl ${color} shadow-lg relative overflow-hidden group-hover:scale-110 transition-transform duration-300`}>
+                <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent"></div>
+                <div className="relative text-white">
                     {icon}
                 </div>
             </div>
-            <button className="flex items-center gap-1 text-xs text-slate-400 hover:text-white transition-colors">
-                <Sparkles size={14} />
+            <button className="flex items-center gap-1 text-xs text-slate-400 hover:text-sky-400 transition-colors bg-white/5 px-2 py-1 rounded-lg border border-white/5 hover:bg-white/10 hover:border-white/20">
+                <Sparkles size={12} />
                 Ask AI
             </button>
         </div>
         <div className="mt-4">
-            <p className="text-3xl font-bold text-white">{value}</p>
+            <p className="text-3xl font-bold text-white tracking-tight">{value}</p>
             <p className="text-sm text-slate-400 font-medium mt-1">{label}</p>
         </div>
         <div className="mt-4 flex justify-between items-center text-xs">
             {change && (
-                <span className="flex items-center font-semibold text-emerald-500">
+                <span className="flex items-center font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-lg border border-emerald-500/20">
                     <ArrowUpRight size={14} className="mr-1" />
-                    {change} vs last month
+                    {change}
                 </span>
             )}
-            <a href="#" className="text-sky-400 hover:text-sky-300 font-medium">View Details</a>
+            <a href="#" className="text-sky-400 hover:text-sky-300 font-medium hover:underline underline-offset-4 decoration-sky-500/30">View Details</a>
         </div>
     </motion.div>
 );

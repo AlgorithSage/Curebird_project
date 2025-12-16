@@ -307,14 +307,14 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
             <div className="relative z-10 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
                 <Header title="Cure Stat" description="Real-time disease intelligence, medication insights, and predictive analytics for a healthier India." user={user} onLogout={onLogout} onLoginClick={onLoginClick} onToggleSidebar={onToggleSidebar} />
 
-                <div className="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between bg-slate-900/50 backdrop-blur-xl p-4 rounded-2xl border border-white/5">
-                    <div className="relative w-full md:w-96">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
-                        <input type="text" placeholder="Search diseases, symptoms..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full bg-slate-800/50 border border-slate-700 rounded-xl py-2 pl-10 pr-4 text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 transition-all" />
+                <div className="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between glass p-4 rounded-2xl">
+                    <div className="relative w-full md:w-96 group">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-sky-400 transition-colors" size={20} />
+                        <input type="text" placeholder="Search diseases, symptoms..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full bg-slate-900/50 border border-white/10 rounded-xl py-2.5 pl-10 pr-4 text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-sky-500/50 focus:ring-2 focus:ring-sky-500/20 transition-all shadow-inner" />
                     </div>
                     <div className="flex gap-2 w-full md:w-auto overflow-x-auto">
                         {['all', 'high', 'medium', 'low'].map((level) => (
-                            <button key={level} onClick={() => setRiskFilter(level)} className={`px-4 py-2 rounded-xl text-sm font-medium capitalize transition-all whitespace-nowrap ${riskFilter === level ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/25' : 'bg-slate-800/50 text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}>
+                            <button key={level} onClick={() => setRiskFilter(level)} className={`px-4 py-2 rounded-xl text-sm font-medium capitalize transition-all whitespace-nowrap border ${riskFilter === level ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/25 border-sky-400' : 'bg-white/5 text-slate-400 border-white/5 hover:bg-white/10 hover:text-white'}`}>
                                 {level === 'all' ? 'All Risks' : `${level} Risk`}
                             </button>
                         ))}
@@ -322,28 +322,28 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-                    <motion.div initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="bg-slate-900/50 backdrop-blur-xl p-6 rounded-3xl border border-white/5 shadow-xl">
+                    <motion.div initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="glass p-6 rounded-3xl">
                         <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-xl font-semibold text-slate-200">Regional Impact (Top States)</h2>
-                            <button onClick={() => setShowHeatmap(true)} className="group relative overflow-hidden bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 px-5 py-2.5 rounded-xl transition-all shadow-lg hover:shadow-sky-500/25 flex items-center gap-2">
+                            <h2 className="text-xl font-bold text-white">Regional Impact</h2>
+                            <button onClick={() => setShowHeatmap(true)} className="group relative overflow-hidden bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 px-5 py-2.5 rounded-xl transition-all shadow-lg hover:shadow-sky-500/25 flex items-center gap-2 border border-white/10">
                                 <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
                                 <div className="relative flex items-center gap-2">
                                     <span className="relative flex h-3 w-3">
                                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
                                         <span className="relative inline-flex rounded-full h-3 w-3 bg-red-400 border border-white"></span>
                                     </span>
-                                    <span className="font-semibold text-white tracking-wide">View Live Heatmap</span>
-                                    <MapPin size={18} className="text-white" />
+                                    <span className="font-semibold text-white tracking-wide text-sm">Live Heatmap</span>
+                                    <MapPin size={16} className="text-white" />
                                 </div>
                             </button>
                         </div>
                         <div className="h-[350px]">
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart layout="vertical" data={getRegionalData(trends[0] || { disease: 'Default' })} margin={{ top: 10, right: 30, left: 40, bottom: 0 }}>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" horizontal={false} />
+                                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" horizontal={false} opacity={0.3} />
                                     <XAxis type="number" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
                                     <YAxis dataKey="name" type="category" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} width={80} />
-                                    <Tooltip content={<CustomTooltip />} cursor={{ fill: '#334155', opacity: 0.4 }} />
+                                    <Tooltip content={<CustomTooltip />} cursor={{ fill: '#ffffff', opacity: 0.05 }} />
                                     <Bar dataKey="value" fill="#38bdf8" radius={[0, 4, 4, 0]} barSize={20}>
                                         {getRegionalData(trends[0] || { disease: 'Default' }).map((entry, index) => (
                                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -354,10 +354,10 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
                         </div>
                     </motion.div>
 
-                    <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }} className="bg-slate-900/50 backdrop-blur-xl p-6 rounded-3xl border border-white/5 shadow-xl">
+                    <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }} className="glass p-6 rounded-3xl">
                         <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-xl font-semibold text-slate-200">Disease Distribution</h2>
-                            <div className="bg-purple-500/10 p-2 rounded-lg"><Sparkles size={20} className="text-purple-400" /></div>
+                            <h2 className="text-xl font-bold text-white">Disease Distribution</h2>
+                            <div className="bg-purple-500/20 p-2 rounded-lg border border-purple-500/30"><Sparkles size={20} className="text-purple-400" /></div>
                         </div>
                         <div className="h-[350px]">
                             <ResponsiveContainer width="100%" height="100%">
@@ -366,7 +366,7 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
                                         {filteredTrends.slice(0, 5).map((entry, index) => (<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />))}
                                     </Pie>
                                     <Tooltip content={<CustomTooltip />} />
-                                    <Legend verticalAlign="bottom" height={36} iconType="circle" formatter={(value) => <span className="text-slate-400 text-sm ml-1">{value}</span>} />
+                                    <Legend verticalAlign="bottom" height={36} iconType="circle" formatter={(value) => <span className="text-slate-300 text-sm ml-2 font-medium">{value}</span>} />
                                 </PieChart>
                             </ResponsiveContainer>
                         </div>
@@ -375,38 +375,41 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
 
                 <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }}>
                     <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                        <span className="w-2 h-8 bg-gradient-to-b from-sky-400 to-purple-500 rounded-full block"></span>
-                        Detailed Insights
+                        <span className="w-2 h-8 bg-gradient-to-b from-sky-400 to-purple-500 rounded-full block shadow-[0_0_10px_rgba(56,189,248,0.5)]"></span>
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400">Detailed Insights</span>
                         {searchTerm && (<span className="text-sm text-slate-400 font-normal">({filteredTrends.length} {filteredTrends.length === 1 ? 'result' : 'results'})</span>)}
                     </h2>
 
                     {filteredTrends.length === 0 ? (
-                        <div className="text-center py-12 text-slate-500">
-                            <Search size={48} className="mx-auto mb-4 opacity-50" />
-                            <p className="text-lg font-medium">No diseases found matching your criteria.</p>
-                            <button onClick={() => { setSearchTerm(''); setRiskFilter('all'); }} className="mt-4 px-4 py-2 bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 rounded-xl transition-colors">Clear Filters</button>
+                        <div className="glass text-center py-16 text-slate-400 rounded-3xl border-dashed border-2 border-white/10">
+                            <Search size={48} className="mx-auto mb-4 opacity-50 text-sky-400" />
+                            <p className="text-lg font-medium text-white">No diseases found matching your criteria.</p>
+                            <button onClick={() => { setSearchTerm(''); setRiskFilter('all'); }} className="mt-4 px-6 py-2 bg-sky-500/20 hover:bg-sky-500/30 text-sky-400 rounded-xl transition-colors font-medium border border-sky-500/20">Clear Filters</button>
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {filteredTrends.map((disease, index) => {
                                 const risk = getRiskLevel(disease.outbreaks);
                                 return (
-                                    <motion.div key={index} whileHover={{ scale: 1.02, y: -5 }} whileTap={{ scale: 0.98 }} onClick={() => setSelectedDisease(disease)} className="group bg-slate-800/40 backdrop-blur-sm p-6 rounded-2xl border border-white/5 hover:border-sky-500/30 hover:bg-slate-800/60 cursor-pointer transition-all duration-300 shadow-lg hover:shadow-sky-500/10">
-                                        <div className="flex justify-between items-start mb-3">
-                                            <h3 className="font-bold text-lg text-slate-100 group-hover:text-sky-400 transition-colors">{disease.disease}</h3>
-                                            <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${risk.bg} ${risk.color} ${risk.border} flex items-center gap-1`}>
+                                    <motion.div key={index} whileHover={{ scale: 1.02, y: -5 }} whileTap={{ scale: 0.98 }} onClick={() => setSelectedDisease(disease)} className="glass-card p-6 rounded-2xl group cursor-pointer border-l-4 border-l-transparent hover:border-l-sky-500 relative overflow-hidden">
+                                        <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+                                            <Activity size={80} />
+                                        </div>
+                                        <div className="flex justify-between items-start mb-3 relative z-10">
+                                            <h3 className="font-bold text-lg text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-sky-400 group-hover:to-emerald-400 transition-all duration-300">{disease.disease}</h3>
+                                            <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${risk.bg} ${risk.color} ${risk.border} flex items-center gap-1 shadow-sm`}>
                                                 {risk.level === 'High' && <AlertTriangle size={10} />}
                                                 {risk.level} Risk
                                             </span>
                                         </div>
-                                        <div className="mb-4">
-                                            <span className="text-2xl font-bold text-white">{disease.outbreaks}</span>
-                                            <span className="text-slate-500 text-sm ml-2">cases reported</span>
+                                        <div className="mb-4 relative z-10">
+                                            <span className="text-3xl font-bold text-white tracking-tight">{disease.outbreaks.toLocaleString()}</span>
+                                            <span className="text-slate-400 text-sm ml-2 font-medium">cases reported</span>
                                         </div>
-                                        <p className="text-slate-400 text-sm line-clamp-2 mb-4 leading-relaxed">{disease.description}</p>
-                                        <div className="flex items-center justify-between text-xs font-medium text-slate-500 group-hover:text-sky-400/80 transition-colors mt-auto pt-4 border-t border-white/5">
+                                        <p className="text-slate-400 text-sm line-clamp-2 mb-4 leading-relaxed relative z-10 group-hover:text-slate-300 transition-colors">{disease.description}</p>
+                                        <div className="flex items-center justify-between text-xs font-medium text-slate-500 group-hover:text-sky-400 transition-colors mt-auto pt-4 border-t border-white/5 relative z-10">
                                             <div className="flex items-center gap-2"><Info size={14} /> <span>Tap to explore details</span></div>
-                                            {disease.source && <span className="text-xs bg-slate-800 px-2 py-1 rounded border border-white/10">{disease.source}</span>}
+                                            {disease.source && <span className="text-[10px] bg-white/5 px-2 py-1 rounded border border-white/5 text-slate-400">{disease.source}</span>}
                                         </div>
                                     </motion.div>
                                 );
@@ -421,13 +424,13 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
 
                 <AnimatePresence>
                     {selectedDisease && (
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50" onClick={() => setSelectedDisease(null)}>
-                            <motion.div initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }} onClick={(e) => e.stopPropagation()} className="bg-slate-900 w-full max-w-6xl max-h-[95vh] overflow-y-auto rounded-3xl border border-slate-700 shadow-2xl relative">
-                                <div className="p-8 border-b border-slate-800 sticky top-0 bg-slate-900/95 backdrop-blur z-10 flex justify-between items-start">
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center p-4 z-50" onClick={() => setSelectedDisease(null)}>
+                            <motion.div initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }} onClick={(e) => e.stopPropagation()} className="glass w-full max-w-6xl max-h-[95vh] overflow-y-auto rounded-3xl border border-white/10 shadow-2xl relative">
+                                <div className="p-8 border-b border-white/10 sticky top-0 bg-slate-900/80 backdrop-blur-xl z-20 flex justify-between items-start shadow-sm">
                                     <div>
                                         <motion.h2 initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400">{selectedDisease.disease}</motion.h2>
                                         <div className="flex items-center gap-4 mt-2">
-                                            <p className="text-sky-400 text-lg font-medium flex items-center gap-2"><Activity size={18} /> {selectedDisease.outbreaks} reported cases</p>
+                                            <p className="text-sky-400 text-lg font-medium flex items-center gap-2"><Activity size={18} /> {selectedDisease.outbreaks.toLocaleString()} reported cases</p>
                                             {(() => {
                                                 const risk = getRiskLevel(selectedDisease.outbreaks);
                                                 return (<span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${risk.bg} ${risk.color} ${risk.border} flex items-center gap-1`}>{risk.level} Risk</span>);
@@ -438,7 +441,7 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
                                         <button onClick={() => downloadCSV(selectedDisease)} className="flex items-center gap-2 px-4 py-2 bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 rounded-xl transition-colors font-medium border border-sky-500/20">
                                             <Download size={18} /> Export Data
                                         </button>
-                                        <button onClick={() => setSelectedDisease(null)} className="p-2 bg-slate-800 hover:bg-slate-700 rounded-full text-slate-400 hover:text-white transition-colors"><X size={24} /></button>
+                                        <button onClick={() => setSelectedDisease(null)} className="p-2 bg-slate-800/50 hover:bg-slate-700 rounded-full text-slate-400 hover:text-white transition-colors border border-white/5"><X size={24} /></button>
                                     </div>
                                 </div>
 
