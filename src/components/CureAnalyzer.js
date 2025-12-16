@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { UploadCloud, Loader, AlertTriangle, Pill, Stethoscope, Bot } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 import Header from './Header';
 
 const CureAnalyzer = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
@@ -28,7 +29,7 @@ const CureAnalyzer = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
         formData.append('file', selectedFile);
 
         try {
-            const response = await fetch('http://127.0.0.1:5001/api/analyze-report', {
+            const response = await fetch(`${API_BASE_URL}/api/analyze-report`, {
                 method: 'POST',
                 body: formData,
             });

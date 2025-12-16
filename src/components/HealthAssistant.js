@@ -3,6 +3,7 @@ import { Send, Bot, User, Trash2, TrendingUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import Header from './Header';
+import { API_BASE_URL } from '../config';
 
 const ChatMessage = ({ message, isUser }) => {
     return (
@@ -75,6 +76,10 @@ const HealthAssistant = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
         scrollToBottom();
     }, [messages, isLoading]);
 
+
+
+    // ... (existing imports)
+
     useEffect(() => {
         // Load disease context
         fetchDiseaseContext();
@@ -89,7 +94,7 @@ const HealthAssistant = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
 
     const fetchDiseaseContext = async () => {
         try {
-            const response = await fetch('http://127.0.0.1:5001/api/health-assistant/context');
+            const response = await fetch(`${API_BASE_URL}/api/health-assistant/context`);
             const data = await response.json();
             if (data.success) {
                 setDiseaseContext(data.diseases);
@@ -113,7 +118,7 @@ const HealthAssistant = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
         setIsLoading(true);
 
         try {
-            const response = await fetch('http://127.0.0.1:5001/api/health-assistant/chat', {
+            const response = await fetch(`${API_BASE_URL}/api/health-assistant/chat`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -154,7 +159,7 @@ const HealthAssistant = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
     const clearChat = async () => {
         if (conversationId) {
             try {
-                await fetch('http://127.0.0.1:5001/api/health-assistant/clear', {
+                await fetch(`${API_BASE_URL}/api/health-assistant/clear`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

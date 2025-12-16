@@ -3,10 +3,8 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { Activity, Loader, ServerCrash, Info, Pill, TrendingUp, X, Sparkles, Download, Users, Brain, Search, MapPin, AlertTriangle, Map } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from './Header';
+import { API_BASE_URL } from '../config';
 
-const API_BASE_URL = (typeof process !== 'undefined' && process.env && process.env.REACT_APP_API_URL)
-    ? process.env.REACT_APP_API_URL
-    : 'http://127.0.0.1:5001';
 
 // Add Google Maps Script
 const loadGoogleMapsScript = (apiKey) => {

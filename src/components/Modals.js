@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Copy, AlertTriangle, Trash2, UploadCloud, Pill, Stethoscope, Loader } from 'lucide-react';
 import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
 import { deleteUser } from "firebase/auth";
+import { API_BASE_URL } from '../config';
 
 const ModalWrapper = ({ onClose, children }) => (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -152,12 +153,11 @@ export const RecordFormModal = ({ onClose, record, userId, appId, db }) => {
         setAnalysisResult(null);
         setAnalysisError('');
         setIsAnalyzing(true);
-        const base64 = await toBase64(selectedFile);
-        setFileBase64(base64);
         const fileData = new FormData();
         fileData.append('file', selectedFile);
+
         try {
-            const response = await fetch('http://127.0.0.1:5001/api/analyze-report', {
+            const response = await fetch(`${API_BASE_URL}/api/analyze-report`, {
                 method: 'POST',
                 body: fileData,
             });
