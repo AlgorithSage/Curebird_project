@@ -62,12 +62,12 @@ const CureAnalyzer = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
 
             <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Upload Section */}
-                <div className="bg-slate-900 p-6 rounded-lg border border-slate-800">
+                <div className="glass-card p-6 rounded-xl">
                     <h2 className="text-xl font-semibold mb-4">1. Choose an Image File</h2>
                     <div className="flex items-center justify-center w-full">
-                        <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-slate-700 border-dashed rounded-lg cursor-pointer bg-slate-800/50 hover:bg-slate-800">
+                        <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-yellow-500/30 border-dashed rounded-xl cursor-pointer bg-black/20 hover:bg-black/30 hover:border-yellow-500/50 transition-all">
                             <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                <UploadCloud className="w-10 h-10 mb-3 text-slate-400" />
+                                <UploadCloud className="w-10 h-10 mb-3 text-amber-400" />
                                 <p className="mb-2 text-sm text-slate-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
                                 <p className="text-xs text-slate-500">PNG, JPG, or GIF</p>
                             </div>
@@ -81,9 +81,9 @@ const CureAnalyzer = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
                 </div>
 
                 {/* Result Section */}
-                <div className="bg-slate-900 p-6 rounded-lg border border-slate-800">
+                <div className="glass-card p-6 rounded-xl">
                     <h2 className="text-xl font-semibold mb-4 flex items-center gap-2"><Bot /> 2. Analysis Results</h2>
-                    <div className="w-full h-96 bg-slate-950 rounded-lg p-4 overflow-y-auto border border-slate-700">
+                    <div className="w-full h-96 bg-black/30 rounded-xl p-4 overflow-y-auto border border-yellow-500/20">
                         {isLoading && <p className="text-slate-400">Processing image...</p>}
                         {error && <div className="text-red-400 flex items-center gap-2"><AlertTriangle /> {error}</div>}
                         {analysisResult && (
@@ -92,16 +92,16 @@ const CureAnalyzer = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
                                     <h4 className="flex items-center gap-2 text-sm font-medium text-amber-400"><Stethoscope size={16} />Detected Conditions / Diseases</h4>
                                     {analysisResult.diseases.length > 0 ? (
                                         <div className="flex flex-wrap gap-2 mt-2">
-                                            {analysisResult.diseases.map(d => <span key={d} className="bg-slate-700 text-slate-200 text-xs font-medium px-2.5 py-1 rounded-full">{d}</span>)}
+                                            {analysisResult.diseases.map(d => <span key={d} className="bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-medium px-2.5 py-1 rounded-full">{d}</span>)}
                                         </div>
                                     ) : <p className="text-slate-400 text-sm mt-1">No specific conditions detected.</p>}
                                 </div>
                                 <div>
-                                    <h4 className="flex items-center gap-2 text-sm font-medium text-sky-400"><Pill size={16} />Detected Medications</h4>
+                                    <h4 className="flex items-center gap-2 text-sm font-medium text-amber-400"><Pill size={16} />Detected Medications</h4>
                                     {analysisResult.medications.length > 0 ? (
                                         <div className="space-y-2 mt-2">
                                             {analysisResult.medications.map((med, i) => (
-                                                <p key={i} className="text-slate-300 text-sm font-mono bg-slate-700/50 p-1 rounded">
+                                                <p key={i} className="text-slate-300 text-sm font-mono bg-amber-500/10 border border-amber-500/20 p-2 rounded-lg">
                                                     &gt; {med.name} - {med.dosage} - {med.frequency}
                                                 </p>
                                             ))}

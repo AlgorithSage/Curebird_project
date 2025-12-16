@@ -27,17 +27,17 @@ const RecordCard = ({ record, onEdit, onDelete }) => {
 
     return (
         <motion.div layout initial={{ opacity: 0, y: 50, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.2 } }}
-            className="glass-card p-5 rounded-2xl group border-l-4 border-l-transparent hover:border-l-sky-500">
+            className="glass-card p-5 rounded-2xl group border-l-4 border-l-transparent hover:border-l-amber-500">
             <div className="flex justify-between items-start">
                 <div className="flex items-center space-x-4">
                     <div className="bg-white/5 p-3 rounded-xl shadow-inner group-hover:scale-110 transition-transform duration-300">{ICONS[record.type] || ICONS.default}</div>
                     <div>
-                        <h3 className="font-bold text-lg text-white group-hover:text-sky-400 transition-colors">{capitalize(record.type)}</h3>
+                        <h3 className="font-bold text-lg text-white group-hover:text-amber-400 transition-colors">{capitalize(record.type)}</h3>
                         <p className="text-sm text-slate-400 font-medium">On {formatDate(record.date)}</p>
                     </div>
                 </div>
                 <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                    <button onClick={onEdit} className="p-2 text-slate-400 hover:text-sky-400 hover:bg-white/10 rounded-lg transition"><Edit size={16} /></button>
+                    <button onClick={onEdit} className="p-2 text-slate-400 hover:text-amber-400 hover:bg-white/10 rounded-lg transition"><Edit size={16} /></button>
                     <button onClick={onDelete} className="p-2 text-slate-400 hover:text-rose-400 hover:bg-white/10 rounded-lg transition"><Trash2 size={16} /></button>
                 </div>
             </div>

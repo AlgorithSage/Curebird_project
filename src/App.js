@@ -18,6 +18,7 @@ import MedicalPortfolio from './components/MedicalPortfolio';
 import AuthModals from './components/AuthModals';
 import AllRecords from './components/AllRecords';
 import Appointments from './components/Appointments';
+import Background from './components/Background';
 import Medications from './components/Medications';
 import Settings from './components/Settings';
 import CureStat from './components/CureStat';
@@ -102,13 +103,8 @@ export default function App() {
     }
 
     return (
-        <div className="min-h-screen font-sans text-slate-200 relative isolate overflow-hidden bg-black">
-            {/* Professional Tech Background */}
-            <div className="fixed inset-0 z-[-1]">
-                <div className="absolute inset-0 bg-zinc-950"></div>
-                {/* Subtle grid pattern */}
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(234,179,8,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(234,179,8,0.03)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
-            </div>
+        <div className="min-h-screen font-sans text-slate-200 relative isolate overflow-hidden">
+            <Background />
 
             {user ? (
                 <div className="relative min-h-screen flex">

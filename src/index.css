@@ -53,16 +53,23 @@ body {
   }
 
   .glass {
-    @apply bg-black/60 backdrop-blur-xl border border-white/10 shadow-2xl;
+    @apply backdrop-blur-2xl border border-white/20 shadow-2xl;
+    background: rgba(0, 0, 0, 0.6);
   }
 
   .glass-card {
-    @apply bg-zinc-950/80 backdrop-blur-md border border-yellow-500/20 hover:border-yellow-500/50 transition-all duration-300;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(234, 179, 8, 0.1);
+    @apply backdrop-blur-xl border border-yellow-500/30 hover:border-yellow-500/60 transition-all duration-300;
+    background: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37),
+      0 0 0 1px rgba(234, 179, 8, 0.15),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
   }
 
   .glass-card:hover {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(234, 179, 8, 0.2);
+    background: rgba(0, 0, 0, 0.55);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37),
+      0 0 20px rgba(234, 179, 8, 0.3),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
   }
 
   .text-glow {

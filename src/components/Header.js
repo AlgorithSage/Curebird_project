@@ -24,7 +24,7 @@ const UserProfile = ({ user, onLogout }) => {
                     <img
                         src={user.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${user.email}`}
                         alt="User Avatar"
-                        className="w-10 h-10 rounded-full border-2 border-white/20 group-hover:border-sky-400 transition-colors shadow-lg"
+                        className="w-10 h-10 rounded-full border-2 border-white/20 group-hover:border-amber-400 transition-colors shadow-lg"
                         referrerPolicy="no-referrer"
                     />
                     <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-400 border-2 border-slate-900 rounded-full"></span>
@@ -70,14 +70,14 @@ const Header = ({ title, description, user, onAddClick, onShareClick, onLoginCli
                     <Menu size={20} className="text-slate-200" />
                 </button>
                 <div>
-                    <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-emerald-400 pb-1">{title}</h1>
-                    <p className="text-slate-400 mt-1 font-medium">{description}</p>
+                    <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-400 pb-1">{title}</h1>
+                    <p className="text-slate-300 mt-1 font-medium text-sm">{description}</p>
                 </div>
             </div>
             <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto mt-4 sm:mt-0">
                 <div className="relative flex-grow sm:flex-grow-0 sm:w-auto group">
-                    <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-sky-400 transition-colors" />
-                    <input type="text" placeholder="Search..." className="w-full bg-slate-900/50 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500/50 text-white placeholder:text-slate-500 transition-all shadow-sm" />
+                    <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-amber-400 transition-colors" />
+                    <input type="text" placeholder="Search..." className="w-full bg-slate-900/50 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 text-white placeholder:text-slate-500 transition-all shadow-sm" />
                 </div>
                 {user && onAddClick && (
                     <>
@@ -89,7 +89,7 @@ const Header = ({ title, description, user, onAddClick, onShareClick, onLoginCli
                         </button>
                         <button
                             onClick={onAddClick}
-                            className="hidden sm:flex items-center gap-2 bg-gradient-to-r from-sky-500 to-indigo-600 text-white px-5 py-2.5 rounded-xl shadow-lg shadow-sky-500/25 hover:shadow-sky-500/40 hover:scale-105 transition-all duration-300 text-sm font-bold border border-white/10"
+                            className="hidden sm:flex items-center gap-2 bg-gradient-to-r from-amber-500 to-yellow-600 text-black px-5 py-2.5 rounded-xl shadow-lg hover:shadow-amber-500/40 hover:scale-105 transition-all duration-300 text-sm font-bold border border-white/10"
                         >
                             <Plus size={18} />
                             <span>Add Record</span>
