@@ -68,17 +68,17 @@ const HeroSection = ({ onOverviewClick }) => {
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.3 }}
-                            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-sm font-semibold tracking-wide uppercase shadow-[0_0_15px_rgba(14,165,233,0.3)]"
+                            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-sm font-semibold tracking-wide uppercase"
                         >
                             <Sparkles size={14} /> AI-Powered Medical Intelligence
                         </motion.div>
 
-                        <h1 className="text-4xl sm:text-6xl lg:text-8xl font-black tracking-tighter leading-[1.1] sm:leading-[0.9] text-transparent bg-clip-text bg-gradient-to-r from-white via-sky-200 to-indigo-200 drop-shadow-2xl py-2">
+                        <h1 className="text-4xl sm:text-6xl lg:text-8xl font-black tracking-tighter leading-[1.1] sm:leading-[0.9] text-transparent bg-clip-text bg-gradient-to-r from-white via-amber-200 to-yellow-200 drop-shadow-2xl py-2">
                             CureBird
                         </h1>
 
                         <p className="text-slate-400 text-base sm:text-2xl leading-relaxed font-light max-w-2xl mx-auto lg:mx-0">
-                            The future of personal healthcare. Analyze trends, predict outcomes, and visualize your health journey with <span className="text-sky-400 font-medium">Precision AI</span>.
+                            The future of personal healthcare. Analyze trends, predict outcomes, and visualize your health journey with <span className="text-amber-400 font-medium">Precision AI</span>.
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-6">
@@ -86,7 +86,7 @@ const HeroSection = ({ onOverviewClick }) => {
                                 onClick={onOverviewClick}
                                 whileHover={{ scale: 1.05, boxShadow: "0 20px 25px -5px rgba(14, 165, 233, 0.4)" }}
                                 whileTap={{ scale: 0.95 }}
-                                className="px-8 py-4 bg-gradient-to-r from-sky-500 to-indigo-600 rounded-2xl font-bold text-white shadow-xl shadow-sky-500/20 border-t border-white/20 hover:border-white/40 transition-all text-lg"
+                                className="px-8 py-4 bg-gradient-to-r from-amber-500 to-yellow-600 rounded-2xl font-bold text-black shadow-xl border-t border-white/20 hover:border-white/40 transition-all text-lg"
                             >
                                 Dashboard Overview
                             </motion.button>
@@ -96,14 +96,14 @@ const HeroSection = ({ onOverviewClick }) => {
                     {/* Right Side: Enhanced 3D Animated Symbol */}
                     <div className="relative w-full max-w-md aspect-square flex items-center justify-center transform-gpu flex-1" style={{ transform: "translateZ(60px)" }}>
                         {/* Glowing orb background */}
-                        <div className="absolute inset-0 bg-gradient-radial from-sky-500/20 via-indigo-500/5 to-transparent rounded-full blur-[80px] animate-pulse-slow"></div>
+                        <div className="absolute inset-0 bg-gradient-radial from-amber-500/20 via-yellow-500/5 to-transparent rounded-full blur-[80px] animate-pulse-slow"></div>
 
                         <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-[0_0_40px_rgba(56,189,248,0.4)]">
                             {/* Rotating Outer Ring */}
                             <motion.circle
                                 cx="100" cy="100" r="70"
                                 fill="none"
-                                stroke="url(#blue-gradient)"
+                                stroke="url(#amber-gradient)"
                                 strokeWidth="0.5"
                                 strokeDasharray="10 5"
                                 opacity="0.5"
@@ -115,7 +115,7 @@ const HeroSection = ({ onOverviewClick }) => {
                             <motion.path
                                 d="M40,100 C40,60 80,40 100,40 C120,40 160,60 160,100 C160,140 120,160 100,160 C80,160 40,140 40,100 Z"
                                 fill="none"
-                                stroke="url(#blue-gradient)"
+                                stroke="url(#amber-gradient)"
                                 strokeWidth="2"
                                 variants={pathVariants}
                                 initial="hidden"
@@ -126,7 +126,7 @@ const HeroSection = ({ onOverviewClick }) => {
                             <motion.path
                                 d="M60,100 L85,100 L95,70 L105,130 L115,100 L140,100"
                                 fill="none"
-                                stroke="#38bdf8"
+                                stroke="#f59e0b"
                                 strokeWidth="4"
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -144,9 +144,9 @@ const HeroSection = ({ onOverviewClick }) => {
                             />
 
                             <defs>
-                                <linearGradient id="blue-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                    <stop offset="0%" stopColor="#38bdf8" />
-                                    <stop offset="100%" stopColor="#818cf8" />
+                                <linearGradient id="amber-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stopColor="#f59e0b" />
+                                    <stop offset="100%" stopColor="#fbbf24" />
                                 </linearGradient>
                             </defs>
                         </svg>
@@ -155,14 +155,14 @@ const HeroSection = ({ onOverviewClick }) => {
                         <motion.div
                             animate={{ y: [-20, 20, -20], x: [0, 5, 0] }}
                             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                            className="absolute top-0 right-0 text-indigo-400 bg-slate-900/60 p-4 rounded-2xl backdrop-blur-md border border-white/10 shadow-lg"
+                            className="absolute top-0 right-0 text-amber-400 bg-slate-900/60 p-4 rounded-2xl backdrop-blur-md border border-white/10 shadow-lg"
                         >
                             <HeartPulse size={32} />
                         </motion.div>
                         <motion.div
                             animate={{ y: [20, -20, 20], x: [0, -5, 0] }}
                             transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                            className="absolute bottom-10 left-0 text-sky-400 bg-slate-900/60 p-3 rounded-2xl backdrop-blur-md border border-white/10 shadow-lg"
+                            className="absolute bottom-10 left-0 text-amber-400 bg-slate-900/60 p-3 rounded-2xl backdrop-blur-md border border-white/10 shadow-lg"
                         >
                             <Activity size={28} />
                         </motion.div>
