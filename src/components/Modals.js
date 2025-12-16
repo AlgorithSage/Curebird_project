@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Share2, Copy, AlertTriangle, Trash2, UploadCloud, Pill, Stethoscope, Loader } from 'lucide-react';
+import { X, Copy, AlertTriangle, Trash2, UploadCloud, Pill, Stethoscope, Loader } from 'lucide-react';
 import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
 import { deleteUser } from "firebase/auth";
 
@@ -28,7 +28,7 @@ export const AppointmentFormModal = ({ onClose, appointment, userId, appId, db }
     }, [appointment]);
 
     const handleInputChange = (e) => setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
-    
+
     const handleSave = async (e) => {
         e.preventDefault();
         const dataToSave = {
@@ -61,15 +61,15 @@ export const AppointmentFormModal = ({ onClose, appointment, userId, appId, db }
             <form onSubmit={handleSave} className="p-6 space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <input type="date" name="date" value={formData.date || ''} onChange={handleInputChange} className="w-full p-2 border bg-transparent border-slate-600 rounded-md text-white" required />
-                     <select name="status" value={formData.status || 'upcoming'} onChange={handleInputChange} className="w-full p-2 border bg-slate-800 border-slate-600 rounded-md text-white">
+                    <select name="status" value={formData.status || 'upcoming'} onChange={handleInputChange} className="w-full p-2 border bg-slate-800 border-slate-600 rounded-md text-white">
                         <option value="upcoming">Upcoming</option>
                         <option value="completed">Completed</option>
                         <option value="cancelled">Cancelled</option>
                     </select>
                 </div>
-                 <input type="text" name="doctorName" placeholder="Doctor's Name" value={formData.doctorName || ''} onChange={handleInputChange} className="w-full p-2 border bg-transparent border-slate-600 rounded-md text-white" required />
-                 <input type="text" name="hospitalName" placeholder="Hospital/Clinic Name" value={formData.hospitalName || ''} onChange={handleInputChange} className="w-full p-2 border bg-transparent border-slate-600 rounded-md text-white" required />
-                 <textarea name="reason" placeholder="Reason for visit..." value={formData.reason || ''} onChange={handleInputChange} className="w-full p-2 border bg-transparent border-slate-600 rounded-md text-white h-24 resize-none"></textarea>
+                <input type="text" name="doctorName" placeholder="Doctor's Name" value={formData.doctorName || ''} onChange={handleInputChange} className="w-full p-2 border bg-transparent border-slate-600 rounded-md text-white" required />
+                <input type="text" name="hospitalName" placeholder="Hospital/Clinic Name" value={formData.hospitalName || ''} onChange={handleInputChange} className="w-full p-2 border bg-transparent border-slate-600 rounded-md text-white" required />
+                <textarea name="reason" placeholder="Reason for visit..." value={formData.reason || ''} onChange={handleInputChange} className="w-full p-2 border bg-transparent border-slate-600 rounded-md text-white h-24 resize-none"></textarea>
                 <div className="flex justify-end pt-4 border-t border-slate-700">
                     <button type="button" onClick={onClose} className="bg-slate-700 border border-slate-600 text-slate-200 px-4 py-2 rounded-lg mr-2 hover:bg-slate-600">Cancel</button>
                     <button type="submit" className="bg-sky-500 text-white px-4 py-2 rounded-lg hover:bg-sky-600">
@@ -95,8 +95,8 @@ const AnalysisResult = ({ result, onApply }) => (
                 ) : <p className="text-slate-400 text-sm mt-1">No specific conditions detected.</p>}
             </div>
             <div>
-                 <h4 className="flex items-center gap-2 text-sm font-medium text-sky-400"><Pill size={16} />Detected Medications</h4>
-                 {result.medications.length > 0 ? (
+                <h4 className="flex items-center gap-2 text-sm font-medium text-sky-400"><Pill size={16} />Detected Medications</h4>
+                {result.medications.length > 0 ? (
                     <div className="space-y-2 mt-2">
                         {result.medications.map((med, i) => (
                             <p key={i} className="text-slate-300 text-sm font-mono bg-slate-700/50 p-1 rounded">
@@ -105,7 +105,7 @@ const AnalysisResult = ({ result, onApply }) => (
                         ))}
                         <button onClick={onApply} className="text-sm text-sky-400 hover:text-sky-300 font-semibold mt-2">Auto-fill Medications</button>
                     </div>
-                 ) : <p className="text-slate-400 text-sm mt-1">No specific medications detected.</p>}
+                ) : <p className="text-slate-400 text-sm mt-1">No specific medications detected.</p>}
             </div>
         </div>
     </div>
@@ -142,7 +142,7 @@ export const RecordFormModal = ({ onClose, record, userId, appId, db }) => {
     const handleFileChange = async (e) => {
         const selectedFile = e.target.files[0];
         if (!selectedFile) return;
-        if (selectedFile.size > 750 * 1024) { 
+        if (selectedFile.size > 750 * 1024) {
             setAnalysisError("File is too large. Please select an image under 750KB.");
             setFile(null);
             setFileBase64(null);
@@ -219,31 +219,31 @@ export const RecordFormModal = ({ onClose, record, userId, appId, db }) => {
             </div>
             <form onSubmit={handleSave} className="p-6 space-y-4 overflow-y-auto">
                 {/* Form Fields... */}
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <input type="date" name="date" value={formData.date || ''} onChange={handleInputChange} className="w-full p-2 border bg-transparent border-slate-600 rounded-md text-white" required />
                     <select name="type" value={type} onChange={(e) => setType(e.target.value)} className="w-full p-2 border bg-slate-800 border-slate-600 rounded-md text-white">
-                         <option value="prescription">Prescription</option><option value="test_report">Test Report</option><option value="diagnosis">Diagnosis</option>
-                         <option value="admission">Hospital Admission</option><option value="ecg">ECG</option>
+                        <option value="prescription">Prescription</option><option value="test_report">Test Report</option><option value="diagnosis">Diagnosis</option>
+                        <option value="admission">Hospital Admission</option><option value="ecg">ECG</option>
                     </select>
-                 </div>
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                     <input type="text" name="doctorName" placeholder="Doctor's Name" value={formData.doctorName || ''} onChange={handleInputChange} className="w-full p-2 border bg-transparent border-slate-600 rounded-md text-white" required />
-                     <input type="text" name="hospitalName" placeholder="Hospital/Clinic Name" value={formData.hospitalName || ''} onChange={handleInputChange} className="w-full p-2 border bg-transparent border-slate-600 rounded-md text-white" required />
-                 </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" name="doctorName" placeholder="Doctor's Name" value={formData.doctorName || ''} onChange={handleInputChange} className="w-full p-2 border bg-transparent border-slate-600 rounded-md text-white" required />
+                    <input type="text" name="hospitalName" placeholder="Hospital/Clinic Name" value={formData.hospitalName || ''} onChange={handleInputChange} className="w-full p-2 border bg-transparent border-slate-600 rounded-md text-white" required />
+                </div>
                 {/* File Upload & AI Analysis Section */}
                 <div className="pt-4 border-t border-slate-700 space-y-4">
-                     <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-600 border-dashed rounded-md">
-                         <div className="space-y-1 text-center">
-                             <UploadCloud className="mx-auto h-12 w-12 text-slate-400" />
-                             <div className="flex text-sm text-slate-400">
+                    <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-600 border-dashed rounded-md">
+                        <div className="space-y-1 text-center">
+                            <UploadCloud className="mx-auto h-12 w-12 text-slate-400" />
+                            <div className="flex text-sm text-slate-400">
                                 <label htmlFor="file-upload" className="relative cursor-pointer bg-slate-800 rounded-md font-medium text-sky-400 hover:text-sky-300">
                                     <span>Upload a file</span>
                                     <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleFileChange} accept="image/*" />
                                 </label>
-                             </div>
-                             <p className="text-xs text-slate-500">{file ? file.name : 'No file selected'}</p>
-                         </div>
-                     </div>
+                            </div>
+                            <p className="text-xs text-slate-500">{file ? file.name : 'No file selected'}</p>
+                        </div>
+                    </div>
                     {isAnalyzing && <div className="flex items-center justify-center gap-2 text-slate-300"><Loader className="animate-spin" size={20} /> <p>AI is analyzing your document...</p></div>}
                     {analysisError && <div className="text-red-400 text-center text-sm p-2 bg-red-900/50 rounded-md">{analysisError}</div>}
                     {analysisResult && <AnalysisResult result={analysisResult} onApply={() => setMedications(analysisResult.medications)} />}
@@ -252,15 +252,15 @@ export const RecordFormModal = ({ onClose, record, userId, appId, db }) => {
                 <AnimatePresence>
                     {type === 'prescription' && (
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                             <div className="space-y-3 pt-4 border-t border-slate-700">
+                            <div className="space-y-3 pt-4 border-t border-slate-700">
                                 <h4 className="font-medium text-white">Medications</h4>
                                 {medications.map((med, index) => (
                                     <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-2 items-center">
-                                        <input type="text" name="name" placeholder="Medication Name" value={med.name} onChange={e => handleMedicationChange(index, e)} className="p-2 border bg-transparent border-slate-600 rounded-md md:col-span-2 text-white" required/>
+                                        <input type="text" name="name" placeholder="Medication Name" value={med.name} onChange={e => handleMedicationChange(index, e)} className="p-2 border bg-transparent border-slate-600 rounded-md md:col-span-2 text-white" required />
                                         <input type="text" name="dosage" placeholder="Dosage" value={med.dosage} onChange={e => handleMedicationChange(index, e)} className="p-2 border bg-transparent border-slate-600 rounded-md text-white" />
                                         <div className="flex items-center">
                                             <input type="text" name="frequency" placeholder="Frequency" value={med.frequency} onChange={e => handleMedicationChange(index, e)} className="p-2 border bg-transparent border-slate-600 rounded-md w-full text-white" />
-                                            <button type="button" onClick={() => removeMedication(index)} className="ml-2 text-rose-500 hover:text-rose-700 p-1"><Trash2 size={16}/></button>
+                                            <button type="button" onClick={() => removeMedication(index)} className="ml-2 text-rose-500 hover:text-rose-700 p-1"><Trash2 size={16} /></button>
                                         </div>
                                     </div>
                                 ))}
@@ -306,7 +306,7 @@ export const ShareModal = ({ onClose, userId }) => {
 
 // --- MODIFIED: Renamed to avoid confusion ---
 export const DeleteConfirmModal = ({ onClose, onConfirm }) => (
-     <ModalWrapper onClose={onClose}>
+    <ModalWrapper onClose={onClose}>
         <div className="p-6 text-center">
             <AlertTriangle size={48} className="mx-auto text-rose-500" />
             <h2 className="text-xl font-semibold mt-4 text-white">Are you sure?</h2>

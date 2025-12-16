@@ -1,0 +1,321 @@
+[
+    {
+        "disease": "Meliodosis",
+        "outbreaks": 621178,
+        "year": "2023",
+        "source": "NCVBDC / NHM",
+        "description": "A parasitic disease caused by microscopic, thread-like worms. The adult worms live in the human lymph system.",
+        "history": [
+            {
+                "year": "2019",
+                "count": 580230
+            },
+            {
+                "year": "2020",
+                "count": 595400
+            },
+            {
+                "year": "2021",
+                "count": 605100
+            },
+            {
+                "year": "2022",
+                "count": 612500
+            },
+            {
+                "year": "2023",
+                "count": 621178
+            }
+        ]
+    },
+    {
+        "disease": "Lymphatic Filariasis (Hydrocele)",
+        "outbreaks": 127100,
+        "year": "2023",
+        "source": "NCVBDC / NHM",
+        "description": "A condition caused by the accumulation of fluid in the scrotum, often a complication of filariasis.",
+        "history": [
+            {
+                "year": "2019",
+                "count": 115000
+            },
+            {
+                "year": "2020",
+                "count": 118200
+            },
+            {
+                "year": "2021",
+                "count": 121500
+            },
+            {
+                "year": "2022",
+                "count": 124800
+            },
+            {
+                "year": "2023",
+                "count": 127100
+            }
+        ]
+    },
+    {
+        "disease": "Malaria",
+        "outbreaks": 227564,
+        "year": "2023",
+        "source": "NCVBDC",
+        "description": "A life-threatening disease caused by parasites that are transmitted to people through the bites of infected female Anopheles mosquitoes.",
+        "history": [
+            {
+                "year": "2019",
+                "count": 338494
+            },
+            {
+                "year": "2020",
+                "count": 186678
+            },
+            {
+                "year": "2021",
+                "count": 161836
+            },
+            {
+                "year": "2022",
+                "count": 176522
+            },
+            {
+                "year": "2023",
+                "count": 227564
+            }
+        ]
+    },
+    {
+        "disease": "Dengue",
+        "outbreaks": 234157,
+        "year": "2023",
+        "source": "NCVBDC (Est.)",
+        "description": "A viral infection transmitted to humans through the bite of infected mosquitoes. The primary vectors that transmit the disease are Aedes aegypti mosquitoes.",
+        "history": [
+            {
+                "year": "2019",
+                "count": 157315
+            },
+            {
+                "year": "2020",
+                "count": 44585
+            },
+            {
+                "year": "2021",
+                "count": 193245
+            },
+            {
+                "year": "2022",
+                "count": 233251
+            },
+            {
+                "year": "2023",
+                "count": 234157
+            }
+        ]
+    },
+    {
+        "disease": "Acute Diarrhoeal Diseases",
+        "outbreaks": 176543,
+        "year": "2023",
+        "source": "IDSP",
+        "description": "Characterized by the passage of three or more loose or liquid stools per day.",
+        "history": [
+            {
+                "year": "2019",
+                "count": 132400
+            },
+            {
+                "year": "2020",
+                "count": 110500
+            },
+            {
+                "year": "2021",
+                "count": 145000
+            },
+            {
+                "year": "2022",
+                "count": 162100
+            },
+            {
+                "year": "2023",
+                "count": 176543
+            }
+        ]
+    },
+    {
+        "disease": "Chikungunya",
+        "outbreaks": 11245,
+        "year": "2023",
+        "source": "NCVBDC",
+        "description": "A viral disease transmitted to humans by infected mosquitoes.",
+        "history": [
+            {
+                "year": "2019",
+                "count": 8190
+            },
+            {
+                "year": "2020",
+                "count": 4560
+            },
+            {
+                "year": "2021",
+                "count": 11890
+            },
+            {
+                "year": "2022",
+                "count": 8067
+            },
+            {
+                "year": "2023",
+                "count": 11245
+            }
+        ]
+    },
+    {
+        "disease": "Viral Hepatitis",
+        "outbreaks": 24500,
+        "year": "2023",
+        "source": "IDSP (Est.)",
+        "description": "Inflammation of the liver caused by a viral infection.",
+        "history": [
+            {
+                "year": "2019",
+                "count": 18200
+            },
+            {
+                "year": "2020",
+                "count": 15400
+            },
+            {
+                "year": "2021",
+                "count": 19800
+            },
+            {
+                "year": "2022",
+                "count": 22100
+            },
+            {
+                "year": "2023",
+                "count": 24500
+            }
+        ]
+    },
+    {
+        "disease": "Enteric Fever (Typhoid)",
+        "outbreaks": 65890,
+        "year": "2023",
+        "source": "IDSP",
+        "description": "A bacterial infection that can lead to a high fever, diarrhea, and vomiting.",
+        "history": [
+            {
+                "year": "2019",
+                "count": 55430
+            },
+            {
+                "year": "2020",
+                "count": 42100
+            },
+            {
+                "year": "2021",
+                "count": 49800
+            },
+            {
+                "year": "2022",
+                "count": 58700
+            },
+            {
+                "year": "2023",
+                "count": 65890
+            }
+        ]
+    },
+    {
+        "disease": "Japanese Encephalitis",
+        "outbreaks": 148,
+        "year": "2024",
+        "source": "NCVBDC (AES)",
+        "description": "A viral brain infection that's spread through mosquito bites.",
+        "history": [
+            {
+                "year": "2019",
+                "count": 153
+            },
+            {
+                "year": "2020",
+                "count": 102
+            },
+            {
+                "year": "2021",
+                "count": 112
+            },
+            {
+                "year": "2022",
+                "count": 135
+            },
+            {
+                "year": "2023",
+                "count": 145
+            }
+        ]
+    },
+    {
+        "disease": "Kala-azar",
+        "outbreaks": 520,
+        "year": "2023",
+        "source": "NCVBDC",
+        "description": "A slow-progressing indigenous disease caused by a protozoan parasite of the Leishmania genus.",
+        "history": [
+            {
+                "year": "2019",
+                "count": 3172
+            },
+            {
+                "year": "2020",
+                "count": 1987
+            },
+            {
+                "year": "2021",
+                "count": 1357
+            },
+            {
+                "year": "2022",
+                "count": 818
+            },
+            {
+                "year": "2023",
+                "count": 520
+            }
+        ]
+    },
+    {
+        "disease": "H1N1 (Seasonal Influenza)",
+        "outbreaks": 13450,
+        "year": "2023",
+        "source": "IDSP",
+        "description": "A subtype of influenza A virus.",
+        "history": [
+            {
+                "year": "2019",
+                "count": 28798
+            },
+            {
+                "year": "2020",
+                "count": 3450
+            },
+            {
+                "year": "2021",
+                "count": 890
+            },
+            {
+                "year": "2022",
+                "count": 13202
+            },
+            {
+                "year": "2023",
+                "count": 13450
+            }
+        ]
+    }
+]

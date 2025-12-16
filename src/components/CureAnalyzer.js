@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UploadCloud, FileText, Loader, AlertTriangle, Pill, Stethoscope, Bot } from 'lucide-react';
+import { UploadCloud, Loader, AlertTriangle, Pill, Stethoscope, Bot } from 'lucide-react';
 
 const CureAnalyzer = () => {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -92,8 +92,8 @@ const CureAnalyzer = () => {
                                     ) : <p className="text-slate-400 text-sm mt-1">No specific conditions detected.</p>}
                                 </div>
                                 <div>
-                                     <h4 className="flex items-center gap-2 text-sm font-medium text-sky-400"><Pill size={16} />Detected Medications</h4>
-                                     {analysisResult.medications.length > 0 ? (
+                                    <h4 className="flex items-center gap-2 text-sm font-medium text-sky-400"><Pill size={16} />Detected Medications</h4>
+                                    {analysisResult.medications.length > 0 ? (
                                         <div className="space-y-2 mt-2">
                                             {analysisResult.medications.map((med, i) => (
                                                 <p key={i} className="text-slate-300 text-sm font-mono bg-slate-700/50 p-1 rounded">
@@ -101,7 +101,7 @@ const CureAnalyzer = () => {
                                                 </p>
                                             ))}
                                         </div>
-                                     ) : <p className="text-slate-400 text-sm mt-1">No specific medications detected.</p>}
+                                    ) : <p className="text-slate-400 text-sm mt-1">No specific medications detected.</p>}
                                 </div>
                             </div>
                         )}

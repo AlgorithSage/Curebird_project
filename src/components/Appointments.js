@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { collection, onSnapshot, doc, deleteDoc, query, orderBy } from 'firebase/firestore';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Calendar, Plus, MoreVertical, Edit, Trash2 } from 'lucide-react';
+import { Plus, MoreVertical, Edit, Trash2 } from 'lucide-react';
 
 import Header from './Header';
 import { AppointmentFormModal, DeleteConfirmModal } from './Modals';
@@ -9,17 +9,17 @@ import { SkeletonCard } from './SkeletonLoaders';
 
 const AppointmentCard = ({ appointment, onEdit, onDelete, formatDate }) => {
     const [menuOpen, setMenuOpen] = useState(false);
-    
+
     const statusStyles = {
         upcoming: { border: 'border-sky-500', bg: 'bg-sky-500/20', text: 'text-sky-400' },
         completed: { border: 'border-emerald-500', bg: 'bg-emerald-500/20', text: 'text-emerald-400' },
         cancelled: { border: 'border-rose-500', bg: 'bg-rose-500/20', text: 'text-rose-400' }
     };
-    
+
     const currentStatus = statusStyles[appointment.status] || statusStyles['upcoming'];
 
     return (
-        <motion.div 
+        <motion.div
             layout
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -38,7 +38,7 @@ const AppointmentCard = ({ appointment, onEdit, onDelete, formatDate }) => {
                     </button>
                     <AnimatePresence>
                         {menuOpen && (
-                             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+                            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
                                 className="absolute right-0 mt-2 w-32 bg-slate-900 border border-slate-700 rounded-md shadow-lg z-10">
                                 <button onClick={() => { onEdit(); setMenuOpen(false); }} className="w-full text-left flex items-center gap-2 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800">
                                     <Edit size={14} /> Edit
@@ -114,33 +114,33 @@ const Appointments = ({ user, db, appId, onLogout, onLoginClick, onToggleSidebar
 
     if (!user) {
         return (
-             <div className="p-4 sm:p-6 lg:p-8 h-screen overflow-y-auto text-white">
-                <Header 
+            <div className="p-4 sm:p-6 lg:p-8 h-screen overflow-y-auto text-white">
+                <Header
                     title="Appointments"
                     description="Log in to manage your appointments."
                     user={null}
                     onLoginClick={onLoginClick}
                     onToggleSidebar={onToggleSidebar}
                 />
-                 <div className="text-center py-20">
+                <div className="text-center py-20">
                     <p className="text-slate-400">Please log in to view your appointments.</p>
-                 </div>
+                </div>
             </div>
         )
     }
 
     return (
         <div className="p-4 sm:p-6 lg:p-8 h-screen overflow-y-auto text-white">
-            <Header 
+            <Header
                 title="Appointments"
                 description="Manage your upcoming and past medical appointments."
                 user={user}
                 onLogout={onLogout}
                 onToggleSidebar={onToggleSidebar}
             />
-            
+
             <main className="mt-8">
-                 <button 
+                <button
                     onClick={() => { setEditingAppointment(null); setIsFormModalOpen(true); }}
                     className="w-full sm:w-auto flex items-center justify-center gap-2 bg-sky-500 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-sky-600 transition-colors text-sm font-semibold mb-8"
                 >
@@ -168,7 +168,7 @@ const Appointments = ({ user, db, appId, onLogout, onLoginClick, onToggleSidebar
                             ) : <p className="text-slate-400">You have no upcoming appointments.</p>}
                         </div>
 
-                         <div>
+                        <div>
                             <h2 className="text-2xl font-bold mb-4 text-white">Past Appointments</h2>
                             {pastAppointments.length > 0 ? (
                                 <div className="space-y-4">

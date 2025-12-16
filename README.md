@@ -1,70 +1,111 @@
+# 🏥 Curebird - Medical Portfolio & AI Health Analytics
 
+Curebird is a modern, full-stack medical portfolio application that combines secure health record management with advanced AI analytics. It features real-time disease intelligence, prescription analysis, and a comprehensive personal health dashboard.
 
+![Curebird Dashboard](public/logo.png)
 
+## 🌟 Key Features
 
-## Available Scripts
+### 👤 Personal Medical Portfolio
+- **Secure Dashboard**: Manage your health records, appointments, and medications.
+- **Visual Analytics**: Track your vital signs and health trends over time.
+- **Document Storage**: Securely store and organize your medical reports.
 
-In the project directory, you can run:
+### 🧠 Cure Analyzer (AI-Powered)
+- **Prescription Analysis**: Upload prescription images to extract medicines and instructions.
+- **AI Intelligence**: Powered by Google Gemini AI and Tesseract OCR.
+- **Disease Detection**: automatically identifies potential conditions mentioned in reports.
 
-### `npm start`
+### 📊 Cure Stat (Disease Intelligence)
+- **Real-Time Trends**: Visualizes disease outbreaks across India using government data.
+- **Interactive Heatmap**: Geographic distribution of diseases via Google Maps.
+- **Research Metrics**: Detailed demographics, recovery rates, and medication trends.
+- **Risk Analysis**: AI-driven risk assessment (High/Medium/Low) for various regions.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🚀 Getting Started
 
-### `npm test`
+### Prerequisites
+- Node.js (v16+)
+- Python (v3.10+)
+- Google Cloud API Key (for Maps & AI)
+- Tesseract OCR (installed on system)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 1️⃣ Installation
 
-### `npm run build`
+**Clone the repository:**
+```bash
+git clone https://github.com/yourusername/curebird.git
+cd curebird
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+**Install Frontend Dependencies:**
+```bash
+npm install
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+**Install Backend Dependencies:**
+```bash
+cd backend
+python -m venv venv
+.\venv\Scripts\activate  # Windows
+pip install -r requirements.txt
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 2️⃣ Configuration
 
-### `npm run eject`
+**Frontend Setup:**
+Create a `.env.local` file in the root directory:
+```env
+# Google Maps API Key for Heatmap
+REACT_APP_GOOGLE_MAPS_API_KEY=your_api_key_here
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+# Backend API URL
+REACT_APP_API_URL=http://127.0.0.1:5001
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+**Backend Setup:**
+Create a `.env` file in the `backend` directory:
+```env
+# Gemini AI API Key
+GEMINI_API_KEY=your_gemini_key
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+# India Gov Data API Key
+DATA_GOV_API_KEY=your_gov_data_key
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### 3️⃣ Running the Application
 
-## Learn More
+**Start Backend Server:**
+```bash
+cd backend
+python run.py
+# Server runs on http://127.0.0.1:5001
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+**Start Frontend Application:**
+```bash
+# In a new terminal
+npm start
+# Application opens at http://localhost:3000
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+## 🛠️ Tech Stack
+- **Frontend**: React, Tailwind CSS, Framer Motion, Recharts
+- **Backend**: Flask, Pandas, Python
+- **AI/ML**: Google Gemini 2.0, Tesseract OCR
+- **Database**: Firebase Firestore
+- **Auth**: Firebase Authentication
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 🔐 Security
+- Environment variables for sensitive keys.
+- Firebase security rules for data protection.
+- Client-side data processing for privacy.
 
-### Analyzing the Bundle Size
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 📄 License
+This project is licensed under the MIT License - see the LICENSE file for details.

@@ -1,26 +1,26 @@
 // --- ADDED: Import Firebase functions ---
 import { initializeApp } from "firebase/app";
-import { 
-    getAuth, 
-    createUserWithEmailAndPassword, 
+import {
+    getAuth,
+    createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     GoogleAuthProvider,
-    signInWithPopup 
+    signInWithPopup
 } from "firebase/auth";
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Stethoscope, Hospital, X, ShieldAlert } from 'lucide-react'; // Added ShieldAlert for errors
+import { User, X, ShieldAlert } from 'lucide-react'; // Added ShieldAlert for errors
 
 // --- ADDED: Firebase Configuration ---
 // IMPORTANT: Replace this with your actual Firebase config object
 const firebaseConfig = {
-  apiKey: "AIzaSyB6phfALFUYNvEhF3BkVwuHK4OeocV-IEo",
-  authDomain: "curebird-535e5.firebaseapp.com",
-  projectId: "curebird-535e5",
-  storageBucket: "curebird-535e5.firebasestorage.app",
-  messagingSenderId: "325018733204",
-  appId: "1:325018733204:web:8b10b21d92afe506e1c281"
+    apiKey: "AIzaSyB6phfALFUYNvEhF3BkVwuHK4OeocV-IEo",
+    authDomain: "curebird-535e5.firebaseapp.com",
+    projectId: "curebird-535e5",
+    storageBucket: "curebird-535e5.firebasestorage.app",
+    messagingSenderId: "325018733204",
+    appId: "1:325018733204:web:8b10b21d92afe506e1c281"
 };
 
 // --- ADDED: Initialize Firebase and Auth ---
@@ -32,18 +32,18 @@ const googleProvider = new GoogleAuthProvider();
 const capitalize = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1).replace(/_/g, ' ') : '');
 
 const ModalWrapper = ({ onClose, children }) => (
-    <motion.div 
-        initial={{ opacity: 0 }} 
-        animate={{ opacity: 1 }} 
+    <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 p-4" 
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 p-4"
         onClick={onClose}
     >
-        <motion.div 
-            initial={{ y: -50, opacity: 0 }} 
-            animate={{ y: 0, opacity: 1 }} 
+        <motion.div
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
             exit={{ y: 50, opacity: 0 }}
-            className="w-full max-w-md bg-black/40 backdrop-blur-lg border border-amber-500/20 rounded-2xl shadow-2xl shadow-amber-500/10" 
+            className="w-full max-w-md bg-black/40 backdrop-blur-lg border border-amber-500/20 rounded-2xl shadow-2xl shadow-amber-500/10"
             onClick={(e) => e.stopPropagation()}
         >
             {children}
@@ -56,24 +56,24 @@ const AuthForm = ({ ctaText, activeTab, onSubmit, setEmail, setPassword }) => (
     <form onSubmit={onSubmit} className="space-y-4">
         <div>
             <label className="text-xs text-slate-400" htmlFor="email">{capitalize(activeTab)} ID / Email</label>
-            <input 
+            <input
                 id="email"
                 name="email"
-                type="email" 
+                type="email"
                 placeholder={`Enter your ${activeTab} email`}
                 onChange={(e) => setEmail(e.target.value)} // --- ADDED ---
-                className="w-full mt-1 p-3 border bg-slate-800/50 border-slate-700 rounded-md text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500" 
+                className="w-full mt-1 p-3 border bg-slate-800/50 border-slate-700 rounded-md text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500"
             />
         </div>
         <div>
             <label className="text-xs text-slate-400" htmlFor="password">Password</label>
-            <input 
+            <input
                 id="password"
                 name="password"
-                type="password" 
+                type="password"
                 placeholder="Enter your password"
                 onChange={(e) => setPassword(e.target.value)} // --- ADDED ---
-                className="w-full mt-1 p-3 border bg-slate-800/50 border-slate-700 rounded-md text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500" 
+                className="w-full mt-1 p-3 border bg-slate-800/50 border-slate-700 rounded-md text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500"
             />
         </div>
         <button type="submit" className="w-full bg-amber-500 text-slate-900 py-3 rounded-lg hover:bg-amber-400 font-semibold transition-colors">
@@ -85,7 +85,7 @@ const AuthForm = ({ ctaText, activeTab, onSubmit, setEmail, setPassword }) => (
 const AuthModals = ({ onClose }) => {
     const [isLoginView, setIsLoginView] = useState(true);
     const [activeTab, setActiveTab] = useState('user');
-    
+
     // --- ADDED: State for form inputs and error messages ---
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -124,7 +124,7 @@ const AuthModals = ({ onClose }) => {
                 });
         }
     };
-    
+
     // --- ADDED: Handler for Google Sign-In ---
     const handleGoogleSignIn = () => {
         signInWithPopup(auth, googleProvider)
@@ -143,15 +143,14 @@ const AuthModals = ({ onClose }) => {
                 <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-white"><X size={24} /></button>
                 <h1 className="text-3xl font-bold text-center text-white mb-2">{isLoginView ? 'Welcome Back' : 'Create an Account'}</h1>
                 <p className="text-center text-slate-400 mb-8">{isLoginView ? 'Securely access your medical portfolio.' : 'Join and start managing your health records.'}</p>
-                
+
                 <div className="flex border-b border-slate-700 mb-6">
                     {tabs.map(tab => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
-                            className={`relative flex-1 flex items-center justify-center gap-2 p-3 text-sm font-medium transition-colors ${
-                                activeTab === tab.id ? 'text-amber-400' : 'text-slate-400 hover:text-white'
-                            }`}
+                            className={`relative flex-1 flex items-center justify-center gap-2 p-3 text-sm font-medium transition-colors ${activeTab === tab.id ? 'text-amber-400' : 'text-slate-400 hover:text-white'
+                                }`}
                         >
                             {tab.icon}
                             {tab.name}
@@ -171,7 +170,7 @@ const AuthModals = ({ onClose }) => {
                         transition={{ duration: 0.2 }}
                     >
                         {/* --- MODIFIED: Pass state and handlers to the form --- */}
-                        <AuthForm 
+                        <AuthForm
                             ctaText={`${isLoginView ? 'Login' : 'Sign Up'} as ${capitalize(activeTab)}`}
                             activeTab={activeTab}
                             onSubmit={handleFormSubmit}
@@ -180,7 +179,7 @@ const AuthModals = ({ onClose }) => {
                         />
                     </motion.div>
                 </AnimatePresence>
-                
+
                 {/* --- ADDED: Google Sign-In Button --- */}
                 <div className="flex items-center my-6">
                     <div className="flex-grow border-t border-slate-700"></div>
@@ -200,7 +199,7 @@ const AuthModals = ({ onClose }) => {
                         <span>{error}</span>
                     </div>
                 )}
-                
+
                 <p className="text-center text-sm text-slate-400 mt-6">
                     {isLoginView ? "Don't have an account?" : "Already have an account?"}
                     <button onClick={() => setIsLoginView(!isLoginView)} className="font-semibold text-amber-400 hover:text-amber-300 ml-1">
