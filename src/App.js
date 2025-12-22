@@ -100,7 +100,7 @@ export default function App() {
             case 'Cure Stat': return <CureStat {...pageProps} />;
             case 'Cure AI': return <CureAI {...pageProps} />;
             case 'Settings': return <Settings {...pageProps} />;
-            case 'Contact': return <div className="p-6"><Contact onBack={() => setActiveView('Dashboard')} /></div>;
+            case 'Contact': return <div className="p-6"><Contact onBack={() => setActiveView('Dashboard')} db={db} /></div>;
             case 'Terms': return <div className="p-6"><TermsOfService onBack={() => setActiveView('Dashboard')} /></div>;
             case 'Privacy': return <div className="p-6"><PrivacyPolicy onBack={() => setActiveView('Dashboard')} /></div>;
             default: return <MedicalPortfolio {...pageProps} />;
@@ -131,7 +131,7 @@ export default function App() {
                 <>
                     {publicView === 'terms' && <TermsOfService onBack={() => setPublicView(null)} />}
                     {publicView === 'privacy' && <PrivacyPolicy onBack={() => setPublicView(null)} />}
-                    {publicView === 'contact' && <Contact onBack={() => setPublicView(null)} />}
+                    {publicView === 'contact' && <Contact onBack={() => setPublicView(null)} db={db} />}
 
                     {!publicView && (
                         <LandingPage

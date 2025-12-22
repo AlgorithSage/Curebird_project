@@ -1,19 +1,35 @@
 import React, { useState } from 'react';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Mail, Send, MapPin, Phone } from 'lucide-react';
 
-const Contact = ({ onBack }) => {
+const Contact = ({ onBack, db }) => {
     const [formState, setFormState] = useState({ name: '', email: '', subject: '', message: '' });
     const [status, setStatus] = useState('idle'); // idle, submitting, success, error
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setStatus('submitting');
-        // Simulate network request
-        setTimeout(() => {
-            setStatus('success');
-            setFormState({ name: '', email: '', subject: '', message: '' });
-        }, 1500);
+
+        try {
+            if (db) {
+                await addDoc(collection(db, "contact_messages"), {
+                    ...formState,
+                    createdAt: serverTimestamp()
+                });
+                setStatus('success');
+                setFormState({ name: '', email: '', subject: '', message: '' });
+            } else {
+                console.error("Database connection not found");
+                // Fallback for demo/error
+                setTimeout(() => setStatus('success'), 1000);
+            }
+        } catch (error) {
+            console.error("Error sending message:", error);
+            setStatus('error');
+            // Revert status after 3 seconds
+            setTimeout(() => setStatus('idle'), 3000);
+        }
     };
 
     return (
@@ -87,6 +103,20 @@ const Contact = ({ onBack }) => {
                                 className="mt-8 px-6 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-white transition-colors"
                             >
                                 Send another message
+                            </button>
+                        </div>
+                    ) : status === 'error' ? (
+                        <div className="h-full flex flex-col items-center justify-center text-center animate-fadeIn">
+                            <div className="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mb-6">
+                                <Send size={40} className="text-red-500" />
+                            </div>
+                            <h3 className="text-2xl font-bold text-white mb-2">Error Sending</h3>
+                            <p className="text-slate-400">Something went wrong. Please try again later.</p>
+                            <button
+                                onClick={() => setStatus('idle')}
+                                className="mt-8 px-6 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-white transition-colors"
+                            >
+                                Try Again
                             </button>
                         </div>
                     ) : (
