@@ -53,7 +53,8 @@ class GroqHealthAssistant:
 
 {disease_context}
 
-Your Goal: Provide elite-level medical insights. **NEVER use introductions or greetings** (like "I'm here to help" or "I understand"). Start immediately with the headers.
+Your Goal: Provide elite-level medical insights. First greet the user. 
+Then Start immediately with the headers.
 
 ────────────────────────
 COMMUNICATION STYLE
