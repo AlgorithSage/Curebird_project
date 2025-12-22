@@ -483,7 +483,7 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
                 <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }}>
                     <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                         <span className="w-2 h-8 bg-gradient-to-b from-sky-400 to-purple-500 rounded-full block shadow-[0_0_10px_rgba(56,189,248,0.5)]"></span>
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400">Detailed Insights</span>
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400">National Disease Burden</span>
                         {searchTerm && (<span className="text-sm text-slate-400 font-normal">({filteredTrends.length} {filteredTrends.length === 1 ? 'result' : 'results'})</span>)}
                     </h2>
 
