@@ -50,6 +50,18 @@ def analyze_report():
         traceback.print_exc()
         return jsonify({"error": f"An error occurred during analysis: {e}"}), 500
 
+@app.route('/api/resource-distribution', methods=['GET'])
+def get_resource_distribution():
+    try:
+        import json
+        file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'resource_distribution.json')
+        with open(file_path, 'r') as f:
+            data = json.load(f)
+        return jsonify(data)
+    except Exception as e:
+        print(f"Error loading resource data: {e}")
+        return jsonify({"error": "Data unavailable"}), 500
+
 
 # Cure AI Endpoints
 @app.route('/api/health-assistant/chat', methods=['POST'])

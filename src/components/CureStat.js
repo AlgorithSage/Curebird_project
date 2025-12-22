@@ -271,6 +271,7 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
                 const response = await fetch(`${API_BASE_URL}/api/disease-trends`);
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const data = await response.json();
+                console.log("--- SURVEILLANCE DATA RECEIVED ---", data);
                 setTrends(data);
                 setFilteredTrends(data);
 
@@ -650,6 +651,23 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
                                 <div className="p-6 sm:p-8 border-b border-white/10 sticky top-0 bg-slate-900/80 backdrop-blur-xl z-20 flex flex-col-reverse sm:flex-row justify-between items-start gap-4 shadow-sm">
                                     <div className="w-full sm:w-auto">
                                         <motion.h2 initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400">{selectedDisease.disease}</motion.h2>
+
+                                        {/* --- DEBUG DIAGNOSTIC OVERLAY --- */}
+                                        <div className="flex gap-2 mt-2">
+                                            <span className={`text-[8px] px-2 py-0.5 rounded ${selectedDisease.history ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                                                TRENDS: {selectedDisease.history ? `OK (${selectedDisease.history.length})` : 'MISSING'}
+                                            </span>
+                                            <span className={`text-[8px] px-2 py-0.5 rounded ${selectedDisease.age_groups ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                                                AGE: {selectedDisease.age_groups ? `OK (${selectedDisease.age_groups.length})` : 'MISSING'}
+                                            </span>
+                                            <span className="text-[8px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-400">
+                                                ID: {selectedDisease.id}
+                                            </span>
+                                            <span className="text-[8px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-400">
+                                                SIG: {selectedDisease.v2_fingerprint || 'STALE_PIPELINE'}
+                                            </span>
+                                        </div>
+
                                         <div className="flex flex-wrap items-center gap-3 mt-3">
                                             <p className="text-sky-400 text-lg font-medium flex items-center gap-2">
                                                 <Activity size={18} />
