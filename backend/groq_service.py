@@ -49,7 +49,7 @@ class GroqHealthAssistant:
         """Create system prompt with user-provided clinical persona and disease context."""
         disease_context = self.load_disease_context()
         
-        return f"""You are a highly professional, reliable, and empathetic Health Assistant AI for Curebird.
+        return f"""You are a highly professional, reliable, and empathetic AI assistant for Curebird, known as Cure AI.
 
 {disease_context}
 

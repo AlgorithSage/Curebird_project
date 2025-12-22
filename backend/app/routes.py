@@ -51,7 +51,7 @@ def analyze_report():
         return jsonify({"error": f"An error occurred during analysis: {e}"}), 500
 
 
-# Health Assistant AI Endpoints
+# Cure AI Endpoints
 @app.route('/api/health-assistant/chat', methods=['POST'])
 def health_assistant_chat():
     """Handle chat messages to Health Assistant AI."""

@@ -9,7 +9,7 @@ const Sidebar = ({ activeView, onNavigate, isOpen, onClose }) => {
         { name: 'Medications' },
         { name: 'Cure Analyzer' },
         { name: 'Cure Stat' },
-        { name: 'Health Assistant' },
+        { name: 'Cure AI' },
         { name: 'Settings' },
         { name: 'Contact' },
         { name: 'Terms' },
@@ -24,7 +24,7 @@ const Sidebar = ({ activeView, onNavigate, isOpen, onClose }) => {
             case 'Medications': return <Pill size={20} />;
             case 'Cure Analyzer': return <Bot size={20} />;
             case 'Cure Stat': return <Activity size={20} />;
-            case 'Health Assistant': return <MessageSquare size={20} />;
+            case 'Cure AI': return <MessageSquare size={20} />;
             case 'Settings': return <Settings size={20} />;
             case 'Contact': return <Mail size={20} />;
             case 'Terms': return <ScrollText size={20} />;

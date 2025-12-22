@@ -23,7 +23,7 @@ import Medications from './components/Medications';
 import Settings from './components/Settings';
 import CureStat from './components/CureStat';
 import CureAnalyzer from './components/CureAnalyzer';
-import HealthAssistant from './components/HealthAssistant';
+import CureAI from './components/CureAI';
 import LandingPage from './components/LandingPage';
 import TermsOfService from './components/TermsOfService';
 import PrivacyPolicy from './components/PrivacyPolicy';
@@ -98,7 +98,7 @@ export default function App() {
             case 'Medications': return <Medications {...pageProps} />;
             case 'Cure Analyzer': return <CureAnalyzer {...pageProps} />;
             case 'Cure Stat': return <CureStat {...pageProps} />;
-            case 'Health Assistant': return <HealthAssistant {...pageProps} />;
+            case 'Cure AI': return <CureAI {...pageProps} />;
             case 'Settings': return <Settings {...pageProps} />;
             case 'Contact': return <div className="p-6"><Contact onBack={() => setActiveView('Dashboard')} /></div>;
             case 'Terms': return <div className="p-6"><TermsOfService onBack={() => setActiveView('Dashboard')} /></div>;

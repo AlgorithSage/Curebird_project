@@ -60,7 +60,7 @@ const TypingIndicator = () => (
     </motion.div>
 );
 
-const HealthAssistant = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
+const CureAI = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
     const [messages, setMessages] = useState([]);
     const [inputMessage, setInputMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -86,7 +86,7 @@ const HealthAssistant = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
 
         // Add welcome message
         setMessages([{
-            text: "Welcome to the Curebird Health Assistant. I am powered by Llama 3.3 and expert medical intelligence. How can I assist your health inquiry today?",
+            text: "Welcome to **Cure AI**. I provide secure, expert-level medical insights and health guidance powered by advanced intelligence. How can I support your wellness today?",
             isUser: false,
             timestamp: new Date().toISOString()
         }]);
@@ -189,8 +189,8 @@ const HealthAssistant = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
     return (
         <div className="flex flex-col h-screen overflow-hidden p-4 sm:p-6 lg:p-8">
             <Header
-                title="Health Assistant AI"
-                description="Powered by Gemini 2.0 Flash - Ask me about diseases, symptoms, treatments, and health trends in India"
+                title="Cure AI"
+                description="Powered by Llama 3.3 - Ask me about diseases, symptoms, treatments, and health trends in India"
                 user={user}
                 onLogout={onLogout}
                 onLoginClick={onLoginClick}
@@ -277,4 +277,4 @@ const HealthAssistant = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
     );
 };
 
-export default HealthAssistant;
+export default CureAI;
