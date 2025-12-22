@@ -484,7 +484,13 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
                     <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                         <span className="w-2 h-8 bg-gradient-to-b from-sky-400 to-purple-500 rounded-full block shadow-[0_0_10px_rgba(56,189,248,0.5)]"></span>
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400">National Disease Burden</span>
-                        {searchTerm && (<span className="text-sm text-slate-400 font-normal">({filteredTrends.length} {filteredTrends.length === 1 ? 'result' : 'results'})</span>)}
+                        <div className="group relative ml-2">
+                            <Info size={16} className="text-slate-500 cursor-help hover:text-sky-400 transition-colors" />
+                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-72 p-3 bg-slate-900/95 backdrop-blur-sm text-xs text-slate-300 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-white/10 shadow-xl z-50">
+                                Accurate, professional, and meaningful, as it displays real-time high-risk disease data sourced from OGD India.
+                            </div>
+                        </div>
+                        {searchTerm && (<span className="text-sm text-slate-400 font-normal ml-2">({filteredTrends.length} {filteredTrends.length === 1 ? 'result' : 'results'})</span>)}
                     </h2>
 
 
