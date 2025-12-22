@@ -10,9 +10,9 @@ import sys
 import os
 
 
-# Add parent directory to path to import gemini_service
+# Add parent directory to path to import groq_service
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from gemini_service import get_health_assistant
+from groq_service import get_health_assistant
 
 @app.route('/api/disease-trends', methods=['GET'])
 def get_disease_trends():

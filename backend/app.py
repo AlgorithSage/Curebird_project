@@ -3,7 +3,7 @@ import requests
 import pandas as pd
 from flask_cors import CORS
 import traceback
-from gemini_service import get_health_assistant
+from groq_service import get_health_assistant
 
 app = Flask(__name__)
 CORS(app)
