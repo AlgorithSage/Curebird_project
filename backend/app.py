@@ -43,6 +43,32 @@ def get_disease_trends():
         traceback.print_exc()
         return jsonify({"error": f"An error occurred: {e}"}), 500
 
+from services.openfda_service import get_medicines_for_disease
+
+@app.route('/api/resource-distribution', methods=['GET'])
+def get_resource_distribution():
+    try:
+        import json
+        import os
+        file_path = os.path.join(os.path.dirname(__file__), 'resource_distribution.json')
+        with open(file_path, 'r') as f:
+            data = json.load(f)
+        return jsonify(data)
+    except Exception as e:
+        print(f"Error loading resource data: {e}")
+        return jsonify({"error": "Data unavailable"}), 500
+
+@app.route('/api/medicines', methods=['GET'])
+def get_medicines():
+    disease = request.args.get('disease')
+    if not disease:
+        return jsonify({"error": "Disease parameter is required"}), 400
+    
+    medicines = get_medicines_for_disease(disease)
+    return jsonify({"medicines": medicines})
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
+
+# Trigger reload

@@ -3,6 +3,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { Activity, Loader, ServerCrash, Info, Pill, TrendingUp, X, Sparkles, Download, Users, Brain, Search, MapPin, AlertTriangle, Map } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from './Header';
+import OccupationalHealth from './OccupationalHealth';
 import { API_BASE_URL } from '../config';
 
 
@@ -177,26 +178,36 @@ const HeatmapModal = ({ isOpen, onClose, regionalData }) => {
 };
 
 const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
+    const [resourceData, setResourceData] = useState([]);
     const [trends, setTrends] = useState([]);
     const [filteredTrends, setFilteredTrends] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [selectedDisease, setSelectedDisease] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [riskFilter, setRiskFilter] = useState('all');
     const [showHeatmap, setShowHeatmap] = useState(false);
+    const [selectedDisease, setSelectedDisease] = useState(null);
 
     useEffect(() => {
         const fetchDiseaseTrends = async () => {
             try {
+                // Fetch Disease Trends
                 const response = await fetch(`${API_BASE_URL}/api/disease-trends`);
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const data = await response.json();
                 setTrends(data);
                 setFilteredTrends(data);
+
+                // Fetch Resource Distribution
+                const resResponse = await fetch(`${API_BASE_URL}/api/resource-distribution`);
+                if (resResponse.ok) {
+                    const resData = await resResponse.json();
+                    setResourceData(resData);
+                }
+
                 setError(null);
             } catch (err) {
-                console.error("Failed to fetch disease trends:", err);
+                console.error("Failed to fetch data:", err);
                 setError("Could not connect to the AI analysis server.");
             } finally {
                 setLoading(false);
@@ -276,7 +287,11 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
             return (
                 <div className="bg-black/90 backdrop-blur-md border border-yellow-500/30 p-4 rounded-xl">
                     <p className="text-slate-200 font-semibold mb-1">{label}</p>
-                    <p className="text-amber-500 text-sm">{payload[0].name}: <span className="font-bold">{payload[0].value}</span></p>
+                    {payload.map((entry, index) => (
+                        <p key={index} className="text-sm" style={{ color: entry.color }}>
+                            {entry.name}: <span className="font-bold">{entry.value}</span>
+                        </p>
+                    ))}
                 </div>
             );
         }
@@ -379,12 +394,87 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
                     </motion.div>
                 </div>
 
+                {/* --- NEW SECTION: Resource Disparity (Respectful Presentation) --- */}
+                {resourceData.length > 0 && (
+                    <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.35 }} className="mb-12">
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="bg-emerald-500/20 p-2.5 rounded-xl border border-emerald-500/30 shadow-lg shadow-emerald-500/10">
+                                <Users size={24} className="text-emerald-400" />
+                            </div>
+                            <div>
+                                <h2 className="text-2xl font-bold text-white">Healthcare Access Insights</h2>
+                                <p className="text-slate-400 text-sm">Comparative analysis of resource density and sector distribution across states.</p>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            {/* Chart 1: Bed Density Urban vs Rural */}
+                            <div className="glass p-6 rounded-3xl border border-white/5">
+                                <h3 className="text-lg font-semibold text-slate-200 mb-6 flex items-center gap-2">
+                                    Infrastructure Density
+                                    <span className="text-xs font-normal text-slate-500 ml-auto bg-slate-800 px-2 py-1 rounded">Beds per 1000 Population</span>
+                                </h3>
+                                <div className="h-[300px]">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <BarChart data={resourceData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                                            <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} opacity={0.3} />
+                                            <XAxis dataKey="state" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} interval={0} angle={-25} textAnchor="end" height={60} />
+                                            <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
+                                            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'transparent' }} />
+                                            <Legend wrapperStyle={{ paddingTop: '20px' }} />
+                                            <Bar name="Urban Density" dataKey="urban_beds_per_1000" fill="#38bdf8" radius={[4, 4, 0, 0]} barSize={12} />
+                                            <Bar name="Rural Density" dataKey="rural_beds_per_1000" fill="#10b981" radius={[4, 4, 0, 0]} barSize={12} />
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                </div>
+                            </div>
+
+                            {/* Chart 2: Sector Utilization */}
+                            <div className="glass p-6 rounded-3xl border border-white/5">
+                                <h3 className="text-lg font-semibold text-slate-200 mb-6 flex items-center gap-2">
+                                    Sector Participation
+                                    <span className="text-xs font-normal text-slate-500 ml-auto bg-slate-800 px-2 py-1 rounded">% Share of Healthcare</span>
+                                </h3>
+                                <div className="h-[300px]">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <AreaChart data={resourceData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                                            <defs>
+                                                <linearGradient id="colorPrivate" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3} />
+                                                    <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
+                                                </linearGradient>
+                                                <linearGradient id="colorPublic" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.3} />
+                                                    <stop offset="95%" stopColor="#06b6d4" stopOpacity={0} />
+                                                </linearGradient>
+                                            </defs>
+                                            <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} opacity={0.3} />
+                                            <XAxis dataKey="state" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} interval={0} angle={-25} textAnchor="end" height={60} />
+                                            <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
+                                            <Tooltip content={<CustomTooltip />} />
+                                            <Legend wrapperStyle={{ paddingTop: '20px' }} />
+                                            <Area type="monotone" name="Private Sector" dataKey="private_sector_share" stroke="#8b5cf6" fillOpacity={1} fill="url(#colorPrivate)" />
+                                            <Area type="monotone" name="Public Sector" dataKey="public_sector_share" stroke="#06b6d4" fillOpacity={1} fill="url(#colorPublic)" />
+                                        </AreaChart>
+                                    </ResponsiveContainer>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+
+                {/* --- NEW SECTION: Occupational Health --- */}
+                <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.38 }} className="mb-12">
+                    <OccupationalHealth />
+                </motion.div>
+
                 <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }}>
                     <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                         <span className="w-2 h-8 bg-gradient-to-b from-sky-400 to-purple-500 rounded-full block shadow-[0_0_10px_rgba(56,189,248,0.5)]"></span>
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400">Detailed Insights</span>
                         {searchTerm && (<span className="text-sm text-slate-400 font-normal">({filteredTrends.length} {filteredTrends.length === 1 ? 'result' : 'results'})</span>)}
                     </h2>
+
 
                     {filteredTrends.length === 0 ? (
                         <div className="glass text-center py-16 text-slate-400 rounded-3xl border-dashed border-2 border-white/10">
