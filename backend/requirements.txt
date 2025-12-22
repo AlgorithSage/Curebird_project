@@ -5,3 +5,6 @@ google-generativeai
 google-cloud-vision
 pillow
 gunicorn
+pandas
+requests
+pytesseract
