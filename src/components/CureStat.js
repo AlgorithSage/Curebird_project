@@ -6,6 +6,7 @@ import Header from './Header';
 import OccupationalHealth from './OccupationalHealth';
 import SocialDeterminants from './SocialDeterminants';
 import RareDisease from './RareDisease';
+import StateHealthProfile from './StateHealthProfile';
 import { API_BASE_URL } from '../config';
 
 
@@ -488,6 +489,11 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
                 {/* --- NEW SECTION: Rare Diseases --- */}
                 <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.52 }} className="mb-12">
                     <RareDisease />
+                </motion.div>
+
+                {/* --- NEW SECTION: State Health Profile --- */}
+                <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.58 }} className="mb-12">
+                    <StateHealthProfile />
                 </motion.div>
 
                 <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }}>
