@@ -36,7 +36,7 @@ const FloatingIcon = ({ icon, className, duration, delay }) => (
     </motion.div>
 );
 
-const LandingPage = ({ onLoginClick }) => {
+const LandingPage = ({ onLoginClick, onTermsClick, onPrivacyClick, onContactClick }) => {
     const textVariants = {
         hidden: { opacity: 0, y: 30 },
         visible: (i) => ({
@@ -99,6 +99,13 @@ const LandingPage = ({ onLoginClick }) => {
                     </motion.button>
                 </motion.div>
             </motion.div>
+
+            {/* Footer */}
+            <div className="absolute bottom-6 z-20 flex gap-8 text-sm text-slate-400/80">
+                <button onClick={onTermsClick} className="hover:text-white transition-colors">Terms of Service</button>
+                <button onClick={onPrivacyClick} className="hover:text-white transition-colors">Privacy Policy</button>
+                <button onClick={onContactClick} className="hover:text-white transition-colors">Contact Us</button>
+            </div>
         </div>
     );
 };

@@ -25,6 +25,9 @@ import CureStat from './components/CureStat';
 import CureAnalyzer from './components/CureAnalyzer';
 import HealthAssistant from './components/HealthAssistant';
 import LandingPage from './components/LandingPage';
+import TermsOfService from './components/TermsOfService';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import Contact from './components/Contact';
 
 const firebaseConfig = {
     apiKey: "AIzaSyB6phfALFUYNvEhF3BkVwuHK4OeocV-IEo",
@@ -47,6 +50,7 @@ const capitalize = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1).replace(/_
 export default function App() {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [publicView, setPublicView] = useState(null); // 'terms', 'privacy', 'contact', or null
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
     const [authError, setAuthError] = useState(null);
     const [activeView, setActiveView] = useState('Dashboard');
@@ -82,7 +86,7 @@ export default function App() {
     const renderActiveView = () => {
         const pageProps = {
             user, db, appId, formatDate, capitalize,
-            onLogout: handleLogout, // --- THIS LINE HAS BEEN CORRECTED ---
+            onLogout: handleLogout,
             onLoginClick: () => setIsAuthModalOpen(true),
             onToggleSidebar: () => setIsSidebarOpen(!isSidebarOpen)
         };
@@ -96,6 +100,9 @@ export default function App() {
             case 'Cure Stat': return <CureStat {...pageProps} />;
             case 'Health Assistant': return <HealthAssistant {...pageProps} />;
             case 'Settings': return <Settings {...pageProps} />;
+            case 'Contact': return <div className="p-6"><Contact onBack={() => setActiveView('Dashboard')} /></div>;
+            case 'Terms': return <div className="p-6"><TermsOfService onBack={() => setActiveView('Dashboard')} /></div>;
+            case 'Privacy': return <div className="p-6"><PrivacyPolicy onBack={() => setActiveView('Dashboard')} /></div>;
             default: return <MedicalPortfolio {...pageProps} />;
         }
     };
@@ -121,7 +128,20 @@ export default function App() {
                     </main>
                 </div>
             ) : (
-                <LandingPage onLoginClick={() => setIsAuthModalOpen(true)} />
+                <>
+                    {publicView === 'terms' && <TermsOfService onBack={() => setPublicView(null)} />}
+                    {publicView === 'privacy' && <PrivacyPolicy onBack={() => setPublicView(null)} />}
+                    {publicView === 'contact' && <Contact onBack={() => setPublicView(null)} />}
+
+                    {!publicView && (
+                        <LandingPage
+                            onLoginClick={() => setIsAuthModalOpen(true)}
+                            onTermsClick={() => setPublicView('terms')}
+                            onPrivacyClick={() => setPublicView('privacy')}
+                            onContactClick={() => setPublicView('contact')}
+                        />
+                    )}
+                </>
             )}
 
             <AnimatePresence>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, FileText, Calendar, Pill, Settings, HeartPulse, Bot, Activity, X, MessageSquare } from 'lucide-react';
+import { LayoutDashboard, FileText, Calendar, Pill, Settings, HeartPulse, Bot, Activity, X, MessageSquare, Mail, Shield, ScrollText } from 'lucide-react';
 
 const Sidebar = ({ activeView, onNavigate, isOpen, onClose }) => {
     const navItems = [
@@ -11,6 +11,9 @@ const Sidebar = ({ activeView, onNavigate, isOpen, onClose }) => {
         { name: 'Cure Stat' },
         { name: 'Health Assistant' },
         { name: 'Settings' },
+        { name: 'Contact' },
+        { name: 'Terms' },
+        { name: 'Privacy' },
     ];
 
     const getIcon = (name) => {
@@ -23,6 +26,9 @@ const Sidebar = ({ activeView, onNavigate, isOpen, onClose }) => {
             case 'Cure Stat': return <Activity size={20} />;
             case 'Health Assistant': return <MessageSquare size={20} />;
             case 'Settings': return <Settings size={20} />;
+            case 'Contact': return <Mail size={20} />;
+            case 'Terms': return <ScrollText size={20} />;
+            case 'Privacy': return <Shield size={20} />;
             default: return null;
         }
     };
