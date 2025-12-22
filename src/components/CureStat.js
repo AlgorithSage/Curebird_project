@@ -404,7 +404,17 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
                                 <Users size={24} className="text-emerald-400" />
                             </div>
                             <div>
-                                <h2 className="text-2xl font-bold text-white">Healthcare Access Insights</h2>
+                                <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                                    Healthcare Access Insights
+                                    <div className="group relative ml-1">
+                                        <Info size={16} className="text-slate-500 cursor-help hover:text-emerald-400 transition-colors" />
+                                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-72 p-3 bg-slate-900/95 backdrop-blur-sm text-xs text-slate-300 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-white/10 shadow-xl z-50">
+                                            <strong>Verified Source:</strong> Rural Health Statistics (RHS) 2021-22, MoHFW, Govt of India.
+                                            <br /><br />
+                                            Displays the gap in health infrastructure between Urban and Rural India.
+                                        </div>
+                                    </div>
+                                </h2>
                                 <p className="text-slate-400 text-sm">Comparative analysis of resource density and sector distribution across states.</p>
                             </div>
                         </div>
