@@ -92,9 +92,15 @@ const AllRecords = ({ user, db, storage, appId, onLogout, onLoginClick, onToggle
         )
     }
 
+    const handleRetractSearch = () => {
+        setIsSearchActive(false);
+        setSearchTerm('');
+        setTypeFilter('All');
+    };
+
     return (
         <LayoutGroup>
-            <div className="p-4 sm:p-6 lg:p-8 h-screen overflow-y-auto text-white">
+            <div className="p-4 sm:p-6 lg:p-8 h-screen overflow-hidden flex flex-col text-white">
                 <Header
                     title="All Records"
                     description="View and manage all your historical medical records."
@@ -106,34 +112,43 @@ const AllRecords = ({ user, db, storage, appId, onLogout, onLoginClick, onToggle
                     onAddClick={() => { setEditingRecord(null); setIsFormModalOpen(true); }}
                 />
 
-                <main className="mt-8 relative min-h-[60vh]">
+                <main className={`flex-1 flex flex-col transition-all duration-500 ${!isSearchActive ? 'justify-center items-center' : 'justify-start'}`}>
                     {/* Centered Initial Search State */}
                     {!isSearchActive && (
                         <motion.div
                             layoutId="search-container"
-                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl px-4 flex flex-col items-center z-10"
+                            className="w-full max-w-3xl px-6 flex flex-col items-center z-10 -mt-20"
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.5 }}
+                            transition={{ duration: 0.5, ease: "easeOut" }}
                         >
-                            <h2 className="text-3xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500">
-                                Find Your Records
-                            </h2>
+                            <div className="text-center mb-8">
+                                <h2 className="text-4xl md:text-5xl font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-600 drop-shadow-sm">
+                                    Find Your Medical History
+                                </h2>
+                                <p className="text-slate-400 text-lg">Search across reports, prescriptions, and doctor notes instantly.</p>
+                            </div>
+
                             <div className="relative w-full group">
-                                <Search size={24} className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-amber-400 transition-colors" />
+                                <div className="absolute inset-0 bg-gradient-to-r from-amber-500/20 to-blue-600/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                <Search size={28} className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-amber-400 transition-colors z-20" />
                                 <input
-                                    autoFocus
                                     type="text"
                                     placeholder="Search by doctor, hospital, or type..."
-                                    className="w-full bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-2xl pl-16 pr-6 py-5 text-xl shadow-2xl shadow-black/50 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 text-white placeholder:text-slate-500 transition-all"
+                                    className="relative z-10 w-full bg-slate-900/60 backdrop-blur-2xl border border-white/10 rounded-2xl pl-16 pr-6 py-6 text-xl shadow-2xl shadow-black/50 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 text-white placeholder:text-slate-500 transition-all"
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     onFocus={() => setIsSearchActive(true)}
                                 />
                             </div>
-                            <p className="mt-4 text-slate-400 text-sm">
-                                Try searching for <span className="text-amber-400">"Cardiology"</span>, <span className="text-amber-400">"Dr. Smith"</span>, or date.
-                            </p>
+
+                            <div className="flex gap-3 mt-6">
+                                {['Prescriptions', 'Blood Tests', 'Cardiology', 'Dr. Smith'].map((tag) => (
+                                    <span key={tag} className="px-3 py-1 rounded-full bg-slate-800/50 border border-white/5 text-xs text-slate-400 hover:text-amber-200 hover:border-amber-500/30 transition-colors cursor-pointer">
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
                         </motion.div>
                     )}
 
@@ -176,7 +191,7 @@ const AllRecords = ({ user, db, storage, appId, onLogout, onLoginClick, onToggle
                                 <motion.button
                                     initial={{ opacity: 0, x: 20 }}
                                     animate={{ opacity: 1, x: 0 }}
-                                    onClick={() => { setIsSearchActive(false); setSearchTerm(''); }}
+                                    onClick={handleRetractSearch}
                                     className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-sm font-medium transition-colors border border-slate-700"
                                 >
                                     Retract
@@ -212,7 +227,7 @@ const AllRecords = ({ user, db, storage, appId, onLogout, onLoginClick, onToggle
                                         {/* Bottom Retract Button for easy access */}
                                         <div className="flex justify-center mt-8">
                                             <button
-                                                onClick={() => { setIsSearchActive(false); setSearchTerm(''); }}
+                                                onClick={handleRetractSearch}
                                                 className="flex items-center gap-2 px-6 py-2 bg-slate-800/80 hover:bg-slate-700 text-amber-500 rounded-full text-sm font-bold border border-amber-500/20 transition-all hover:scale-105"
                                             >
                                                 Retract View
@@ -231,7 +246,7 @@ const AllRecords = ({ user, db, storage, appId, onLogout, onLoginClick, onToggle
                                         <h3 className="mt-4 text-xl font-bold text-slate-200">No Records Found</h3>
                                         <p className="text-slate-500 mt-2">No matches for "<span className="text-amber-500">{searchTerm}</span>"</p>
                                         <button
-                                            onClick={() => { setIsSearchActive(false); setSearchTerm(''); }}
+                                            onClick={handleRetractSearch}
                                             className="mt-6 text-sm text-slate-400 hover:text-white underline underline-offset-4"
                                         >
                                             Clear Search & Retract
