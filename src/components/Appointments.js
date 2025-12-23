@@ -64,7 +64,7 @@ const AppointmentCard = ({ appointment, onEdit, onDelete, formatDate }) => {
 };
 
 
-const Appointments = ({ user, db, appId, onLogout, onLoginClick, onToggleSidebar, formatDate }) => {
+const Appointments = ({ user, db, appId, onLogout, onLoginClick, onToggleSidebar, onNavigate, formatDate }) => {
     const [appointments, setAppointments] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
@@ -121,6 +121,7 @@ const Appointments = ({ user, db, appId, onLogout, onLoginClick, onToggleSidebar
                     user={null}
                     onLoginClick={onLoginClick}
                     onToggleSidebar={onToggleSidebar}
+                    onNavigate={onNavigate}
                 />
                 <div className="text-center py-20">
                     <p className="text-slate-400">Please log in to view your appointments.</p>
@@ -137,6 +138,7 @@ const Appointments = ({ user, db, appId, onLogout, onLoginClick, onToggleSidebar
                 user={user}
                 onLogout={onLogout}
                 onToggleSidebar={onToggleSidebar}
+                onNavigate={onNavigate}
             />
 
             <main className="mt-8">

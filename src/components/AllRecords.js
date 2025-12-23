@@ -8,7 +8,7 @@ import RecordCard from './RecordCard';
 import { RecordFormModal, DeleteConfirmModal } from './Modals';
 import { SkeletonCard } from './SkeletonLoaders';
 
-const AllRecords = ({ user, db, appId, onLogout, onLoginClick, onToggleSidebar }) => {
+const AllRecords = ({ user, db, appId, onLogout, onLoginClick, onToggleSidebar, onNavigate }) => {
     const [records, setRecords] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
@@ -70,6 +70,7 @@ const AllRecords = ({ user, db, appId, onLogout, onLoginClick, onToggleSidebar }
                     user={null}
                     onLoginClick={onLoginClick}
                     onToggleSidebar={onToggleSidebar}
+                    onNavigate={onNavigate}
                 />
                 <div className="text-center py-20">
                     <p className="text-slate-400">Please log in to view your medical records.</p>
@@ -87,6 +88,7 @@ const AllRecords = ({ user, db, appId, onLogout, onLoginClick, onToggleSidebar }
                 onLogout={onLogout}
                 onLoginClick={onLoginClick}
                 onToggleSidebar={onToggleSidebar}
+                onNavigate={onNavigate}
                 onAddClick={() => { setEditingRecord(null); setIsFormModalOpen(true); }}
             />
             <main className="mt-8">

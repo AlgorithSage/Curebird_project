@@ -21,14 +21,14 @@ const MedicationCard = ({ med, records }) => (
             </div>
         </div>
         <p className="text-sm text-slate-300 mt-1">{med.frequency}</p>
-        
+
         <div className="mt-4 pt-4 border-t border-slate-700 space-y-2 text-sm">
             <p className="text-slate-400">Last prescribed on: <span className="font-semibold text-slate-200">{med.lastPrescribed}</span></p>
-             <div className="flex items-center gap-2 text-slate-400">
+            <div className="flex items-center gap-2 text-slate-400">
                 <Stethoscope size={14} />
                 <span>Dr. {records[0].doctorName}</span>
             </div>
-             <div className="flex items-center gap-2 text-slate-400">
+            <div className="flex items-center gap-2 text-slate-400">
                 <Hospital size={14} />
                 <span>{records[0].hospitalName}</span>
             </div>
@@ -37,7 +37,7 @@ const MedicationCard = ({ med, records }) => (
 );
 
 
-const Medications = ({ user, db, appId, onLogout, onLoginClick, onToggleSidebar, formatDate }) => {
+const Medications = ({ user, db, appId, onLogout, onLoginClick, onToggleSidebar, onNavigate, formatDate }) => {
     const [medications, setMedications] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -95,7 +95,7 @@ const Medications = ({ user, db, appId, onLogout, onLoginClick, onToggleSidebar,
                         records: medRecords, // Keep all records for history
                     };
                 });
-                
+
                 setMedications(uniqueMeds);
                 setIsLoading(false);
 
@@ -110,35 +110,37 @@ const Medications = ({ user, db, appId, onLogout, onLoginClick, onToggleSidebar,
         }
     }, [prescriptionsCollectionRef, formatDate]);
 
-     if (!user) {
+    if (!user) {
         return (
-             <div className="p-4 sm:p-6 lg:p-8 h-screen overflow-y-auto text-white">
-                <Header 
+            <div className="p-4 sm:p-6 lg:p-8 h-screen overflow-y-auto text-white">
+                <Header
                     title="Medications"
                     description="Log in to manage your medication history."
                     user={null}
                     onLoginClick={onLoginClick}
                     onToggleSidebar={onToggleSidebar}
+                    onNavigate={onNavigate}
                 />
-                 <div className="text-center py-20">
+                <div className="text-center py-20">
                     <p className="text-slate-400">Please log in to view your medications.</p>
-                 </div>
+                </div>
             </div>
         )
     }
 
     return (
         <div className="p-4 sm:p-6 lg:p-8 h-screen overflow-y-auto text-white">
-            <Header 
+            <Header
                 title="Medications"
                 description="A summary of all your prescribed medications."
                 user={user}
                 onLogout={onLogout}
                 onToggleSidebar={onToggleSidebar}
+                onNavigate={onNavigate}
             />
-            
+
             <main className="mt-8">
-                 {isLoading ? (
+                {isLoading ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <SkeletonCard /><SkeletonCard /><SkeletonCard />
                     </div>
