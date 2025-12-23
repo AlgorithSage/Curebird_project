@@ -197,13 +197,14 @@ const CureAI = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
                 onToggleSidebar={onToggleSidebar}
             />
 
-            {/* Premium Hero Section - Compacted for better chat space */}
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-500/10 via-orange-500/5 to-transparent border border-amber-500/10 p-6 mb-4 text-center mt-4 flex-shrink-0">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-amber-500/10 blur-[100px] rounded-full -z-10 pointer-events-none"></div>
+            {/* Premium Hero Section - Compact AI Console Look */}
+            {/* MATCHING CURE ANALYZER HERO STYLE EXACTLY but keeping compact height */}
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-500/20 via-orange-500/10 to-transparent border border-amber-500/20 p-6 mb-8 text-center mt-6 flex-shrink-0 backdrop-blur-md group">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-amber-500/20 blur-[100px] rounded-full -z-10 pointer-events-none"></div>
 
-                <div className="flex items-center justify-center gap-2 mb-2">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-bold animate-pulse">
-                        <Bot size={14} /> AI ASSISTANT
+                <div className="flex items-center justify-center gap-2 mb-3">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[10px] font-bold tracking-widest uppercase animate-pulse">
+                        <Bot size={12} /> Neural Interface Active
                     </div>
                 </div>
 
@@ -211,18 +212,22 @@ const CureAI = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
                     Cure Personal <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">AI</span>
                 </h1>
 
-                <p className="text-sm text-slate-400 max-w-2xl mx-auto leading-relaxed hidden sm:block">
-                    Your 24/7 medical companion. Expert-level precision for health queries.
+                <p className="text-xs text-slate-300 max-w-xl mx-auto font-medium leading-relaxed">
+                    Advanced diagnostics support and health queries. <span className="text-amber-400 font-semibold">Always verify effectively.</span>
                 </p>
             </div>
 
-            <div className="flex-1 flex gap-6 mt-2 overflow-hidden min-h-0">
-                {/* Main Chat Area */}
-                <div className="flex-1 flex flex-col bg-slate-900/50 backdrop-blur-xl rounded-2xl border border-slate-700/50 overflow-hidden shadow-2xl relative group">
-                    <div className="absolute inset-0 bg-gradient-to-b from-amber-500/5 to-transparent pointer-events-none"></div>
+            <div className="flex-1 flex gap-8 mt-2 overflow-hidden min-h-0 relative z-10 pb-2">
+                {/* Main Chat Area - Premium Glass Console */}
+                <div className="flex-1 flex flex-col bg-[#090e1a] backdrop-blur-xl rounded-[23px] border border-slate-700 overflow-hidden shadow-[0_0_50px_-10px_rgba(0,0,0,0.5)] relative">
+                    {/* Subtle Grid - Professional */}
+                    <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '60px 60px' }}></div>
+
+                    {/* Premium Glow effect */}
+                    <div className="absolute -top-24 -right-24 w-48 h-48 bg-sky-500/5 blur-[80px] rounded-full pointer-events-none"></div>
 
                     {/* Messages Area */}
-                    <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
+                    <div className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-6 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent relative z-10">
                         <AnimatePresence>
                             {messages.map((message, index) => (
                                 <ChatMessage key={index} message={message} isUser={message.isUser} />
@@ -234,63 +239,73 @@ const CureAI = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
                         <div ref={messagesEndRef} />
                     </div>
 
-                    {/* Input Area */}
-                    <div className="p-4 bg-slate-900/80 border-t border-slate-800 backdrop-blur-md">
-                        <div className="flex gap-3 items-end">
-                            <div className="flex-1 relative">
+                    {/* Input Area - Integrated Control Panel */}
+                    <div className="p-6 bg-[#090e1a]/95 border-t border-slate-800 backdrop-blur-xl relative z-20">
+                        <div className="flex gap-4 items-end max-w-5xl mx-auto">
+                            <div className="flex-1 relative group/input">
+                                <div className="absolute inset-0 bg-sky-500/5 blur-lg rounded-xl opacity-0 group-focus-within/input:opacity-100 transition-opacity duration-500"></div>
                                 <textarea
                                     value={inputMessage}
                                     onChange={(e) => setInputMessage(e.target.value)}
                                     onKeyPress={handleKeyPress}
-                                    placeholder="Type your health query here..."
+                                    placeholder="Access Neural Health Database..."
                                     rows={1}
-                                    className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition-all resize-none shadow-inner"
+                                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-5 py-4 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-sky-500/30 focus:bg-slate-900/80 transition-all resize-none font-medium relative z-10 shadow-inner"
                                     disabled={isLoading}
-                                    style={{ minHeight: '52px', maxHeight: '120px' }}
+                                    style={{ minHeight: '60px', maxHeight: '120px' }}
                                 />
-                                <div className="absolute right-3 bottom-3 text-[10px] text-slate-600 font-mono">AI-POWERED</div>
+                                <div className="absolute right-3 bottom-3 flex gap-2">
+                                    <div className="p-1.5 rounded-lg bg-slate-800 text-slate-500 border border-slate-700/50 text-[10px] font-mono">CMD+ENTER</div>
+                                </div>
                             </div>
 
                             <button
                                 onClick={sendMessage}
                                 disabled={isLoading || !inputMessage.trim()}
-                                className="px-6 py-3 h-[52px] bg-gradient-to-r from-amber-500 to-orange-600 text-black rounded-xl hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-bold flex items-center justify-center gap-2 uppercase tracking-wide text-xs"
+                                className="px-6 h-[60px] bg-sky-600 text-white rounded-xl hover:bg-sky-500 hover:shadow-[0_0_20px_rgba(14,165,233,0.4)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-bold flex items-center justify-center shadow-lg"
                             >
-                                <Send size={18} />
+                                <Send size={20} />
                             </button>
+
                             <button
                                 onClick={clearChat}
-                                className="px-4 py-3 h-[52px] bg-slate-800/50 border border-slate-700 rounded-xl hover:bg-red-500/10 hover:border-red-500/50 hover:text-red-400 transition-all text-slate-400"
-                                title="Clear conversation"
+                                className="px-4 h-[60px] bg-slate-800/50 border border-slate-700 rounded-xl hover:bg-rose-500/10 hover:border-rose-500/50 hover:text-rose-400 transition-all text-slate-500 flex items-center justify-center group/clear"
+                                title="Reset Session"
                             >
-                                <Trash2 size={18} />
+                                <Trash2 size={18} className="group-hover/clear:scale-110 transition-transform" />
                             </button>
                         </div>
                     </div>
                 </div>
 
-                {/* Disease Trends Sidebar */}
-                <div className="hidden lg:block w-80 bg-slate-900/50 backdrop-blur-xl rounded-2xl p-6 overflow-y-auto border border-slate-700/50 shadow-xl">
-                    <div className="flex items-center gap-2 mb-4">
-                        <TrendingUp className="text-amber-400" size={20} />
-                        <h3 className="text-lg font-semibold text-white">Current Trends</h3>
+                {/* Disease Trends Sidebar - Data Stream Style */}
+                <div className="hidden lg:block w-80 bg-[#090e1a] backdrop-blur-xl rounded-[23px] p-0 overflow-hidden border border-slate-700 shadow-2xl flex flex-col relative">
+                    {/* Subtle Grid - Professional */}
+                    <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '60px 60px' }}></div>
+
+                    <div className="p-6 border-b border-slate-800 bg-[#090e1a]/90 relative z-10">
+                        <div className="flex items-center gap-2">
+                            <TrendingUp className="text-amber-500" size={18} />
+                            <h3 className="text-sm font-bold text-slate-200 uppercase tracking-wider">Epidemic Data Stream</h3>
+                        </div>
                     </div>
 
-                    <div className="space-y-3">
+                    <div className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-thin scrollbar-thumb-slate-800 relative z-10">
                         {diseaseContext.slice(0, 10).map((disease, index) => (
-                            <div key={index} className="bg-black/30 border border-yellow-500/20 rounded-lg p-3">
-                                <div className="flex items-start justify-between gap-2">
-                                    <div className="flex-1">
-                                        <p className="text-sm font-medium text-white">{disease.name}</p>
-                                        <p className="text-xs text-slate-400 mt-1">
-                                            {disease.cases?.toLocaleString()} cases
+                            <div key={index} className="group relative bg-slate-900 border border-slate-800 hover:border-amber-500/30 rounded-xl p-3 transition-all hover:bg-slate-800/80">
+                                <div className="absolute left-0 top-0 bottom-0 w-1 bg-slate-800 group-hover:bg-amber-500 transition-colors rounded-l-xl"></div>
+                                <div className="flex items-start justify-between gap-2 pl-2">
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-sm font-semibold text-slate-300 group-hover:text-white truncate transition-colors">{disease.name}</p>
+                                        <p className="text-[10px] text-slate-500 font-mono mt-1 group-hover:text-amber-500/70 transition-colors">
+                                            DETECTED: {disease.cases?.toLocaleString()}
                                         </p>
                                     </div>
-                                    <span className={`text-xs px-2 py-1 rounded-full ${disease.risk_level === 'High' ? 'bg-red-500/20 text-red-400' :
-                                        disease.risk_level === 'Medium' ? 'bg-amber-500/20 text-amber-400' :
-                                            'bg-green-500/20 text-green-400'
+                                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${disease.risk_level === 'High' ? 'bg-rose-950/30 border-rose-500/20 text-rose-400' :
+                                        disease.risk_level === 'Medium' ? 'bg-amber-950/30 border-amber-500/20 text-amber-400' :
+                                            'bg-emerald-950/30 border-emerald-500/20 text-emerald-400'
                                         }`}>
-                                        {disease.risk_level}
+                                        {disease.risk_level?.toUpperCase().slice(0, 3)}
                                     </span>
                                 </div>
                             </div>
