@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Plus, Share2, Bell, Search, LogIn, LogOut, Settings, Menu, LayoutDashboard, FileText, Calendar, Pill, HeartPulse, Bot, Activity, Mail, ScrollText, Shield, MessageSquare } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import CurebirdLogo from '../curebird_logo.png';
 
 const UserProfile = ({ user, onLogout }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -149,7 +150,9 @@ const Header = ({ title, description, user, onAddClick, onShareClick, onLoginCli
 
                 <div className="hidden sm:block w-px h-10 bg-white/10 mx-2 self-center"></div>
 
-                <div className="flex flex-col justify-center min-w-0 flex-1 pl-3">
+                <img src={CurebirdLogo} alt="Logo" className="w-16 h-16 object-contain hidden sm:block" />
+
+                <div className="flex flex-col justify-center min-w-0 flex-1">
                     <h1 className="text-base sm:text-3xl font-extrabold tracking-tight leading-tight mb-0.5 whitespace-nowrap overflow-hidden text-ellipsis">
                         <span className="sm:hidden">
                             <span className="text-white">Welcome, </span>

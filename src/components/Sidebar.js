@@ -1,5 +1,6 @@
 import React from 'react';
 import { LayoutDashboard, FileText, Calendar, Pill, Settings, HeartPulse, Bot, Activity, X, MessageSquare, Mail, Shield, ScrollText } from 'lucide-react';
+import CurebirdLogo from '../curebird_logo.png';
 
 const Sidebar = ({ activeView, onNavigate, isOpen, onClose }) => {
     const navItems = [
@@ -49,8 +50,11 @@ const Sidebar = ({ activeView, onNavigate, isOpen, onClose }) => {
             >
                 <div className="p-6 flex items-center justify-between gap-3 border-b border-white/10">
                     <div className='flex items-center gap-3'>
-                        <div className="bg-gradient-to-tr from-amber-500 to-yellow-600 p-2.5 rounded-xl shadow-lg">
-                            <HeartPulse size={24} className="text-black" />
+                        <div className="relative group shrink-0">
+                            <div className="absolute inset-0 bg-amber-500 rounded-full blur-md opacity-20 group-hover:opacity-40 transition-opacity duration-500 animate-pulse"></div>
+                            <div className="relative w-16 h-16 rounded-full bg-gradient-to-b from-slate-800 to-black p-3 border border-amber-500/50 shadow-[0_0_15px_-3px_rgba(245,158,11,0.3)] group-hover:shadow-[0_0_25px_-5px_rgba(245,158,11,0.6)] transition-all duration-300 flex items-center justify-center">
+                                <img src={CurebirdLogo} alt="Curebird Logo" className="w-full h-full object-contain drop-shadow-[0_0_10px_rgba(245,158,11,0.5)]" />
+                            </div>
                         </div>
                         <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-amber-200">Curebird</h1>
                     </div>

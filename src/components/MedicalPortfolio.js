@@ -143,11 +143,10 @@ const MedicalPortfolio = ({ user, db, storage, appId, formatDate, capitalize, on
                 {isLoading ? <SkeletonDashboard /> : (
                     <>
                         {/* Standard Stat Cards for Dashboard Overview */}
-                        <div ref={dashboardRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 scroll-mt-24">
+                        <div ref={dashboardRef} className="grid grid-cols-1 sm:grid-cols-3 gap-6 scroll-mt-24">
                             <StatCard icon={<Hash size={24} className="text-black" />} label="Total Records" value={records.length} color="bg-yellow-500" />
-                            <StatCard icon={<Pill size={24} className="text-black" />} label="Prescriptions" value={totalPrescriptions} color="bg-amber-500" />
+                            <StatCard icon={<ShieldCheck size={24} className="text-black" />} label="Identity Verified" value="Active" color="bg-amber-400" />
                             <StatCard icon={<Calendar size={24} className="text-black" />} label="Last Visit" value={lastVisit} color="bg-yellow-600" />
-                            <StatCard icon={<ShieldCheck size={24} className="text-black" />} label="Status" value="Verified" color="bg-amber-400" />
                         </div>
                         <div className="mt-8">
                             <RecordsChart data={dashboardData} />
