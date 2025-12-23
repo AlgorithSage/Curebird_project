@@ -15,8 +15,18 @@ const Contact = ({ onBack, db }) => {
 
         try {
             // 1. Send Email via EmailJS
-            // REPLACE THESE WITH YOUR ACTUAL EMAILJS SERVICE ID, TEMPLATE ID, AND PUBLIC KEY
-            await emailjs.sendForm('service_20dvlcn', 'template_p8u4esr', form.current, 'pFU-tQ0UQQ9tTLDJx3Wuw');
+            // using .send() allows us to explicitly map our state specific variables
+            await emailjs.send(
+                'service_20dvlcn',
+                'template_p8u4esr',
+                {
+                    user_name: formState.name,
+                    user_email: formState.email,
+                    subject: formState.subject,
+                    message: formState.message
+                },
+                'xm8CaQSx54BOc3zyc'
+            );
 
             // 2. Save to Firestore (Backup/Log)
             if (db) {
@@ -31,6 +41,7 @@ const Contact = ({ onBack, db }) => {
 
         } catch (error) {
             console.error("Error sending message:", error);
+            alert("Email send failed: " + (error.text || error.message || "Unknown error")); // Helpful for debugging
             setStatus('error');
             setTimeout(() => setStatus('idle'), 3000);
         }
