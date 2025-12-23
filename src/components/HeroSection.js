@@ -3,18 +3,27 @@ import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
 import { HeartPulse, Sparkles, Activity, ShieldPlus } from 'lucide-react';
 
 const HeroSection = ({ onOverviewClick }) => {
+    const [isMobile, setIsMobile] = React.useState(false);
+
+    React.useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 1024); // lg breakpoint
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
     // 3D Tilt Logic
     const x = useMotionValue(0);
-
     const y = useMotionValue(0);
 
     const mouseX = useSpring(x, { stiffness: 500, damping: 30 });
     const mouseY = useSpring(y, { stiffness: 500, damping: 30 });
 
-    const rotateX = useTransform(mouseY, [-300, 300], [5, -5]); // Subtle tilt for large card
+    const rotateX = useTransform(mouseY, [-300, 300], [5, -5]);
     const rotateY = useTransform(mouseX, [-300, 300], [-5, 5]);
 
     const handleMouseMove = (e) => {
+        if (isMobile) return; // Disable tilt on mobile/tablets
         const rect = e.currentTarget.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
@@ -34,7 +43,7 @@ const HeroSection = ({ onOverviewClick }) => {
             pathLength: 1,
             opacity: 1,
             transition: {
-                duration: 3,
+                duration: isMobile ? 5 : 3, // Slower/simpler on mobile
                 ease: "easeInOut",
                 repeat: Infinity,
                 repeatType: "reverse",
@@ -46,7 +55,7 @@ const HeroSection = ({ onOverviewClick }) => {
     return (
         <div className="w-full flex justify-center py-4 px-2 sm:px-6 perspective-2000">
             <motion.div
-                style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+                style={!isMobile ? { rotateX, rotateY, transformStyle: "preserve-3d" } : {}}
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -73,7 +82,7 @@ const HeroSection = ({ onOverviewClick }) => {
                             <Sparkles size={14} /> AI-Powered Medical Intelligence
                         </motion.div>
 
-                        <h1 className="text-4xl sm:text-6xl lg:text-8xl font-black tracking-tighter leading-[1.1] sm:leading-[0.9] text-transparent bg-clip-text bg-gradient-to-r from-white via-amber-200 to-yellow-200 drop-shadow-2xl py-2">
+                        <h1 className="text-3xl sm:text-6xl lg:text-8xl font-black tracking-tighter leading-[1.1] sm:leading-[0.9] text-transparent bg-clip-text bg-gradient-to-r from-white via-amber-200 to-yellow-200 drop-shadow-2xl py-2">
                             CureBird
                         </h1>
 

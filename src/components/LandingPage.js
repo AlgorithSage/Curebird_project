@@ -37,6 +37,15 @@ const FloatingIcon = ({ icon, className, duration, delay }) => (
 );
 
 const LandingPage = ({ onLoginClick, onTermsClick, onPrivacyClick, onContactClick }) => {
+    const [isMobile, setIsMobile] = React.useState(false);
+
+    React.useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
     const textVariants = {
         hidden: { opacity: 0, y: 30 },
         visible: (i) => ({
@@ -51,32 +60,44 @@ const LandingPage = ({ onLoginClick, onTermsClick, onPrivacyClick, onContactClic
             {/* Background Video */}
             <VideoBackground />
 
-            {/* Decorative Floating Icons */}
-            <FloatingIcon icon={<Dna size={120} />} className="top-16 left-16" duration={12} delay={0} />
-            <FloatingIcon icon={<HeartPulse size={100} />} className="bottom-20 right-24" duration={10} delay={1} />
-            <FloatingIcon icon={<Pill size={80} />} className="top-1/3 right-1/4" duration={14} delay={0.5} />
-            <FloatingIcon icon={<Stethoscope size={100} />} className="bottom-1/3 left-1/5" duration={16} delay={1.5} />
-            <FloatingIcon icon={<Syringe size={70} />} className="top-1/4 left-2/3" duration={18} delay={0.7} />
-            <FloatingIcon icon={<Activity size={90} />} className="top-1/2 left-1/3" duration={20} delay={1.2} />
+            {/* Decorative Floating Icons - Reduced on mobile */}
+            {!isMobile && (
+                <>
+                    <FloatingIcon icon={<Dna size={120} />} className="top-16 left-16" duration={12} delay={0} />
+                    <FloatingIcon icon={<HeartPulse size={100} />} className="bottom-20 right-24" duration={10} delay={1} />
+                    <FloatingIcon icon={<Pill size={80} />} className="top-1/3 right-1/4" duration={14} delay={0.5} />
+                    <FloatingIcon icon={<Stethoscope size={100} />} className="bottom-1/3 left-1/5" duration={16} delay={1.5} />
+                    <FloatingIcon icon={<Syringe size={70} />} className="top-1/4 left-2/3" duration={18} delay={0.7} />
+                    <FloatingIcon icon={<Activity size={90} />} className="top-1/2 left-1/3" duration={20} delay={1.2} />
+                </>
+            )}
+
+            {/* Minimal icons for mobile to keep the vibe without the lag */}
+            {isMobile && (
+                <>
+                    <FloatingIcon icon={<Dna size={80} />} className="top-10 left-10" duration={15} delay={0} />
+                    <FloatingIcon icon={<HeartPulse size={70} />} className="bottom-10 right-10" duration={12} delay={1} />
+                </>
+            )}
 
             {/* Main Glass Box */}
             <motion.div
                 initial="hidden"
                 animate="visible"
-                className="text-center z-10 flex flex-col items-center glass p-10 sm:p-14 rounded-3xl shadow-[0_0_60px_rgba(56,189,248,0.2)] max-w-3xl border border-white/10"
+                className="text-center z-10 flex flex-col items-center glass p-8 sm:p-14 rounded-3xl shadow-[0_0_60px_rgba(56,189,248,0.2)] max-w-[90%] sm:max-w-3xl border border-white/10"
             >
                 {/* Logo & Title */}
                 <motion.div custom={0} variants={textVariants} className="flex justify-center items-center gap-5 mb-8">
                     <div className="bg-amber-500 p-4 rounded-2xl shadow-lg shadow-amber-500/50 animate-pulse">
                         <HeartPulse size={50} className="text-slate-900" />
                     </div>
-                    <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight">
+                    <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight">
                         Cure<span className="text-amber-400">bird</span>
                     </h1>
                 </motion.div>
 
                 {/* Tagline */}
-                <motion.p custom={1} variants={textVariants} className="text-2xl sm:text-3xl text-slate-200 font-medium mt-2">
+                <motion.p custom={1} variants={textVariants} className="text-xl sm:text-3xl text-slate-200 font-medium mt-2">
                     Your Personal, Intelligent Medical Portfolio
                 </motion.p>
 

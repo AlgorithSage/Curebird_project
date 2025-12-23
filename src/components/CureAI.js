@@ -17,7 +17,7 @@ const ChatMessage = ({ message, isUser }) => {
                 {isUser ? <User size={20} className="text-white" /> : <Bot size={20} className="text-white" />}
             </div>
 
-            <div className={`max-w-[70%] ${isUser ? 'items-end' : 'items-start'} flex flex-col gap-1`}>
+            <div className={`max-w-[85%] sm:max-w-[70%] ${isUser ? 'items-end' : 'items-start'} flex flex-col gap-1`}>
                 <div className={`px-4 py-3 rounded-2xl ${isUser
                     ? 'bg-gradient-to-r from-amber-500 to-yellow-600 text-black'
                     : 'glass-card text-slate-100'

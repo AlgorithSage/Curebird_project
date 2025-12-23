@@ -540,10 +540,10 @@ const OccupationalHealth = () => {
                         type="text"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        placeholder="Enter your profession (e.g., Software Engineer, Teacher)..."
-                        className="w-full bg-slate-900/50 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-lg text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 transition-all shadow-inner"
+                        placeholder="Enter your profession..."
+                        className="w-full bg-slate-900/50 border border-white/10 rounded-2xl py-4 pl-12 pr-28 sm:pr-4 text-base sm:text-lg text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 transition-all shadow-inner"
                     />
-                    <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 bg-amber-500 hover:bg-amber-600 text-black font-semibold px-6 py-2 rounded-xl transition-colors">
+                    <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 bg-amber-500 hover:bg-amber-600 text-black font-semibold px-4 sm:px-6 py-2 rounded-xl transition-colors text-sm sm:text-base">
                         Analyze
                     </button>
                 </form>

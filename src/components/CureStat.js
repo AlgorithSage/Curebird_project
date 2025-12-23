@@ -323,6 +323,15 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
         applyFilters();
     }, [applyFilters]);
 
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
     const COLORS = ['#f59e0b', '#fbbf24', '#d97706', '#fcd34d', '#b45309', '#78350f'];
     const GENDER_COLORS = ['#f59e0b', '#fbbf24'];
 
@@ -419,7 +428,7 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
                                 </div>
                             </button>
                         </div>
-                        <div className="h-[350px]">
+                        <div className="h-[250px] sm:h-[350px]">
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart layout="vertical" data={getRegionalData(trends[0] || { disease: 'Default' })} margin={{ top: 10, right: 30, left: 40, bottom: 0 }}>
                                     <CartesianGrid strokeDasharray="3 3" stroke="#334155" horizontal={false} opacity={0.3} />
@@ -441,10 +450,10 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
                             <h2 className="text-xl font-bold text-white">Disease Distribution</h2>
                             <div className="bg-purple-500/20 p-2 rounded-lg border border-purple-500/30"><Sparkles size={20} className="text-purple-400" /></div>
                         </div>
-                        <div className="h-[350px]">
+                        <div className="h-[250px] sm:h-[350px]">
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart>
-                                    <Pie data={filteredTrends.slice(0, 5)} cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={4} dataKey="outbreaks" nameKey="disease" stroke="none">
+                                    <Pie data={filteredTrends.slice(0, 5)} cx="50%" cy="50%" innerRadius={isMobile ? 40 : 60} outerRadius={isMobile ? 60 : 80} paddingAngle={4} dataKey="outbreaks" nameKey="disease" stroke="none">
                                         {filteredTrends.slice(0, 5).map((entry, index) => (<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />))}
                                     </Pie>
                                     <Tooltip content={<CustomTooltip />} />
