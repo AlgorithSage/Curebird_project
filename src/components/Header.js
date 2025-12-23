@@ -145,13 +145,13 @@ const Header = ({ title, description, user, onAddClick, onShareClick, onLoginCli
                     })}
                 </div>
 
-                <div className="hidden sm:block w-px h-8 bg-white/10 mx-2"></div>
+                <div className="hidden sm:block w-px h-10 bg-white/10 mx-2 self-center"></div>
 
-                <div>
-                    <h1 className="text-xl md:text-3xl font-extrabold tracking-tight mb-1 leading-tight">
-                        <span className="text-white">Welcome bird ! , </span>
-                        <span className="text-white">Cure</span><span className="text-amber-200">bird</span>
-                        <span className="text-white"> is at your service!</span>
+                <div className="pl-4 flex flex-col justify-center">
+                    <h1 className="text-xl md:text-3xl font-extrabold tracking-tight leading-none mb-0.5">
+                        <span className="text-white">Welcome bird    |    </span>
+                        <span className="text-white"> Cure</span><span className="text-amber-200">bird</span>
+                        <span className="text-white"> is at your service !</span>
                     </h1>
                     <div className="flex items-center gap-2 text-slate-400 text-xs md:text-sm font-medium">
                         <span className="text-amber-500/90 uppercase tracking-wider font-bold">{title}</span>
