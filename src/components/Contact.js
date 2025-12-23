@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import emailjs from '@emailjs/browser';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Mail, Send, MapPin, Phone } from 'lucide-react';
 
 const Contact = ({ onBack, db }) => {
+    const form = useRef();
     const [formState, setFormState] = useState({ name: '', email: '', subject: '', message: '' });
     const [status, setStatus] = useState('idle'); // idle, submitting, success, error
 
@@ -12,22 +14,24 @@ const Contact = ({ onBack, db }) => {
         setStatus('submitting');
 
         try {
+            // 1. Send Email via EmailJS
+            // REPLACE THESE WITH YOUR ACTUAL EMAILJS SERVICE ID, TEMPLATE ID, AND PUBLIC KEY
+            await emailjs.sendForm('service_20dvlcn', 'template_p8u4esr', form.current, 'pFU-tQ0UQQ9tTLDJx3Wuw');
+
+            // 2. Save to Firestore (Backup/Log)
             if (db) {
                 await addDoc(collection(db, "contact_messages"), {
                     ...formState,
                     createdAt: serverTimestamp()
                 });
-                setStatus('success');
-                setFormState({ name: '', email: '', subject: '', message: '' });
-            } else {
-                console.error("Database connection not found");
-                // Fallback for demo/error
-                setTimeout(() => setStatus('success'), 1000);
             }
+
+            setStatus('success');
+            setFormState({ name: '', email: '', subject: '', message: '' });
+
         } catch (error) {
             console.error("Error sending message:", error);
             setStatus('error');
-            // Revert status after 3 seconds
             setTimeout(() => setStatus('idle'), 3000);
         }
     };
@@ -63,21 +67,14 @@ const Contact = ({ onBack, db }) => {
                                     <Mail className="mt-1 opacity-80" />
                                     <div>
                                         <h4 className="font-semibold text-lg">Chat to us</h4>
-                                        <p className="text-amber-100 text-sm">support@curebird.com</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-4">
-                                    <MapPin className="mt-1 opacity-80" />
-                                    <div>
-                                        <h4 className="font-semibold text-lg">Office</h4>
-                                        <p className="text-amber-100 text-sm">123 Health Tech Blvd,<br />Silicon Valley, CA 94025</p>
+                                        <p className="text-amber-100 text-sm">carchisman2@gmail.com</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-4">
                                     <Phone className="mt-1 opacity-80" />
                                     <div>
                                         <h4 className="font-semibold text-lg">Phone</h4>
-                                        <p className="text-amber-100 text-sm">+1 (555) 000-0000</p>
+                                        <p className="text-amber-100 text-sm">XXXXX</p>
                                     </div>
                                 </div>
                             </div>
@@ -120,7 +117,7 @@ const Contact = ({ onBack, db }) => {
                             </button>
                         </div>
                     ) : (
-                        <form onSubmit={handleSubmit} className="space-y-6">
+                        <form ref={form} onSubmit={handleSubmit} className="space-y-6">
                             <h3 className="text-2xl font-bold text-white mb-6 md:hidden">Send a Message</h3>
 
                             <div className="grid grid-cols-2 gap-6">
@@ -129,6 +126,7 @@ const Contact = ({ onBack, db }) => {
                                     <input
                                         required
                                         type="text"
+                                        name="user_name"
                                         className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 transition-colors"
                                         placeholder="John Doe"
                                         value={formState.name}
@@ -140,6 +138,7 @@ const Contact = ({ onBack, db }) => {
                                     <input
                                         required
                                         type="email"
+                                        name="user_email"
                                         className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 transition-colors"
                                         placeholder="john@example.com"
                                         value={formState.email}
@@ -153,6 +152,7 @@ const Contact = ({ onBack, db }) => {
                                 <input
                                     required
                                     type="text"
+                                    name="subject"
                                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 transition-colors"
                                     placeholder="How can we help?"
                                     value={formState.subject}
@@ -165,6 +165,7 @@ const Contact = ({ onBack, db }) => {
                                 <textarea
                                     required
                                     rows={5}
+                                    name="message"
                                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 transition-colors resize-none"
                                     placeholder="Tell us more about your inquiry..."
                                     value={formState.message}
