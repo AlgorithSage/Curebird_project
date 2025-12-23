@@ -187,7 +187,7 @@ const CureAI = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
     };
 
     return (
-        <div className="flex flex-col h-screen overflow-y-auto scroll-smooth p-4 sm:p-6 lg:p-8 relative z-0">
+        <div className="p-4 sm:p-6 lg:p-8 h-screen overflow-y-auto text-white scroll-smooth relative z-0">
             <Header
                 title="Cure AI"
                 description="Powered by Llama 3.3 - Ask me about diseases, symptoms, treatments, and health trends in India"
@@ -200,7 +200,7 @@ const CureAI = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
             {/* Premium Hero Section - Compact AI Console Look */}
             {/* MATCHING CURE ANALYZER HERO STYLE EXACTLY but keeping compact height */}
             {/* Premium Hero Section - Expanded Dimensions */}
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-500/20 via-orange-500/10 to-transparent border border-amber-500/20 p-8 mb-8 text-center mt-6 flex-shrink-0 backdrop-blur-md group">
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-500/20 via-orange-500/10 to-transparent border border-amber-500/20 p-8 mb-12 text-center mt-6 flex-shrink-0 backdrop-blur-md group">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-amber-500/20 blur-[100px] rounded-full -z-10 pointer-events-none"></div>
 
                 <div className="flex items-center justify-center gap-2 mb-4">
@@ -218,9 +218,9 @@ const CureAI = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
                 </p>
             </div>
 
-            <div className="flex-1 flex gap-8 mt-2 overflow-hidden min-h-0 relative z-10 pb-2">
+            <div className="flex flex-col lg:flex-row gap-8 mt-2 min-h-0 relative z-10 pb-2">
                 {/* Main Chat Area - Premium Glass Console */}
-                <div className="flex-1 flex flex-col bg-[#090e1a] backdrop-blur-xl rounded-[23px] border border-slate-700 overflow-hidden shadow-[0_0_50px_-10px_rgba(0,0,0,0.5)] relative">
+                <div className="flex-1 flex flex-col bg-[#090e1a] backdrop-blur-xl rounded-[23px] border border-slate-700 shadow-[0_0_50px_-10px_rgba(0,0,0,0.5)] relative h-[800px]">
                     {/* Subtle Grid - Professional */}
                     <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '60px 60px' }}></div>
 
