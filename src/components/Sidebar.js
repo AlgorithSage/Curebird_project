@@ -49,11 +49,16 @@ const Sidebar = ({ activeView, onNavigate, isOpen, onClose }) => {
                            ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
             >
                 <div className="p-6 flex items-center justify-between gap-3 border-b border-white/10">
-                    <div className='flex items-center gap-3'>
+                    <div className="flex items-center gap-3">
                         <div className="relative group shrink-0">
-                            <div className="absolute inset-0 bg-amber-500 rounded-full blur-md opacity-20 group-hover:opacity-40 transition-opacity duration-500 animate-pulse"></div>
-                            <div className="relative w-16 h-16 rounded-full bg-gradient-to-b from-slate-800 to-black p-3 border border-amber-500/50 shadow-[0_0_15px_-3px_rgba(245,158,11,0.3)] group-hover:shadow-[0_0_25px_-5px_rgba(245,158,11,0.6)] transition-all duration-300 flex items-center justify-center">
-                                <img src={CurebirdLogo} alt="Curebird Logo" className="w-full h-full object-contain drop-shadow-[0_0_10px_rgba(245,158,11,0.5)]" />
+                            {/* Logo Container - Clean, dark, barely visible border to let the logo shine */}
+                            <div className="relative w-16 h-16 rounded-full bg-black/40 p-2 flex items-center justify-center transition-transform duration-500 hover:scale-105">
+                                {/* The Logo Itself - Glowing and Lively */}
+                                <img
+                                    src={CurebirdLogo}
+                                    alt="Curebird Logo"
+                                    className="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(245,158,11,0.8)] animate-[pulse_3s_ease-in-out_infinite] hover:drop-shadow-[0_0_20px_rgba(245,158,11,1)] transition-all duration-300"
+                                />
                             </div>
                         </div>
                         <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-amber-200">Curebird</h1>
@@ -94,7 +99,7 @@ const Sidebar = ({ activeView, onNavigate, isOpen, onClose }) => {
                 <div className="absolute bottom-0 left-0 right-0 p-6 opacity-40 pointer-events-none">
                     <div className="w-full h-32 bg-gradient-to-t from-sky-500/10 to-transparent rounded-b-none blur-2xl"></div>
                 </div>
-            </aside>
+            </aside >
         </>
     );
 };

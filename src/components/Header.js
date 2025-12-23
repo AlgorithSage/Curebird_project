@@ -150,7 +150,11 @@ const Header = ({ title, description, user, onAddClick, onShareClick, onLoginCli
 
                 <div className="hidden sm:block w-px h-10 bg-white/10 mx-2 self-center"></div>
 
-                <img src={CurebirdLogo} alt="Logo" className="w-16 h-16 object-contain hidden sm:block" />
+                <img
+                    src={CurebirdLogo}
+                    alt="Logo"
+                    className="w-16 h-16 object-contain hidden sm:block filter drop-shadow-[0_0_8px_rgba(245,158,11,0.8)] animate-[pulse_3s_ease-in-out_infinite] hover:drop-shadow-[0_0_20px_rgba(245,158,11,1)] transition-all duration-300"
+                />
 
                 <div className="flex flex-col justify-center min-w-0 flex-1">
                     <h1 className="text-base sm:text-3xl font-extrabold tracking-tight leading-tight mb-0.5 whitespace-nowrap overflow-hidden text-ellipsis">
