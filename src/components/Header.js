@@ -149,12 +149,11 @@ const Header = ({ title, description, user, onAddClick, onShareClick, onLoginCli
 
                 <div className="hidden sm:block w-px h-10 bg-white/10 mx-2 self-center"></div>
 
-                <div className="flex flex-col justify-center min-w-0 flex-1">
-                    <h1 className="text-base sm:text-3xl font-extrabold tracking-tight leading-none mb-0.5 whitespace-nowrap overflow-hidden text-ellipsis">
+                <div className="flex flex-col justify-center min-w-0 flex-1 pl-3">
+                    <h1 className="text-base sm:text-3xl font-extrabold tracking-tight leading-tight mb-0.5 whitespace-nowrap overflow-hidden text-ellipsis">
                         <span className="sm:hidden">
                             <span className="text-white">Welcome, </span>
-                            <span className="text-white">Cure</span><span className="text-amber-200">bird</span>
-                            <span className="text-white">!</span>
+                            <span className="text-white">Bird</span><span className="text-white">!</span>
                         </span>
                         <span className="hidden sm:inline">
                             <span className="text-white">Welcome bird | </span>
@@ -163,8 +162,7 @@ const Header = ({ title, description, user, onAddClick, onShareClick, onLoginCli
                         </span>
                     </h1>
                     <div className="flex items-center gap-2 text-slate-400 text-[10px] sm:text-sm font-medium">
-                        <span className="text-amber-500/90 uppercase tracking-wider font-bold truncate max-w-[80px] sm:max-w-none">{title}</span>
-                        <span className="hidden sm:inline text-slate-600">|</span>
+                        <span className="text-amber-500/90 uppercase tracking-wider font-bold truncate">{title}</span>
                         <span className="hidden md:inline truncate max-w-xl text-slate-400/80">{description}</span>
                     </div>
                 </div>
