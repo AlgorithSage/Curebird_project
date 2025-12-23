@@ -173,7 +173,7 @@ const MedicalPortfolio = ({ user, db, storage, appId, formatDate, capitalize, on
                     </div>
                 ) : (
                     <>
-                        {/* Opaque & High Visibility Category Grid */}
+                        {/* Opaque Amber & High Visibility Category Grid */}
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4">
                             {[
                                 { id: 'prescription', label: 'Prescriptions', icon: <Pill size={40} />, count: records.filter(r => r.type === 'prescription').length },
@@ -188,11 +188,11 @@ const MedicalPortfolio = ({ user, db, storage, appId, formatDate, capitalize, on
                                     whileTap={{ scale: 0.95 }}
                                     onClick={() => handleCategoryClick(cat.id)}
                                     // REVISED STYLES: 
-                                    // bg-slate-900/80 (Opaque-ish)
-                                    // Enhanced borders
+                                    // Gradient Amber + Vignette Blur (Shadow)
+                                    // Blending with UI via shadow and slight opacity
                                     className={`relative aspect-square flex flex-col items-center justify-center p-4 rounded-3xl cursor-pointer transition-all duration-300 border-2 group ${activeTypeFilter === cat.id
-                                            ? `bg-amber-500 border-amber-300 shadow-[0_0_40px_-5px_rgba(251,191,36,0.6)] scale-105 z-10`
-                                            : `bg-slate-900/80 backdrop-blur-xl border-amber-500/30 hover:border-amber-400 hover:bg-slate-800`
+                                        ? `bg-gradient-to-br from-amber-400 to-amber-600 border-white/50 shadow-[0_0_60px_-10px_rgba(251,191,36,0.5)] scale-105 z-10`
+                                        : `bg-gradient-to-br from-amber-500 to-amber-600/90 shadow-[0_0_30px_-10px_rgba(245,158,11,0.3)] border-amber-500/30 hover:shadow-[0_0_40px_-5px_rgba(245,158,11,0.4)] hover:scale-[1.02]`
                                         }`}
                                 >
 
@@ -200,8 +200,8 @@ const MedicalPortfolio = ({ user, db, storage, appId, formatDate, capitalize, on
                                         animate={{ y: [0, -4, 0] }}
                                         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                                         className={`mb-4 p-4 rounded-2xl ${activeTypeFilter === cat.id
-                                                ? 'bg-white text-amber-600 shadow-lg'
-                                                : 'bg-amber-500/10 text-amber-500 group-hover:bg-amber-500 group-hover:text-black border border-amber-500/20'
+                                            ? 'bg-white/20 text-white backdrop-blur-sm shadow-inner'
+                                            : 'bg-black/20 text-black/80 group-hover:bg-black/30 border border-black/5'
                                             } transition-all duration-300`}
                                     >
                                         {React.cloneElement(cat.icon, { className: "stroke-[2.5]" })}
@@ -209,23 +209,26 @@ const MedicalPortfolio = ({ user, db, storage, appId, formatDate, capitalize, on
 
                                     <div className="text-center z-10 flex flex-col items-center">
                                         <h3 className={`text-5xl font-black mb-1 leading-none ${activeTypeFilter === cat.id
-                                                ? 'text-black'
-                                                : 'text-white group-hover:text-amber-100'
+                                            ? 'text-white drop-shadow-md'
+                                            : 'text-black/90 group-hover:text-black'
                                             } transition-colors`}>
                                             {cat.count}
                                         </h3>
 
                                         <p className={`text-xs font-bold uppercase tracking-wider ${activeTypeFilter === cat.id
-                                                ? 'text-black/80'
-                                                : 'text-slate-400 group-hover:text-amber-200'
+                                            ? 'text-white/90 drop-shadow-sm'
+                                            : 'text-black/70 group-hover:text-black/90'
                                             } transition-colors`}>
                                             {cat.label}
                                         </p>
                                     </div>
 
+                                    {/* Vignette / Edge Blur Effect Overlay */}
+                                    <div className={`absolute inset-0 rounded-3xl pointer-events-none transition-opacity duration-300 ${activeTypeFilter === cat.id ? 'opacity-0' : 'opacity-100 bg-gradient-to-b from-transparent via-transparent to-black/10'}`} />
+
                                     {activeTypeFilter === cat.id && (
                                         <div className="absolute top-3 right-3 text-white animate-pulse">
-                                            <Sparkles size={20} fill="white" />
+                                            <Sparkles size={20} fill="currentColor" />
                                         </div>
                                     )}
                                 </motion.div>
