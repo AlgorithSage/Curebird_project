@@ -148,8 +148,15 @@ const Header = ({ title, description, user, onAddClick, onShareClick, onLoginCli
                 <div className="hidden sm:block w-px h-8 bg-white/10 mx-2"></div>
 
                 <div>
-                    <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-400 pb-1">{title}</h1>
-                    <p className="text-slate-300 mt-1 font-medium text-sm hidden md:block">{description}</p>
+                    <h1 className="text-xl md:text-3xl font-extrabold tracking-tight mb-1 leading-tight">
+                        <span className="text-white">Welcome bird ! , </span>
+                        <span className="text-white">Cure</span><span className="text-amber-200">bird</span>
+                        <span className="text-white"> is at your service!</span>
+                    </h1>
+                    <div className="flex items-center gap-2 text-slate-400 text-xs md:text-sm font-medium">
+                        <span className="text-amber-500/90 uppercase tracking-wider font-bold">{title}</span>
+                        <span className="hidden md:inline truncate max-w-xl text-slate-400/80">{description}</span>
+                    </div>
                 </div>
             </div>
             <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto mt-4 sm:mt-0">
