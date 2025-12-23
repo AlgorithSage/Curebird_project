@@ -200,22 +200,39 @@ const CureAI = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
             {/* Premium Hero Section - Compact AI Console Look */}
             {/* MATCHING CURE ANALYZER HERO STYLE EXACTLY but keeping compact height */}
             {/* Premium Hero Section - Expanded Dimensions */}
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-500/20 via-orange-500/10 to-transparent border border-amber-500/20 p-8 mb-12 text-center mt-6 flex-shrink-0 backdrop-blur-md group">
+            {/* Premium Hero Section - Exact Match to CureAnalyzer */}
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-500/20 via-orange-500/10 to-transparent border border-amber-500/20 p-8 mb-12 text-center mt-6">
+                {/* Decorative background glow */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-amber-500/20 blur-[100px] rounded-full -z-10 pointer-events-none"></div>
 
-                <div className="flex items-center justify-center gap-2 mb-4">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm font-bold tracking-widest uppercase animate-pulse">
-                        <Bot size={16} /> Neural Interface Active
-                    </div>
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm font-bold mb-6 animate-pulse">
+                    <Bot size={16} /> NEURAL INTERFACE
                 </div>
 
                 <h1 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight drop-shadow-lg">
                     Cure Personal <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">AI</span>
                 </h1>
 
-                <p className="text-lg text-slate-300 max-w-2xl mx-auto font-medium leading-relaxed">
-                    Advanced diagnostics support and health queries. <span className="text-amber-400 font-semibold">Always verify effectively.</span>
+                <p className="text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
+                    Advanced diagnostics support and health queries. Our <span className="text-amber-400 font-semibold">Dual-Core AI</span> will instantly answer your questions and provide personalized health guidance effectively.
                 </p>
+
+                <div className="flex justify-center gap-8 mt-8 opacity-70">
+                    <div className="flex flex-col items-center gap-2">
+                        <div className="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-sky-400"><Bot /></div>
+                        <span className="text-xs uppercase tracking-widest font-bold text-slate-500">Ask</span>
+                    </div>
+                    <div className="w-16 h-px bg-slate-700 self-center"></div>
+                    <div className="flex flex-col items-center gap-2">
+                        <div className="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-amber-400"><Brain /></div>
+                        <span className="text-xs uppercase tracking-widest font-bold text-slate-500">Reason</span>
+                    </div>
+                    <div className="w-16 h-px bg-slate-700 self-center"></div>
+                    <div className="flex flex-col items-center gap-2">
+                        <div className="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-emerald-400"><ShieldCheck /></div>
+                        <span className="text-xs uppercase tracking-widest font-bold text-slate-500">Verify</span>
+                    </div>
+                </div>
             </div>
 
             <div className="flex flex-col lg:flex-row gap-8 mt-2 min-h-0 relative z-10 pb-2">
