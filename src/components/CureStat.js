@@ -395,7 +395,7 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar }) => {
 
     return (
         <div className="min-h-screen text-white overflow-y-auto relative selection:bg-sky-500/30">
-            <div className="relative z-10 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
+            <div className="relative z-10 p-4 sm:p-6 lg:p-8">
                 <Header title="Cure Stat" description="Real-time disease intelligence, medication insights, and predictive analytics for a healthier India." user={user} onLogout={onLogout} onLoginClick={onLoginClick} onToggleSidebar={onToggleSidebar} />
 
                 {/* Premium Hero Section */}
