@@ -44,7 +44,7 @@ const Contact = ({ onBack, db }) => {
             <div className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto bg-slate-900/90 border border-white/10 rounded-3xl shadow-2xl text-slate-300 flex flex-col md:flex-row overflow-hidden">
                 <button
                     onClick={onBack}
-                    className="absolute top-6 right-6 md:right-auto md:left-6 z-10 p-2 rounded-full bg-black/20 hover:bg-white/10 transition-colors text-white"
+                    className="absolute top-6 right-6 md:right-auto md:left-6 z-20 p-2 rounded-full bg-black/20 hover:bg-white/10 transition-colors text-white"
                 >
                     <ArrowLeft size={24} />
                     <span className="sr-only">Close</span>
