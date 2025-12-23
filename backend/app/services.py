@@ -6,6 +6,8 @@ import re
 import os
 import json
 import time
+import base64
+from groq import Groq
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -151,3 +153,66 @@ def perform_ocr(file_stream):
     except Exception as e:
         print(f"OCR ERROR: Failed to perform extraction: {e}")
         return ""
+
+def analyze_with_vlm(file_stream):
+    """
+    Directly analyze medical report images using Groq VLM.
+    Replaces the separate OCR + Analysis steps.
+    """
+    try:
+        # 1. Setup Groq Client (Priority for specialized Vision key)
+        api_key = os.getenv('GROQ_API_KEY_VISION') or os.getenv('GROQ_API_KEY')
+        if not api_key:
+            raise ValueError("Groq API key not found in environment variables.")
+        
+        client = Groq(api_key=api_key)
+        
+        # 2. Encode image to Base64
+        # We need to seek to 0 just in case the stream was read partially elsewhere
+        file_stream.seek(0)
+        base64_image = base64.b64encode(file_stream.read()).decode('utf-8')
+        
+        # 3. Call Groq VLM
+        # Model: meta-llama/llama-4-scout-17b-16e-instruct (as requested)
+        # Note: If this specific model doesn't support vision, it will return an error 
+        # which we catch and log.
+        completion = client.chat.completions.create(
+            model="meta-llama/llama-4-scout-17b-16e-instruct",
+            messages=[
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text", 
+                            "text": "Analyze this medical report image. Extract all detected medications (name, dosage, frequency) and any detected clinical conditions or diseases. Return ONLY a valid JSON object with the following structure: {'medications': [{'name': '...', 'dosage': '...', 'frequency': '...'}], 'diseases': ['...', '...']}"
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/jpeg;base64,{base64_image}",
+                            },
+                        },
+                    ],
+                }
+            ],
+            temperature=0.1, # Low temperature for structural reliability
+            max_tokens=1024,
+            response_format={"type": "json_object"}
+        )
+        
+        raw_response = completion.choices[0].message.content
+        print(f"VLM Raw Response: {raw_response}")
+        
+        # 4. Parse the structured results
+        structured_data = json.loads(raw_response)
+        
+        # Ensure correct structure
+        return {
+            "medications": structured_data.get("medications", []),
+            "diseases": structured_data.get("diseases", []) or structured_data.get("conditions", [])
+        }
+        
+    except Exception as e:
+        print(f"VLM ERROR: Failed to analyze report: {e}")
+        # Fallback to empty structure if VLM fails
+        return {"medications": [], "diseases": []}

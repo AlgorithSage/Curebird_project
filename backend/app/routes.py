@@ -35,14 +35,11 @@ def analyze_report():
             return jsonify({"error": "No file selected for uploading"}), 400
 
         if file:
-            # Step 1: Perform OCR
-            extracted_text = services.perform_ocr(file.stream)
-            
-            # Step 2: Analyze the text
-            analysis_results = services.analyze_report_text(extracted_text)
+            # New Step: Direct VLM Analysis (OCR + Extraction in one pass)
+            analysis_results = services.analyze_with_vlm(file.stream)
             
             return jsonify({
-                "raw_text": extracted_text,
+                "raw_text": "Extracted via VLM", # VLM combines text and analysis
                 "analysis": analysis_results
             })
             
