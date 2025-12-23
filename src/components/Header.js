@@ -87,10 +87,10 @@ const Header = ({ title, description, user, onAddClick, onShareClick, onLoginCli
     };
 
     return (
-        <header className="flex flex-wrap items-center justify-between gap-y-4 gap-x-2 sm:gap-4 pb-6 border-b border-white/10 relative z-20">
+        <header className="flex flex-wrap items-center gap-y-4 gap-x-2 sm:gap-4 pb-6 border-b border-white/10 relative z-20">
 
             {/* Left Group: Menu, Logo, Nav */}
-            <div className="flex items-center gap-1.5 sm:gap-4 order-1 flex-1">
+            <div className="flex items-center gap-1.5 sm:gap-4 order-1">
                 {/* Mobile Hamburger Menu Button */}
                 <motion.button
                     onClick={onToggleSidebar}
@@ -117,7 +117,7 @@ const Header = ({ title, description, user, onAddClick, onShareClick, onLoginCli
                 </div>
 
                 {/* Quick Navigation Chain */}
-                <div className='bg-slate-900/50 p-1.5 sm:p-1.5 rounded-full border border-white/5 backdrop-blur-sm shadow-inner shrink-0 overflow-hidden ml-1'>
+                <div className='bg-slate-900/50 p-1.5 sm:p-1.5 rounded-full border border-white/5 backdrop-blur-sm shadow-inner shrink-0 overflow-hidden'>
                     <div className='flex items-center gap-1.5 sm:gap-2 overflow-x-auto max-w-[140px] sm:max-w-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden'>
                         {navItems.map((item) => {
                             const isActive = title === item.name;
@@ -156,10 +156,13 @@ const Header = ({ title, description, user, onAddClick, onShareClick, onLoginCli
                         })}
                     </div>
                 </div>
+
+                {/* Vertical Divider for Desktop Symmetry */}
+                <div className="hidden sm:block w-px h-10 bg-white/10 opacity-50 shrink-0"></div>
             </div>
 
             {/* Right Group: Actions (Add, Profile) */}
-            <div className="flex items-center gap-1.5 sm:gap-4 order-2 sm:order-3 shrink-0">
+            <div className="flex items-center gap-1.5 sm:gap-4 order-2 sm:order-3 shrink-0 ml-auto">
                 {user && onAddClick && (
                     <>
                         {/* Hidden on mobile to save space, shown on large screens */}
@@ -193,7 +196,7 @@ const Header = ({ title, description, user, onAddClick, onShareClick, onLoginCli
             </div>
 
             {/* Center/Bottom Group: Text */}
-            <div className="w-full sm:w-auto sm:flex-1 sm:ml-4 sm:border-l sm:border-white/10 sm:pl-4 order-3 sm:order-2 text-center sm:text-left mt-3 sm:mt-0">
+            <div className="w-full sm:w-auto order-3 sm:order-2 text-center sm:text-left mt-3 sm:mt-0">
                 <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight leading-tight mb-0.5 whitespace-nowrap overflow-hidden text-ellipsis">
                     <span className="sm:hidden">
                         <span className="text-white">Welcome, </span>
