@@ -29,6 +29,7 @@ import LandingPage from './components/LandingPage';
 import TermsOfService from './components/TermsOfService';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import Contact from './components/Contact';
+import LoadingScreen from './components/LoadingScreen';
 
 const firebaseConfig = {
     apiKey: "AIzaSyB6phfALFUYNvEhF3BkVwuHK4OeocV-IEo",
@@ -111,7 +112,7 @@ export default function App() {
     };
 
     if (loading) {
-        return <div className="flex items-center justify-center h-screen bg-slate-900 text-white"><p>Loading Application...</p></div>;
+        return <LoadingScreen />;
     }
 
     return (
