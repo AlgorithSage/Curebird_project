@@ -60,9 +60,31 @@ export default function App() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, currentUser => {
-            setUser(currentUser);
-            // Artificial delay for testing the loading screen (4 seconds)
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+            if (currentUser) {
+                // Fetch user profile from Firestore to get custom fields (firstName, photoURL, etc.)
+                try {
+                    const { doc, getDoc } = await import('firebase/firestore');
+                    const userDocRef = doc(db, 'users', currentUser.uid);
+                    const userDoc = await getDoc(userDocRef);
+
+                    if (userDoc.exists()) {
+                        // Merge Auth user with Firestore data
+                        const userData = userDoc.data();
+                        setUser({ ...currentUser, ...userData });
+                    } else {
+                        // If no profile yet, just use Auth user (AuthModals will handle creation)
+                        setUser(currentUser);
+                    }
+                } catch (error) {
+                    console.error("Error fetching user profile:", error);
+                    setUser(currentUser);
+                }
+            } else {
+                setUser(null);
+            }
+
+            // Artificial delay for loading screen
             setTimeout(() => {
                 setLoading(false);
             }, 4000);
@@ -129,6 +151,7 @@ export default function App() {
                         onNavigate={setActiveView}
                         isOpen={isSidebarOpen}
                         onClose={() => setIsSidebarOpen(false)}
+                        user={user} // Pass updated user with profile data
                     />
                     <main className="w-full min-h-screen transition-all duration-300">
                         {renderActiveView()}
@@ -153,7 +176,19 @@ export default function App() {
 
             <AnimatePresence>
                 {isAuthModalOpen && (
-                    <AuthModals user={user} onLogout={handleLogout} onClose={() => setIsAuthModalOpen(false)} onLogin={handleLogin} onSignUp={handleSignUp} onGoogleSignIn={handleGoogleSignIn} capitalize={capitalize} error={authError} />
+                    <AuthModals
+                        user={user}
+                        auth={auth}
+                        db={db}
+                        storage={storage}
+                        onLogout={handleLogout}
+                        onClose={() => setIsAuthModalOpen(false)}
+                        onLogin={handleLogin}
+                        onSignUp={handleSignUp}
+                        onGoogleSignIn={handleGoogleSignIn}
+                        capitalize={capitalize}
+                        error={authError}
+                    />
                 )}
             </AnimatePresence>
         </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import { LayoutDashboard, FileText, Calendar, Pill, Settings, HeartPulse, Bot, Activity, X, MessageSquare, Mail, Shield, ScrollText } from 'lucide-react';
 import CurebirdLogo from '../curebird_logo.png';
 
-const Sidebar = ({ activeView, onNavigate, isOpen, onClose }) => {
+const Sidebar = ({ activeView, onNavigate, isOpen, onClose, user }) => {
     const navItems = [
         { name: 'Dashboard' },
         { name: 'All Records' },
@@ -95,10 +95,28 @@ const Sidebar = ({ activeView, onNavigate, isOpen, onClose }) => {
                     </ul>
                 </nav>
 
-                {/* Decorative bottom section */}
-                <div className="absolute bottom-0 left-0 right-0 p-6 opacity-40 pointer-events-none">
-                    <div className="w-full h-32 bg-gradient-to-t from-sky-500/10 to-transparent rounded-b-none blur-2xl"></div>
-                </div>
+                {/* User Profile Section */}
+                {user && (
+                    <div className="absolute bottom-0 left-0 right-0 p-4 bg-black/40 border-t border-white/5 backdrop-blur-md">
+                        <div className="flex items-center gap-3 group cursor-pointer hover:bg-white/5 p-2 rounded-xl transition-colors">
+                            <div className="relative w-10 h-10 rounded-full bg-slate-800 border-2 border-amber-500/30 overflow-hidden shrink-0">
+                                {user.photoURL ? (
+                                    <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover" />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center bg-amber-500/10 text-amber-500 font-bold">
+                                        {user.firstName ? user.firstName.charAt(0) : 'U'}
+                                    </div>
+                                )}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                                <h4 className="text-sm font-bold text-slate-200 truncate group-hover:text-amber-400 transition-colors">
+                                    {user.firstName ? `Welcome, ${user.firstName}` : 'Welcome, User'}
+                                </h4>
+                                <p className="text-xs text-amber-500/80 font-medium">Pro Member</p>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </aside >
         </>
     );

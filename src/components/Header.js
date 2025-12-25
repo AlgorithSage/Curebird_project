@@ -204,10 +204,10 @@ const Header = ({ title, description, user, onAddClick, onShareClick, onLoginCli
                 <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight leading-tight mb-0.5 whitespace-nowrap overflow-hidden text-ellipsis">
                     <span className="sm:hidden">
                         <span className="text-white">Welcome, </span>
-                        <span className="text-white">Bird</span><span className="text-white">!</span>
+                        <span className="text-white">{user?.firstName || 'User'}</span><span className="text-white">!</span>
                     </span>
                     <span className="hidden sm:inline">
-                        <span className="text-white">Welcome bird | </span>
+                        <span className="text-white">Welcome {user?.firstName || 'User'} | </span>
                         <span className="text-white">Cure</span><span className="text-amber-200">bird</span>
                         <span className="text-white"> is at your service!</span>
                     </span>

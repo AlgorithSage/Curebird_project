@@ -86,7 +86,7 @@ const CureAI = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigate }) =
 
         // Add welcome message
         setMessages([{
-            text: "Welcome to **Cure AI**. I provide secure, expert-level medical insights and health guidance powered by advanced intelligence. How can I support your wellness today?",
+            text: `Hello ${user?.firstName ? `**${user.firstName}**` : 'there'}! Welcome to **Cure AI**. I provide secure, expert-level medical insights and health guidance powered by advanced intelligence. How can I support your wellness today?`,
             isUser: false,
             timestamp: new Date().toISOString()
         }]);
