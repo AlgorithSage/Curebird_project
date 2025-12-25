@@ -1,8 +1,8 @@
 import React from 'react';
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
-import { HeartPulse, Sparkles, Activity, ShieldPlus, FileText, Pill, Calendar } from 'lucide-react';
+import { HeartPulse, Sparkles, Activity, ShieldPlus, FileText, Pill, Calendar, Bot, BarChart2 } from 'lucide-react';
 
-const HeroSection = ({ onOverviewClick, onAddClick }) => {
+const HeroSection = ({ onOverviewClick, onAddClick, onNavigate }) => {
     const [isMobile, setIsMobile] = React.useState(false);
 
     React.useEffect(() => {
@@ -127,37 +127,48 @@ const HeroSection = ({ onOverviewClick, onAddClick }) => {
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6">
-                                <div className="flex flex-col items-center lg:items-start p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors group">
-                                    <div className="p-2 bg-sky-500/20 rounded-lg mb-3 group-hover:scale-110 transition-transform">
-                                        <FileText size={20} className="text-sky-400" />
+                                {/* Cure AI Card */}
+                                <div
+                                    onClick={() => onNavigate && onNavigate('Cure AI')}
+                                    className="flex flex-col items-center lg:items-start p-5 rounded-2xl bg-slate-900/40 border border-amber-500/20 hover:bg-amber-500/10 hover:border-amber-500/50 transition-all duration-300 group cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_20px_rgba(245,158,11,0.2)]"
+                                >
+                                    <div className="p-2.5 bg-amber-500/10 rounded-xl mb-3 group-hover:scale-110 transition-transform border border-amber-500/20">
+                                        <Bot size={24} className="text-amber-400" />
                                     </div>
-                                    <h4 className="text-white font-bold text-sm sm:text-base mb-1">Medical Portfolio</h4>
-                                    <p className="text-slate-400 text-xs sm:text-sm leading-tight text-center lg:text-left">
-                                        Centrally manage diagnostics & clinical records.
+                                    <h4 className="text-white font-bold text-base sm:text-lg mb-1 group-hover:text-amber-400 transition-colors">CURE AI</h4>
+                                    <p className="text-slate-400 text-xs sm:text-sm leading-snug text-center lg:text-left">
+                                        Your Personal AI Health Assistant.
                                     </p>
                                 </div>
 
-                                <div className="flex flex-col items-center lg:items-start p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors group">
-                                    <div className="p-2 bg-amber-500/20 rounded-lg mb-3 group-hover:scale-110 transition-transform">
-                                        <Pill size={20} className="text-amber-400" />
+                                {/* Cure Analyzer Card */}
+                                <div
+                                    onClick={() => onNavigate && onNavigate('Cure Analyzer')}
+                                    className="flex flex-col items-center lg:items-start p-5 rounded-2xl bg-slate-900/40 border border-sky-500/20 hover:bg-sky-500/10 hover:border-sky-500/50 transition-all duration-300 group cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_20px_rgba(14,165,233,0.2)]"
+                                >
+                                    <div className="p-2.5 bg-sky-500/10 rounded-xl mb-3 group-hover:scale-110 transition-transform border border-sky-500/20">
+                                        <Activity size={24} className="text-sky-400" />
                                     </div>
-                                    <h4 className="text-white font-bold text-sm sm:text-base mb-1">Therapeutic Tracking</h4>
-                                    <p className="text-slate-400 text-xs sm:text-sm leading-tight text-center lg:text-left">
-                                        Monitor prescriptions & therapeutic protocols.
+                                    <h4 className="text-white font-bold text-base sm:text-lg mb-1 group-hover:text-sky-400 transition-colors">CURE ANALYZER</h4>
+                                    <p className="text-slate-400 text-xs sm:text-sm leading-snug text-center lg:text-left">
+                                        Advanced Clinical Report Diagnostics.
                                     </p>
                                 </div>
 
-                                <div className="flex flex-col items-center lg:items-start p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors group">
-                                    <div className="p-2 bg-emerald-500/20 rounded-lg mb-3 group-hover:scale-110 transition-transform">
-                                        <Calendar size={20} className="text-emerald-400" />
+                                {/* Cure Stat Card */}
+                                <div
+                                    onClick={() => onNavigate && onNavigate('Cure Stat')}
+                                    className="flex flex-col items-center lg:items-start p-5 rounded-2xl bg-slate-900/40 border border-emerald-500/20 hover:bg-emerald-500/10 hover:border-emerald-500/50 transition-all duration-300 group cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_20px_rgba(16,185,129,0.2)]"
+                                >
+                                    <div className="p-2.5 bg-emerald-500/10 rounded-xl mb-3 group-hover:scale-110 transition-transform border border-emerald-500/20">
+                                        <BarChart2 size={24} className="text-emerald-400" />
                                     </div>
-                                    <h4 className="text-white font-bold text-sm sm:text-base mb-1">Care Coordination</h4>
-                                    <p className="text-slate-400 text-xs sm:text-sm leading-tight text-center lg:text-left">
-                                        Precisely schedule & sync clinical consultations.
+                                    <h4 className="text-white font-bold text-base sm:text-lg mb-1 group-hover:text-emerald-400 transition-colors">CURE STAT</h4>
+                                    <p className="text-slate-400 text-xs sm:text-sm leading-snug text-center lg:text-left">
+                                        Real-time Disease & Epidemic Tracking.
                                     </p>
                                 </div>
                             </div>
-
                             <div className="flex items-center justify-center lg:justify-start gap-6 pt-2">
                                 <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-white/5 px-3 py-1 rounded-full border border-white/5">
                                     <ShieldPlus size={12} className="text-emerald-500" /> Secure HIPAA Analytics

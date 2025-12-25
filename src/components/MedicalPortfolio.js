@@ -137,6 +137,7 @@ const MedicalPortfolio = ({ user, db, storage, appId, formatDate, capitalize, on
                     <HeroSection
                         onOverviewClick={scrollToDashboard}
                         onAddClick={() => { setEditingRecord(null); setIsFormModalOpen(true); }}
+                        onNavigate={onNavigate}
                     />
                 </div>
 

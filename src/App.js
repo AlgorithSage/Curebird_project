@@ -169,6 +169,13 @@ export default function App() {
                             onTermsClick={() => setPublicView('terms')}
                             onPrivacyClick={() => setPublicView('privacy')}
                             onContactClick={() => setPublicView('contact')}
+                            onNavigate={(view) => {
+                                if (user) {
+                                    setActiveView(view);
+                                } else {
+                                    setIsAuthModalOpen(true);
+                                }
+                            }}
                         />
                     )}
                 </>
