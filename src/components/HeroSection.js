@@ -142,11 +142,11 @@ const HeroSection = ({ onOverviewClick, onAddClick, onNavigate }) => {
                             </div>
                         </div>
 
-                        {/* Right Side: Video Placeholder with Enhanced Frame */}
-                        <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
-                            <div className="p-3 bg-white/5 backdrop-blur-2xl rounded-[2.5rem] border border-white/10 shadow-[0_0_80px_-20px_rgba(0,0,0,0.6)] w-full">
-                                <div className="relative w-full aspect-video rounded-[2rem] overflow-hidden border border-white/5 bg-slate-900/80 group">
-                                    <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-purple-500/5 z-10 pointer-events-none"></div>
+                        {/* Pixel-perfect Video Modal (Desktop Only) */}
+                        <div className="hidden lg:block absolute top-[2px] right-[9px] z-20">
+                            <div className="p-4 bg-white/5 backdrop-blur-2xl rounded-[3rem] border border-white/10 shadow-[0_0_120px_-30px_rgba(0,0,0,0.8)] w-[800px]">
+                                <div className="relative w-full aspect-square rounded-[2.5rem] overflow-hidden border border-white/5 bg-slate-900/80 group">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-purple-500/5 z-10 pointer-events-none" />
                                     <video
                                         autoPlay
                                         loop
@@ -154,9 +154,12 @@ const HeroSection = ({ onOverviewClick, onAddClick, onNavigate }) => {
                                         playsInline
                                         className="w-full h-full object-cover opacity-90 mix-blend-screen group-hover:opacity-100 transition-opacity duration-500"
                                     >
-                                        <source src="https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-a-human-heart-9964-large.mp4" type="video/mp4" />
+                                        <source
+                                            src="https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-a-human-heart-9964-large.mp4"
+                                            type="video/mp4"
+                                        />
                                     </video>
-                                    <div className="absolute bottom-6 right-6 z-20 flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/10">
+                                    <div className="absolute bottom-[24px] right-[24px] z-20 flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/10">
                                         <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
                                         <span className="text-xs font-medium text-white/80">LIVE DEMO</span>
                                     </div>
