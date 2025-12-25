@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
 import { Activity, Loader, ServerCrash, Info, Pill, TrendingUp, X, Sparkles, Download, Users, Brain, Search, MapPin, AlertTriangle, Map, Calendar, ShieldCheck, Clock, Layers } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import Header from './Header';
 import OccupationalHealth from './OccupationalHealth';
 import SocialDeterminants from './SocialDeterminants';
@@ -378,8 +379,14 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigate })
 
     if (loading) return (
         <div className="h-screen flex flex-col items-center justify-center bg-black text-white">
-            <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }}><Loader size={64} className="text-amber-500" /></motion.div>
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="mt-6 text-xl font-light tracking-wide text-slate-400">Analyzing Health Data...</motion.p>
+            <div className="w-64 h-64 md:w-80 md:h-80">
+                <DotLottieReact
+                    src="/assets/curestat_loader.lottie"
+                    loop
+                    autoplay
+                />
+            </div>
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="mt-2 text-xl font-light tracking-wide text-slate-400">Analyzing Health Data...</motion.p>
         </div>
     );
 

@@ -1,9 +1,18 @@
 import React from 'react';
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
-import { HeartPulse, Sparkles, Activity, ShieldPlus, FileText, Pill, Calendar, Bot, BarChart2, CheckCircle2 } from 'lucide-react';
+import { HeartPulse, Sparkles, Activity, ShieldPlus, FileText, Pill, Calendar, Bot, BarChart2, CheckCircle2, Volume2, VolumeX } from 'lucide-react';
 
 const HeroSection = ({ onOverviewClick, onAddClick, onNavigate }) => {
     const [isMobile, setIsMobile] = React.useState(false);
+    const [isMuted, setIsMuted] = React.useState(true);
+    const videoRef = React.useRef(null);
+
+    const toggleMute = () => {
+        if (videoRef.current) {
+            videoRef.current.muted = !videoRef.current.muted;
+            setIsMuted(!isMuted);
+        }
+    };
 
     React.useEffect(() => {
         const checkMobile = () => setIsMobile(window.innerWidth < 1024); // lg breakpoint
@@ -145,21 +154,31 @@ const HeroSection = ({ onOverviewClick, onAddClick, onNavigate }) => {
                         {/* Right Side: Fluid Video Modal */}
                         <div className="w-full lg:w-1/2 flex items-center justify-center lg:justify-end relative z-20">
                             <div className="p-4 bg-white/5 backdrop-blur-2xl rounded-[3rem] border border-white/10 shadow-[0_0_120px_-30px_rgba(0,0,0,0.8)] w-full">
-                                <div className="relative w-full aspect-square rounded-[2.5rem] overflow-hidden border border-white/5 bg-slate-900/80 group">
+                                <div className="relative w-full aspect-video rounded-[2.5rem] overflow-hidden border border-white/5 bg-slate-900/80 group">
                                     <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-purple-500/5 z-10 pointer-events-none" />
                                     <video
+                                        ref={videoRef}
                                         autoPlay
                                         loop
-                                        muted
+                                        muted={isMuted} // Controlled by state
                                         playsInline
                                         className="w-full h-full object-cover opacity-90 mix-blend-screen group-hover:opacity-100 transition-opacity duration-500"
                                     >
                                         <source
-                                            src="https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-a-human-heart-9964-large.mp4"
+                                            src="/assets/hero_video.mp4"
                                             type="video/mp4"
                                         />
                                     </video>
-                                    <div className="absolute bottom-[24px] right-[24px] z-20 flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/10">
+
+                                    {/* Mute Toggle Button */}
+                                    <button
+                                        onClick={toggleMute}
+                                        className="absolute bottom-6 left-6 z-20 p-2 rounded-full bg-black/40 backdrop-blur-md border border-white/10 hover:bg-black/60 transition-colors text-white/80 hover:text-white"
+                                    >
+                                        {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+                                    </button>
+
+                                    <div className="absolute bottom-6 right-6 z-20 flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/10">
                                         <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
                                         <span className="text-xs font-medium text-white/80">LIVE DEMO</span>
                                     </div>
