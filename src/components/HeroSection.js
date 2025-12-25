@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
-import { HeartPulse, Sparkles, Activity, ShieldPlus, FileText, Pill, Calendar, Bot, BarChart2 } from 'lucide-react';
+import { HeartPulse, Sparkles, Activity, ShieldPlus, FileText, Pill, Calendar, Bot, BarChart2, CheckCircle2 } from 'lucide-react';
 
 const HeroSection = ({ onOverviewClick, onAddClick, onNavigate }) => {
     const [isMobile, setIsMobile] = React.useState(false);
@@ -86,9 +86,37 @@ const HeroSection = ({ onOverviewClick, onAddClick, onNavigate }) => {
                             CureBird
                         </h1>
 
-                        <p className="text-slate-400 text-base sm:text-2xl leading-relaxed font-light max-w-2xl mx-auto lg:mx-0">
-                            The future of personal healthcare. Analyze trends, predict outcomes, and visualize your health journey with <span className="text-amber-400 font-medium">Precision AI</span>.
-                        </p>
+                        <h2 className="text-xl sm:text-2xl font-semibold tracking-wide mt-2 mb-8">
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-200">Revolutionizing</span> and <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-200">Digitizing</span> Healthcare with <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-200">Clinical Precision</span>
+                        </h2>
+
+                        {/* Feature Overview Glass Card - Enhanced Visuals */}
+                        <div className="bg-gradient-to-br from-slate-900/60 to-slate-800/60 backdrop-blur-xl border border-white/10 rounded-3xl p-8 mb-10 max-w-2xl transform-gpu hover:border-white/20 transition-all shadow-2xl">
+                            <ul className="space-y-5">
+                                {[
+                                    "Instant Clinical Report Analysis",
+                                    "24/7 AI Health Consultation",
+                                    "Real-time Epidemic Tracking",
+                                    "Secure Digital Health Archives",
+                                    "Predictive Wellness Analytics"
+                                ].map((feature, index) => (
+                                    <motion.li
+                                        key={index}
+                                        initial={{ opacity: 0, x: -20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: 0.5 + (index * 0.1) }}
+                                        className="flex items-center gap-4"
+                                    >
+                                        <div className="p-1.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 shadow-[0_0_12px_-3px_rgba(16,185,129,0.3)]">
+                                            <CheckCircle2 size={20} className="text-emerald-400" />
+                                        </div>
+                                        <span className="text-slate-100 text-lg sm:text-xl font-medium tracking-wide leading-snug drop-shadow-sm">
+                                            {feature}
+                                        </span>
+                                    </motion.li>
+                                ))}
+                            </ul>
+                        </div>
 
                         <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-6">
                             <motion.button
@@ -117,64 +145,74 @@ const HeroSection = ({ onOverviewClick, onAddClick, onNavigate }) => {
                             transition={{ delay: 0.5 }}
                             className="pt-10 border-t border-white/5 space-y-6"
                         >
-                            <div className="space-y-2">
+                            <div className="space-y-4">
                                 <h2 className="text-xl sm:text-3xl font-bold text-slate-100 tracking-tight leading-snug">
                                     Welcome, <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-400">Bird</span>.
                                 </h2>
-                                <p className="text-slate-400 text-sm sm:text-lg font-medium">
-                                    Your Personalized Clinical Intelligence Dashboard is ready.
+                                <p className="text-slate-400 text-base leading-relaxed max-w-2xl">
+                                    Your command center for total health mastery is now active. Explore our core features to <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-200 font-semibold">unlock advanced insights</span> from your health data, <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-200 font-semibold">predict potential risks</span>, and <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-200 font-semibold">experience the future</span> of personalized healthcare:
                                 </p>
+
+                                <div className="space-y-4 mt-6">
+                                    <div
+                                        onClick={() => onNavigate && onNavigate('Cure AI')}
+                                        className="flex items-start gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors group backdrop-blur-sm cursor-pointer"
+                                    >
+                                        <div className="mt-1 p-2 rounded-xl bg-amber-500/10 border border-amber-500/20 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_-3px_rgba(245,158,11,0.2)]">
+                                            <Bot size={24} className="text-amber-400" />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-slate-200 font-bold text-lg leading-tight mb-1 group-hover:text-amber-400 transition-colors">Cure AI</h3>
+                                            <p className="text-slate-400 text-sm leading-relaxed">
+                                                Your dedicated 24/7 health consultant. Ask anything, anytime, and get intelligent answers based on your medical history.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div
+                                        onClick={() => onNavigate && onNavigate('Cure Analyzer')}
+                                        className="flex items-start gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors group backdrop-blur-sm cursor-pointer"
+                                    >
+                                        <div className="mt-1 p-2 rounded-xl bg-sky-500/10 border border-sky-500/20 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_-3px_rgba(14,165,233,0.2)]">
+                                            <Activity size={24} className="text-sky-400" />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-slate-200 font-bold text-lg leading-tight mb-1 group-hover:text-sky-400 transition-colors">Cure Analyzer</h3>
+                                            <p className="text-slate-400 text-sm leading-relaxed">
+                                                Instantly decodes complex lab reports into clear, actionable insights, highlighting critical values and trends.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div
+                                        onClick={() => onNavigate && onNavigate('Cure Stat')}
+                                        className="flex items-start gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors group backdrop-blur-sm cursor-pointer"
+                                    >
+                                        <div className="mt-1 p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_-3px_rgba(16,185,129,0.2)]">
+                                            <BarChart2 size={24} className="text-emerald-400" />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-slate-200 font-bold text-lg leading-tight mb-1 group-hover:text-emerald-400 transition-colors">Cure Stat</h3>
+                                            <p className="text-slate-400 text-sm leading-relaxed">
+                                                Visualizes real-time disease trends and epidemic data globally, keeping you informed about public health risks.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6">
-                                {/* Cure AI Card */}
-                                <div
-                                    onClick={() => onNavigate && onNavigate('Cure AI')}
-                                    className="flex flex-col items-center lg:items-start p-5 rounded-2xl bg-slate-900/40 border border-amber-500/20 hover:bg-amber-500/10 hover:border-amber-500/50 transition-all duration-300 group cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_20px_rgba(245,158,11,0.2)]"
-                                >
-                                    <div className="p-2.5 bg-amber-500/10 rounded-xl mb-3 group-hover:scale-110 transition-transform border border-amber-500/20">
-                                        <Bot size={24} className="text-amber-400" />
-                                    </div>
-                                    <h4 className="text-white font-bold text-base sm:text-lg mb-1 group-hover:text-amber-400 transition-colors">CURE AI</h4>
-                                    <p className="text-slate-400 text-xs sm:text-sm leading-snug text-center lg:text-left">
-                                        Your Personal AI Health Assistant.
-                                    </p>
-                                </div>
-
-                                {/* Cure Analyzer Card */}
-                                <div
-                                    onClick={() => onNavigate && onNavigate('Cure Analyzer')}
-                                    className="flex flex-col items-center lg:items-start p-5 rounded-2xl bg-slate-900/40 border border-sky-500/20 hover:bg-sky-500/10 hover:border-sky-500/50 transition-all duration-300 group cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_20px_rgba(14,165,233,0.2)]"
-                                >
-                                    <div className="p-2.5 bg-sky-500/10 rounded-xl mb-3 group-hover:scale-110 transition-transform border border-sky-500/20">
-                                        <Activity size={24} className="text-sky-400" />
-                                    </div>
-                                    <h4 className="text-white font-bold text-base sm:text-lg mb-1 group-hover:text-sky-400 transition-colors">CURE ANALYZER</h4>
-                                    <p className="text-slate-400 text-xs sm:text-sm leading-snug text-center lg:text-left">
-                                        Advanced Clinical Report Diagnostics.
-                                    </p>
-                                </div>
-
-                                {/* Cure Stat Card */}
-                                <div
-                                    onClick={() => onNavigate && onNavigate('Cure Stat')}
-                                    className="flex flex-col items-center lg:items-start p-5 rounded-2xl bg-slate-900/40 border border-emerald-500/20 hover:bg-emerald-500/10 hover:border-emerald-500/50 transition-all duration-300 group cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_20px_rgba(16,185,129,0.2)]"
-                                >
-                                    <div className="p-2.5 bg-emerald-500/10 rounded-xl mb-3 group-hover:scale-110 transition-transform border border-emerald-500/20">
-                                        <BarChart2 size={24} className="text-emerald-400" />
-                                    </div>
-                                    <h4 className="text-white font-bold text-base sm:text-lg mb-1 group-hover:text-emerald-400 transition-colors">CURE STAT</h4>
-                                    <p className="text-slate-400 text-xs sm:text-sm leading-snug text-center lg:text-left">
-                                        Real-time Disease & Epidemic Tracking.
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="flex items-center justify-center lg:justify-start gap-6 pt-2">
-                                <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-white/5 px-3 py-1 rounded-full border border-white/5">
+                            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+                                <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-full border border-white/5 hover:bg-white/10 transition-colors cursor-default">
                                     <ShieldPlus size={12} className="text-emerald-500" /> Secure HIPAA Analytics
                                 </div>
-                                <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-white/5 px-3 py-1 rounded-full border border-white/5">
+                                <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-full border border-white/5 hover:bg-white/10 transition-colors cursor-default">
                                     <Activity size={12} className="text-sky-500" /> Real-time Synthesis
+                                </div>
+                                <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-full border border-white/5 hover:bg-white/10 transition-colors cursor-default">
+                                    <FileText size={12} className="text-amber-500" /> Multi-Format Support
+                                </div>
+                                <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-full border border-white/5 hover:bg-white/10 transition-colors cursor-default">
+                                    <Sparkles size={12} className="text-purple-500" /> Predictive Modeling
                                 </div>
                             </div>
                         </motion.div>
