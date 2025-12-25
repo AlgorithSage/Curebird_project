@@ -142,9 +142,9 @@ const HeroSection = ({ onOverviewClick, onAddClick, onNavigate }) => {
                             </div>
                         </div>
 
-                        {/* Pixel-perfect Video Modal (Desktop Only) */}
-                        <div className="hidden lg:block absolute top-[2px] right-[9px] z-20">
-                            <div className="p-4 bg-white/5 backdrop-blur-2xl rounded-[3rem] border border-white/10 shadow-[0_0_120px_-30px_rgba(0,0,0,0.8)] w-[800px]">
+                        {/* Right Side: Fluid Video Modal */}
+                        <div className="w-full lg:w-1/2 flex items-center justify-center lg:justify-end relative z-20">
+                            <div className="p-4 bg-white/5 backdrop-blur-2xl rounded-[3rem] border border-white/10 shadow-[0_0_120px_-30px_rgba(0,0,0,0.8)] w-full">
                                 <div className="relative w-full aspect-square rounded-[2.5rem] overflow-hidden border border-white/5 bg-slate-900/80 group">
                                     <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-purple-500/5 z-10 pointer-events-none" />
                                     <video
