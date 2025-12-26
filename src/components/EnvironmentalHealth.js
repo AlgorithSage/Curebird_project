@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Wind, CloudFog, AlertTriangle, Cigarette, Info,
-    Search, RefreshCw, Signal, Hourglass, FlaskConical, Skull, Activity
+    Search, RefreshCw, Signal, Hourglass, FlaskConical, Skull, Activity,
+    Timer, AlertOctagon, HeartPulse
 } from 'lucide-react';
 
 // Scientific conversion constants
@@ -125,7 +126,7 @@ const EnvironmentalHealth = () => {
     const minutesLostToday = Math.round(cigarettes * 11);
     const dailyInhaleMicrograms = currentPM25 * BREATH_VOL_M3;
     const annualInhaleGrams = (dailyInhaleMicrograms * 365 / 1000000).toFixed(2);
-    const teaspoonEquivalent = (annualInhaleGrams / 5).toFixed(1); // 1 tsp approx 5g
+    const teaspoonEquivalent = (annualInhaleGrams / 5).toFixed(1);
 
     return (
         <div className="w-full">
@@ -139,14 +140,17 @@ const EnvironmentalHealth = () => {
             </div>
 
             {/* MAIN CARD */}
-            <div className="glass-card p-8 lg:p-12 rounded-[2.5rem] border border-white/5 mb-8 relative overflow-hidden min-h-[650px] transition-all duration-500">
+            <div className={`glass-card p-8 lg:p-12 rounded-[2.5rem] border border-white/5 mb-8 relative overflow-hidden min-h-[680px] transition-all duration-500 
+                ${activeView === 'life' ? 'shadow-[0_0_50px_rgba(220,38,38,0.1)] border-red-900/20' : ''}
+                ${activeView === 'dust' ? 'shadow-[0_0_50px_rgba(16,185,129,0.1)] border-emerald-900/20' : ''}
+            `}>
 
                 {/* TAB NAVIGATION */}
                 <div className="absolute top-0 left-0 right-0 flex justify-center p-6 z-20">
                     <div className="bg-black/40 backdrop-blur-xl p-1.5 rounded-full border border-white/10 flex items-center gap-1 shadow-2xl">
                         {[
                             { id: 'smoker', icon: Cigarette, label: "Smoker's Eq." },
-                            { id: 'life', icon: Hourglass, label: 'Time Thief' },
+                            { id: 'life', icon: HeartPulse, label: 'Time Thief' },
                             { id: 'dust', icon: FlaskConical, label: 'Dust Jar' },
                         ].map((tab) => (
                             <button
@@ -169,18 +173,20 @@ const EnvironmentalHealth = () => {
                     animate={{
                         opacity: Math.min(currentAQI / 600, 0.8),
                         background: activeView === 'life'
-                            ? 'linear-gradient(to bottom right, #1a0505, #000000)'
-                            : 'linear-gradient(to bottom right, #0f172a, #020617)'
+                            ? 'linear-gradient(to bottom right, #2b0404, #000000, #1a0202)'
+                            : activeView === 'dust'
+                                ? 'linear-gradient(to bottom right, #00120b, #000000, #00171a)'
+                                : 'linear-gradient(to bottom right, #0f172a, #020617)'
                     }}
                     transition={{ duration: 1 }}
                     className="absolute inset-0 pointer-events-none z-0"
                     style={{ filter: 'blur(40px)' }}
                 />
 
-                <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 h-full mt-16">
+                <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 h-full mt-16 px-2">
 
                     {/* LEFT COLUMN: Narrative & Metrics */}
-                    <div className="flex flex-col justify-center h-full gap-16">
+                    <div className="flex flex-col justify-start h-full gap-12 pt-12">
 
                         {/* Header Dynamic Text */}
                         <AnimatePresence mode="wait">
@@ -205,11 +211,11 @@ const EnvironmentalHealth = () => {
                                 {activeView === 'life' && (
                                     <>
                                         <h3 className="text-3xl md:text-5xl font-black text-white flex items-center gap-3 mb-6 tracking-tight">
-                                            <Hourglass size={40} className="text-red-400" />
+                                            <HeartPulse size={40} className="text-red-500 animate-pulse" />
                                             "The Time Thief"
                                         </h3>
                                         <p className="text-slate-300 text-lg md:text-xl leading-relaxed max-w-2xl font-light">
-                                            Every breath steals a moment. See how much <strong className="text-white font-semibold">life expectancy</strong> is lost to toxic air based on AQLI.
+                                            Your body keeps the score. Visualizing the <strong className="text-white font-semibold">actuarial life expectancy</strong> lost to chronic exposure.
                                         </p>
                                     </>
                                 )}
@@ -220,17 +226,17 @@ const EnvironmentalHealth = () => {
                                             "The Dust Jar"
                                         </h3>
                                         <p className="text-slate-300 text-lg md:text-xl leading-relaxed max-w-2xl font-light">
-                                            Your lungs act as a filter. This is the <strong className="text-white font-semibold">physical mass</strong> of particulates you ingest annually.
+                                            The lungs are a filter. This is the <strong className="text-white font-semibold">accumulated mass</strong> of toxic particulates you capture annually.
                                         </p>
                                     </>
                                 )}
                             </motion.div>
                         </AnimatePresence>
 
-                        {/* Shared AQI Metric */}
+                        {/* Shared AQI Metric - RESTORED TO ORIGINAL LAYOUT (NO CARD WRAPPER) */}
                         <div className="flex flex-col gap-8">
                             <div>
-                                <span className="text-slate-400 font-bold tracking-[0.2em] text-sm mb-4 block uppercase opacity-80">Local Air Quality (NAQI)</span>
+                                <span className={`font-bold tracking-[0.2em] text-sm mb-4 block uppercase opacity-80 ${activeView === 'life' ? 'text-red-400' : activeView === 'dust' ? 'text-emerald-400' : 'text-slate-400'}`}>Local Air Quality (NAQI)</span>
                                 <div className="flex items-end gap-6">
                                     <span className="text-8xl md:text-[8rem] font-black text-white leading-[0.85] tracking-tighter drop-shadow-2xl">
                                         {currentAQI}
@@ -245,7 +251,7 @@ const EnvironmentalHealth = () => {
                                 </div>
                             </div>
 
-                            {/* VARIABLE METRIC BOX */}
+                            {/* VARIABLE METRIC BOX (This WAS a card, keeping it themed) */}
                             <AnimatePresence mode="wait">
                                 <motion.div
                                     key={activeView}
@@ -253,10 +259,13 @@ const EnvironmentalHealth = () => {
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.95 }}
                                     transition={{ duration: 0.3 }}
-                                    className="bg-black/40 p-10 rounded-[2rem] border border-white/10 backdrop-blur-md shadow-2xl relative overflow-hidden group"
+                                    className={`p-10 rounded-[2rem] border backdrop-blur-md shadow-2xl relative overflow-hidden group hover:shadow-[0_0_40px_rgba(0,0,0,0.3)] transition-all duration-500 ${activeView === 'life' ? 'bg-red-950/20 border-red-500/20 shadow-[0_0_20px_rgba(220,38,38,0.1)]' :
+                                            activeView === 'dust' ? 'bg-emerald-950/20 border-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.1)]' :
+                                                'bg-slate-900/60 border-white/10'
+                                        }`}
                                 >
-                                    <div className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 transition-all duration-700 ${activeView === 'life' ? 'bg-red-500/10 group-hover:bg-red-500/20' :
-                                            activeView === 'dust' ? 'bg-emerald-500/10 group-hover:bg-emerald-500/20' :
+                                    <div className={`absolute top-0 right-0 w-60 h-60 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 transition-all duration-700 ${activeView === 'life' ? 'bg-red-600/10 group-hover:bg-red-600/20' :
+                                            activeView === 'dust' ? 'bg-emerald-600/10 group-hover:bg-emerald-600/20' :
                                                 'bg-orange-500/10 group-hover:bg-orange-500/20'
                                         }`}></div>
 
@@ -283,42 +292,48 @@ const EnvironmentalHealth = () => {
                                     {activeView === 'life' && (
                                         <>
                                             <div className="flex items-center gap-3 mb-6 relative z-10">
-                                                <div className="bg-red-500/20 p-2.5 rounded-xl"><Skull size={24} className="text-red-500" /></div>
-                                                <span className="text-slate-200 font-bold text-lg tracking-wide">Life Expectancy Impact</span>
+                                                <div className="bg-red-500/20 p-2.5 rounded-xl"><Activity size={24} className="text-red-500 animate-[pulse_3s_ease-in-out_infinite]" /></div>
+                                                <span className="text-slate-200 font-bold text-lg tracking-wide">Actuarial Forecast</span>
                                             </div>
                                             <div className="flex items-end gap-6 relative z-10">
                                                 <div className="bg-white/5 p-5 rounded-2xl border border-white/10 backdrop-blur-sm">
-                                                    <Activity size={48} className="text-red-400 opacity-90" />
+                                                    <Skull size={48} className="text-red-400 opacity-90" />
                                                 </div>
                                                 <div>
-                                                    <p className="text-slate-400 text-sm font-medium mb-1 uppercase opacity-70">If levels persist:</p>
+                                                    <p className="text-slate-400 text-sm font-medium mb-1 uppercase opacity-70">Timeline Reduced By:</p>
                                                     <p className="text-5xl md:text-7xl font-black text-white leading-none mt-2">
                                                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-300 to-red-600">{yearsLost}</span> <span className="text-3xl md:text-4xl text-slate-400 font-bold">Years</span>
                                                     </p>
                                                 </div>
                                             </div>
-                                            <p className="text-red-400/60 text-xs mt-4 font-mono">~{minutesLostToday} minutes lost just today.</p>
+                                            <p className="text-red-400/80 text-sm mt-5 font-medium border-l-2 border-red-500/30 pl-3 leading-relaxed">
+                                                📉 That's <span className="text-red-300 font-bold">{yearsLost} years</span> potentially cut from your total lifespan if these pollution levels persist.
+                                            </p>
+                                            <p className="text-red-400/40 text-[10px] uppercase tracking-widest mt-2 font-mono ml-3">System projection: -{minutesLostToday} minutes today</p>
                                         </>
                                     )}
 
                                     {activeView === 'dust' && (
                                         <>
                                             <div className="flex items-center gap-3 mb-6 relative z-10">
-                                                <div className="bg-emerald-500/20 p-2.5 rounded-xl"><Wind size={24} className="text-emerald-500" /></div>
-                                                <span className="text-slate-200 font-bold text-lg tracking-wide">Annual Toxic Load</span>
+                                                <div className="bg-emerald-500/20 p-2.5 rounded-xl"><AlertOctagon size={24} className="text-emerald-500" /></div>
+                                                <span className="text-slate-200 font-bold text-lg tracking-wide">Particulate Load</span>
                                             </div>
                                             <div className="flex items-end gap-6 relative z-10">
                                                 <div className="bg-white/5 p-5 rounded-2xl border border-white/10 backdrop-blur-sm">
                                                     <FlaskConical size={48} className="text-emerald-400 opacity-90" />
                                                 </div>
                                                 <div>
-                                                    <p className="text-slate-400 text-sm font-medium mb-1 uppercase opacity-70">Particulate Mass:</p>
+                                                    <p className="text-slate-400 text-sm font-medium mb-1 uppercase opacity-70">Annual Inhalation:</p>
                                                     <p className="text-5xl md:text-7xl font-black text-white leading-none mt-2">
                                                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-emerald-600">{annualInhaleGrams}</span> <span className="text-3xl md:text-4xl text-slate-400 font-bold">g</span>
                                                     </p>
                                                 </div>
                                             </div>
-                                            <p className="text-emerald-400/60 text-xs mt-4 font-mono">≈ {teaspoonEquivalent} teaspoon(s) of physical dust.</p>
+                                            <p className="text-emerald-400/60 text-xs mt-4 font-mono pl-1">
+                                                <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
+                                                Volume ≈ {teaspoonEquivalent} teaspoon(s) of pure toxic dust.
+                                            </p>
                                         </>
                                     )}
 
@@ -331,11 +346,14 @@ const EnvironmentalHealth = () => {
                     {/* RIGHT COLUMN: Selector & Visualization */}
                     <div className="flex flex-col gap-6 h-full">
 
-                        {/* Selector (Same as before) */}
-                        <div className="w-full bg-slate-900/50 p-6 rounded-3xl border border-white/10 backdrop-blur-md shadow-xl">
+                        {/* Selector */}
+                        <div className={`w-full p-6 rounded-[2rem] border backdrop-blur-md shadow-xl transition-all duration-500 ${activeView === 'life' ? 'bg-red-950/20 border-red-500/20 shadow-[0_0_20px_rgba(220,38,38,0.1)]' :
+                                activeView === 'dust' ? 'bg-emerald-950/20 border-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.1)]' :
+                                    'bg-slate-900/60 border-white/10'
+                            }`}>
                             <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-3">
                                 <div className="flex items-center gap-3">
-                                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Select Location</h4>
+                                    <h4 className={`text-xs font-bold uppercase tracking-widest ${activeView === 'life' ? 'text-red-400' : activeView === 'dust' ? 'text-emerald-400' : 'text-slate-400'}`}>Select Location</h4>
                                     {isLoading ? (
                                         <RefreshCw size={10} className="text-orange-400 animate-spin" />
                                     ) : isLive ? (
@@ -367,7 +385,7 @@ const EnvironmentalHealth = () => {
                                         key={city.name}
                                         onClick={() => setSelectedCity(city)}
                                         className={`px-4 py-3 rounded-xl text-xs font-semibold transition-all text-left truncate flex items-center gap-3 ${selectedCity.name === city.name
-                                            ? 'bg-slate-700 text-white shadow-lg border border-white/20'
+                                            ? (activeView === 'life' ? 'bg-red-900/40 text-white border-red-500/30' : activeView === 'dust' ? 'bg-emerald-900/40 text-white border-emerald-500/30' : 'bg-slate-700/80 text-white border-white/20') + ' shadow-lg border'
                                             : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
                                             }`}
                                     >
@@ -379,35 +397,72 @@ const EnvironmentalHealth = () => {
                         </div>
 
                         {/* VISUALIZATION PANEL */}
-                        <div className="bg-slate-800/30 p-8 rounded-[2rem] border border-white/5 flex-grow min-h-[400px] flex flex-col items-center justify-center relative overflow-hidden group shadow-inner">
+                        <div className={`p-8 rounded-[2.5rem] border flex-grow min-h-[400px] flex flex-col items-center justify-center relative overflow-hidden group shadow-inner transition-all duration-500 ${activeView === 'life' ? 'bg-red-950/20 border-red-500/20 shadow-[0_0_20px_rgba(220,38,38,0.1)]' :
+                                activeView === 'dust' ? 'bg-emerald-950/20 border-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.1)]' :
+                                    'bg-slate-800/40 border-white/10'
+                            }`}>
                             <p className="absolute top-6 left-8 text-xs text-slate-500 font-mono z-20 tracking-widest opacity-50 uppercase">{activeView} VISUALIZATION</p>
 
                             <AnimatePresence mode="wait">
 
-                                {/* 1. CIGARETTE VISUALIZATION */}
+                                {/* 1. CIGARETTE VISUALIZATION (ENHANCED & INTERACTIVE) */}
                                 {activeView === 'smoker' && (
                                     <motion.div
                                         key="smoker-vis"
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
                                         exit={{ opacity: 0 }}
-                                        className="flex flex-wrap gap-4 justify-center content-center w-full h-full relative z-10"
+                                        className="flex flex-wrap gap-8 justify-center content-center w-full h-full relative z-10 px-4"
                                     >
                                         {Array.from({ length: cigaretteCount }).map((_, i) => (
                                             <motion.div
                                                 key={`cig-${i}`}
-                                                initial={{ scale: 0, y: 50 }}
-                                                animate={{ scale: 1, y: 0 }}
+                                                initial={{ scale: 0, y: 100, rotate: Math.random() * 10 - 5 }}
+                                                animate={{ scale: 1, y: 0, rotate: 0 }}
+                                                whileHover={{ scale: 1.15, rotate: Math.random() * 4 - 2, y: -10 }}
                                                 transition={{ delay: i * 0.05, type: 'spring' }}
-                                                className="relative group flex flex-col items-center"
+                                                className="relative group cursor-pointer"
                                             >
-                                                <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-12 h-24 pointer-events-none opacity-60">
-                                                    <div className="absolute bottom-0 left-1/2 w-1 h-2 bg-slate-400 rounded-full blur-[2px] animate-[smoke-rise_2s_linear_infinite]"></div>
+                                                {/* Interactive Tooltip */}
+                                                <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-black/80 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-white/10">
+                                                    Toxic Load: 22µg
                                                 </div>
-                                                <div className="w-3.5 h-20 flex flex-col items-center relative shadow-xl ">
-                                                    <div className="w-full h-2 bg-orange-500 animate-pulse rounded-t-sm relative z-20"><div className="absolute inset-0 bg-red-500/50 blur-sm"></div></div>
-                                                    <div className="w-full h-12 bg-gray-100 border-x border-gray-300 relative z-10"></div>
-                                                    <div className="w-full h-6 bg-[#dcb26c] border-x border-black/10 rounded-b-sm z-10 relative"><div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cork-board.png')] opacity-20"></div></div>
+
+                                                {/* Smoke Effect (Reacts to Hover) */}
+                                                <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-16 h-32 pointer-events-none opacity-60 mix-blend-screen">
+                                                    {/* Stream 1 */}
+                                                    <div className="absolute bottom-0 left-1/2 w-1.5 h-4 bg-slate-400 rounded-full blur-[3px] animate-[smoke-rise_3s_linear_infinite] group-hover:animate-[smoke-rise_1.5s_linear_infinite]"></div>
+                                                    {/* Stream 2 */}
+                                                    <div className="absolute bottom-4 left-1/2 w-4 h-4 bg-slate-500/50 rounded-full blur-md animate-[smoke-curl_4s_ease-out_infinite] group-hover:animate-[smoke-curl_2s_ease-out_infinite]" style={{ animationDelay: '0.5s' }}></div>
+                                                </div>
+
+                                                {/* The Cigarette Body (Larger & Detailed) */}
+                                                <div className="w-6 h-32 flex flex-col items-center relative shadow-2xl drop-shadow-2xl transition-all duration-300 group-hover:shadow-[0_0_30px_rgba(249,115,22,0.4)]">
+
+                                                    {/* Cherry (Burning Tip) */}
+                                                    <div className="w-full h-3 bg-gradient-to-t from-red-600 via-orange-500 to-yellow-400 animate-pulse rounded-t-sm relative z-20 overflow-visible group-hover:from-red-500 group-hover:via-orange-400 group-hover:to-white">
+                                                        <div className="absolute inset-x-0 -top-2 h-4 bg-orange-500/60 blur-md rounded-full group-hover:bg-orange-400/80 group-hover:blur-lg transition-all"></div>
+                                                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] opacity-40 mix-blend-multiply"></div>
+                                                    </div>
+
+                                                    {/* Ash Line */}
+                                                    <div className="w-full h-1 bg-gray-800 z-20 opacity-50"></div>
+
+                                                    {/* Paper Body */}
+                                                    <div className="w-full h-20 bg-gradient-to-r from-gray-200 via-white to-gray-300 border-x border-gray-400/20 relative z-10 flex flex-col justify-evenly">
+                                                        <div className="w-full h-[1px] bg-black/5"></div>
+                                                        <div className="w-full h-[1px] bg-black/5"></div>
+                                                        <div className="w-full h-[1px] bg-black/5"></div>
+                                                    </div>
+
+                                                    {/* Gold Ring */}
+                                                    <div className="w-full h-1 bg-gradient-to-r from-yellow-700 via-yellow-500 to-yellow-700 z-10"></div>
+
+                                                    {/* Filter */}
+                                                    <div className="w-full h-8 bg-[#dcb26c] border-x border-black/10 rounded-b-sm z-10 relative overflow-hidden">
+                                                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cork-board.png')] opacity-30 bg-[length:12px_12px]"></div>
+                                                        <div className="absolute inset-0 bg-gradient-to-r from-black/10 via-transparent to-black/10"></div>
+                                                    </div>
                                                 </div>
                                             </motion.div>
                                         ))}
@@ -423,19 +478,36 @@ const EnvironmentalHealth = () => {
                                         exit={{ opacity: 0 }}
                                         className="flex flex-col items-center justify-center w-full h-full relative z-10 text-center"
                                     >
-                                        <div className="relative">
-                                            <div className="text-[8rem] font-mono font-black text-red-500 leading-none tracking-widest tabular-nums animate-pulse drop-shadow-[0_0_15px_rgba(239,68,68,0.8)]">
+                                        {/* Bio-Monitor Interface */}
+                                        <div className="relative group cursor-crosshair px-16 py-10 rounded-[3rem] bg-black/20 border border-red-500/10 backdrop-blur-sm overflow-hidden">
+                                            {/* Background Scanlines */}
+                                            <div className="absolute inset-0 bg-red-500/5 z-0" style={{ backgroundSize: '100% 4px', backgroundImage: 'linear-gradient(rgba(0,0,0,0) 50%, rgba(255,0,0,0.1) 50%)' }}></div>
+
+                                            {/* Main Digits */}
+                                            <div className="text-[9rem] font-mono font-black text-red-600 leading-none tracking-tighter tabular-nums drop-shadow-[0_0_25px_rgba(220,38,38,0.6)] z-10 relative group-hover:scale-105 transition-transform duration-300 mix-blend-screen">
                                                 {yearsLost}<span className="text-4xl text-red-800">yr</span>
                                             </div>
+
+                                            {/* Glitch Overlay */}
                                             <motion.div
-                                                animate={{ x: [-2, 2, -2], opacity: [0.5, 0.8, 0.5] }}
-                                                transition={{ repeat: Infinity, duration: 0.2 }}
-                                                className="absolute inset-0 text-[8rem] font-mono font-black text-white/10 mix-blend-overlay leading-none tracking-widest tabular-nums"
+                                                animate={{ x: [-2, 3, -1, 0], opacity: [0.3, 0.6, 0.2] }}
+                                                transition={{ repeat: Infinity, duration: 0.15, repeatType: 'mirror' }}
+                                                className="absolute inset-0 text-[9rem] font-mono font-black text-white/20 mix-blend-overlay leading-none tracking-tighter tabular-nums pointer-events-none flex items-center justify-center"
                                             >
-                                                {yearsLost}<span className="text-4xl">yr</span>
+                                                {yearsLost}<span className="text-4xl opacity-0">yr</span>
                                             </motion.div>
+
+                                            {/* Timeline Visualizer */}
+                                            <div className="w-64 h-2 bg-slate-800 rounded-full mt-4 mx-auto relative overflow-hidden z-20">
+                                                <div className="absolute left-0 top-0 bottom-0 bg-red-600 shadow-[0_0_10px_red]" style={{ width: `${Math.min(100, (yearsLost / 80) * 100)}%` }}></div>
+                                                <div className="absolute inset-0 opacity-20 bg-[repeating-linear-gradient(90deg,transparent,transparent_10px,#000_10px,#000_11px)]"></div>
+                                            </div>
                                         </div>
-                                        <p className="text-red-400 text-lg font-bold mt-4 tracking-[0.5em] uppercase">Life Expectancy Signal Lost</p>
+
+                                        <div className="mt-8 flex items-center gap-3">
+                                            <Activity className="text-red-500 animate-pulse" size={20} />
+                                            <p className="text-red-400 text-sm font-bold tracking-[0.3em] uppercase animate-pulse">Vitality Signal Degrading</p>
+                                        </div>
                                     </motion.div>
                                 )}
 
@@ -448,51 +520,71 @@ const EnvironmentalHealth = () => {
                                         exit={{ opacity: 0 }}
                                         className="flex flex-col items-center justify-center w-full h-full relative z-10"
                                     >
-                                        {/* Container for Jar and Labels */}
-                                        <div className="relative flex flex-col items-center w-full max-w-[280px]">
+                                        <div className="relative flex flex-col items-center w-full max-w-[280px] group cursor-pointer perspective-[1000px]">
 
-                                            {/* The Glass Jar - Bigger & Better */}
-                                            <div className="w-64 h-80 border-x-4 border-b-4 border-white/20 border-t-0 rounded-b-[3rem] relative overflow-hidden bg-white/5 backdrop-blur-sm shadow-2xl">
+                                            {/* The Lab Jar */}
+                                            <motion.div
+                                                whileHover={{ rotateX: 5, rotateY: 5 }}
+                                                className="w-64 h-80 border-x-4 border-b-4 border-white/10 border-t-0 rounded-b-[3rem] relative overflow-hidden bg-white/5 backdrop-blur-md shadow-2xl ring-1 ring-white/10"
+                                            >
+                                                {/* Top Rim */}
+                                                <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-white/20 via-white/40 to-white/20 shadow-[0_0_15px_rgba(255,255,255,0.1)]"></div>
 
-                                                {/* Top Rim to fix 'Cut Off' look */}
-                                                <div className="absolute top-0 left-0 right-0 h-1 bg-white/30 shadow-[0_0_10px_rgba(255,255,255,0.2)]"></div>
+                                                {/* Measurement Gradients */}
+                                                <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-black/20 to-transparent pointer-events-none"></div>
 
-                                                {/* Measurement Markings */}
-                                                <div className="absolute right-0 top-1/4 w-3 h-0.5 bg-white/20"></div>
-                                                <div className="absolute right-0 top-2/4 w-3 h-0.5 bg-white/20"></div>
-                                                <div className="absolute right-0 top-3/4 w-3 h-0.5 bg-white/20"></div>
-
-                                                {/* Fill Level */}
+                                                {/* The Filth (Soot) */}
                                                 <motion.div
                                                     initial={{ height: '0%' }}
                                                     animate={{ height: `${Math.min(100, Math.max(10, annualInhaleGrams * 12))}%` }}
                                                     transition={{ duration: 1.5, ease: "easeOut" }}
-                                                    className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 via-gray-700 to-gray-600/80 w-full"
+                                                    className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-950 via-gray-800 to-gray-700 w-full"
                                                 >
-                                                    {/* Floating Particles - INCREASED DENSITY */}
-                                                    {Array.from({ length: 40 }).map((_, i) => (
-                                                        <div key={i} className="absolute w-1 h-1 bg-black/50 rounded-full animate-bounce" style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%`, animationDuration: `${2 + Math.random() * 3}s` }}></div>
-                                                    ))}
+                                                    {/* Texture Overlay */}
+                                                    <div className="absolute inset-0 opacity-40 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
+
+                                                    {/* "Agitated" Particles on Hover */}
+                                                    <div className="absolute inset-0 overflow-hidden">
+                                                        {Array.from({ length: 50 }).map((_, i) => (
+                                                            <div
+                                                                key={i}
+                                                                className="absolute w-1 h-1 bg-black/60 rounded-full group-hover:animate-ping"
+                                                                style={{
+                                                                    left: `${Math.random() * 100}%`,
+                                                                    top: `${Math.random() * 100}%`,
+                                                                    transition: 'all 0.5s',
+                                                                    transform: `scale(${Math.random()})`
+                                                                }}
+                                                            ></div>
+                                                        ))}
+                                                    </div>
                                                 </motion.div>
 
-                                                {/* Glass Reflection */}
-                                                <div className="absolute top-0 left-0 bottom-0 w-1/3 bg-gradient-to-r from-white/10 to-transparent pointer-events-none"></div>
-                                            </div>
+                                                {/* Surface Tension / Meniscus */}
+                                                <motion.div
+                                                    animate={{ bottom: `${Math.min(99, Math.max(10, annualInhaleGrams * 12))}%` }}
+                                                    className="absolute left-0 right-0 h-2 bg-gray-600/50 blur-sm brightness-125"
+                                                ></motion.div>
 
-                                            {/* Labels below */}
-                                            <div className="mt-6 flex flex-col items-center gap-2">
-                                                <div className="text-emerald-400/80 font-mono text-xs uppercase tracking-widest">
-                                                    Actual Accumulated Mass
+                                                {/* Glass Reflections */}
+                                                <div className="absolute top-0 left-2 bottom-0 w-8 bg-gradient-to-r from-white/10 to-transparent"></div>
+                                                <div className="absolute top-0 right-10 bottom-0 w-2 bg-gradient-to-r from-white/5 to-transparent"></div>
+
+                                                {/* Warning Label */}
+                                                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-yellow-400/90 text-black text-[10px] font-bold px-3 py-1 rounded shadow-lg uppercase tracking-wider rotate-[-2deg] opacity-80 group-hover:opacity-100 transition-opacity">
+                                                    Caution: Toxic
                                                 </div>
-                                                <div className="text-white/40 text-[0.65rem] font-sans border border-white/10 px-2 py-1 rounded-full bg-white/5">
-                                                    1 tsp ≈ 5 grams
+                                            </motion.div>
+
+                                            {/* External Context */}
+                                            <div className="mt-8 text-center">
+                                                <div className="text-emerald-400/80 font-mono text-xs uppercase tracking-widest mb-1 group-hover:text-emerald-300 transition-colors">
+                                                    Particulate Matter 2.5
+                                                </div>
+                                                <div className="text-white/30 text-[9px] uppercase tracking-[0.2em]">
+                                                    Sample ID: {selectedCity.name.substring(0, 3).toUpperCase()}-2024
                                                 </div>
                                             </div>
-
-                                            {/* Floating Dust Particles in Air (Context) */}
-                                            {Array.from({ length: 15 }).map((_, i) => (
-                                                <div key={`air-${i}`} className="absolute w-0.5 h-0.5 bg-white/20 rounded-full animate-pulse" style={{ left: `${Math.random() * 120 - 10}%`, top: `${Math.random() * 100 - 20}%`, animationDuration: `${3 + Math.random()}s` }}></div>
-                                            ))}
                                         </div>
                                     </motion.div>
                                 )}
