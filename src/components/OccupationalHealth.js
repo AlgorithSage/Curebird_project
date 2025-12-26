@@ -529,7 +529,7 @@ const OccupationalHealth = () => {
                 </div>
                 <div>
                     <h2 className="text-2xl font-bold text-white">Occupational Wellness</h2>
-                    <p className="text-slate-400 text-sm">Discover health risks, preventive measures, and medical advice tailored to your profession.</p>
+                    <p className="text-white font-bold text-sm">Discover health risks, preventive measures, and medical advice tailored to your profession.</p>
                 </div>
             </div>
 

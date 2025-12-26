@@ -83,7 +83,7 @@ const HeroSection = ({ onOverviewClick, onAddClick, onNavigate }) => {
                     {/* Top Section: Split Layout (Left Content | Right Video) */}
                     <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-20">
                         {/* Left Side: Text & Features */}
-                        <div className="w-full lg:w-1/2 flex flex-col items-start text-left space-y-8">
+                        <div className="w-full lg:w-1/2 flex flex-col items-center text-center lg:items-start lg:text-left space-y-8">
                             <motion.div
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
@@ -94,10 +94,10 @@ const HeroSection = ({ onOverviewClick, onAddClick, onNavigate }) => {
                             </motion.div>
 
                             <div className="space-y-6">
-                                <h1 className="text-6xl sm:text-8xl lg:text-[11rem] font-black tracking-tighter leading-[0.85] text-transparent bg-clip-text bg-gradient-to-r from-white via-amber-200 via-yellow-300 via-amber-200 to-white animate-text-flow drop-shadow-[0_0_30px_rgba(245,158,11,0.5)] pb-4">
+                                <h1 className="text-5xl sm:text-8xl lg:text-[11rem] font-black tracking-tighter leading-[0.9] text-transparent bg-clip-text bg-gradient-to-r from-white via-amber-200 via-yellow-300 via-amber-200 to-white animate-text-flow drop-shadow-[0_0_30px_rgba(245,158,11,0.5)] pb-2 sm:pb-4">
                                     CureBird
                                 </h1>
-                                <h2 className="text-xl sm:text-3xl font-semibold tracking-wide text-slate-200 max-w-2xl">
+                                <h2 className="text-lg sm:text-3xl font-semibold tracking-wide text-slate-200 max-w-2xl leading-relaxed">
                                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-200">Revolutionizing</span> and <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-200">Digitizing</span> Healthcare with <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-200">Clinical Precision</span>
                                 </h2>
                             </div>
@@ -122,7 +122,7 @@ const HeroSection = ({ onOverviewClick, onAddClick, onNavigate }) => {
                                             <div className="p-1.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 shadow-[0_0_12px_-3px_rgba(16,185,129,0.3)] shrink-0">
                                                 <CheckCircle2 size={20} className="text-emerald-400" />
                                             </div>
-                                            <span className="text-slate-100 text-lg font-medium tracking-wide leading-snug drop-shadow-sm">
+                                            <span className="text-slate-100 text-base sm:text-lg font-medium tracking-wide leading-snug drop-shadow-sm">
                                                 {feature}
                                             </span>
                                         </motion.li>
@@ -135,7 +135,7 @@ const HeroSection = ({ onOverviewClick, onAddClick, onNavigate }) => {
                                     onClick={onOverviewClick}
                                     whileHover={{ scale: 1.05, boxShadow: "0 20px 25px -5px rgba(245, 158, 11, 0.3)" }}
                                     whileTap={{ scale: 0.95 }}
-                                    className="px-8 py-4 bg-gradient-to-r from-amber-500 to-yellow-600 rounded-2xl font-bold text-black shadow-xl border-t border-white/20 hover:border-white/40 transition-all text-lg flex-1 text-center"
+                                    className="px-8 py-3 sm:py-4 bg-gradient-to-r from-amber-500 to-yellow-600 rounded-2xl font-bold text-black shadow-xl border-t border-white/20 hover:border-white/40 transition-all text-base sm:text-lg flex-1 text-center"
                                 >
                                     Dashboard Overview
                                 </motion.button>
@@ -143,7 +143,7 @@ const HeroSection = ({ onOverviewClick, onAddClick, onNavigate }) => {
                                     onClick={onAddClick}
                                     whileHover={{ scale: 1.05, backgroundColor: "rgba(255, 255, 255, 0.15)" }}
                                     whileTap={{ scale: 0.95 }}
-                                    className="px-8 py-4 bg-white/5 backdrop-blur-md rounded-2xl font-bold text-white shadow-xl border border-white/10 hover:border-white/30 transition-all text-lg flex items-center justify-center gap-2 flex-1 text-center"
+                                    className="px-8 py-3 sm:py-4 bg-white/5 backdrop-blur-md rounded-2xl font-bold text-white shadow-xl border border-white/10 hover:border-white/30 transition-all text-base sm:text-lg flex items-center justify-center gap-2 flex-1 text-center"
                                 >
                                     <HeartPulse size={20} className="text-amber-400" />
                                     Add Clinical Record
@@ -195,10 +195,10 @@ const HeroSection = ({ onOverviewClick, onAddClick, onNavigate }) => {
                         className="w-full border-t border-white/5 pt-12"
                     >
                         <div className="text-center mb-10">
-                            <h2 className="text-2xl sm:text-4xl font-bold text-slate-100 tracking-tight leading-snug mb-4">
+                            <h2 className="text-2xl sm:text-4xl font-bold text-white tracking-tight leading-snug mb-4">
                                 Welcome, <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-400">Bird</span>.
                             </h2>
-                            <p className="text-slate-400 text-base sm:text-lg leading-relaxed max-w-3xl mx-auto">
+                            <p className="text-white font-bold text-base sm:text-lg leading-relaxed max-w-3xl mx-auto">
                                 Your command center for total health mastery is now active. Explore our core features to <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-200 font-semibold">unlock advanced insights</span> from your health data <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-200 font-semibold">predict potential risks</span>, and <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-200 font-semibold">experience the future</span> of personalized healthcare:
                             </p>
                         </div>
@@ -211,8 +211,8 @@ const HeroSection = ({ onOverviewClick, onAddClick, onNavigate }) => {
                                 <div className="mb-4 p-3 rounded-2xl bg-amber-500/10 border border-amber-500/20 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_-3px_rgba(245,158,11,0.2)]">
                                     <Bot size={28} className="text-amber-400" />
                                 </div>
-                                <h3 className="text-slate-200 font-bold text-xl leading-tight mb-2 group-hover:text-amber-400 transition-colors">Cure AI</h3>
-                                <p className="text-slate-400 text-sm leading-relaxed">
+                                <h3 className="text-white font-bold text-xl leading-tight mb-2 group-hover:text-amber-400 transition-colors">Cure AI</h3>
+                                <p className="text-white font-bold text-sm leading-relaxed">
                                     Your dedicated 24/7 health consultant. Ask anything, anytime, and get intelligent answers based on your medical history.
                                 </p>
                             </div>
@@ -224,8 +224,8 @@ const HeroSection = ({ onOverviewClick, onAddClick, onNavigate }) => {
                                 <div className="mb-4 p-3 rounded-2xl bg-sky-500/10 border border-sky-500/20 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_-3px_rgba(14,165,233,0.2)]">
                                     <Activity size={28} className="text-sky-400" />
                                 </div>
-                                <h3 className="text-slate-200 font-bold text-xl leading-tight mb-2 group-hover:text-sky-400 transition-colors">Cure Analyzer</h3>
-                                <p className="text-slate-400 text-sm leading-relaxed">
+                                <h3 className="text-white font-bold text-xl leading-tight mb-2 group-hover:text-sky-400 transition-colors">Cure Analyzer</h3>
+                                <p className="text-white font-bold text-sm leading-relaxed">
                                     Instantly decodes complex lab reports into clear, actionable insights, highlighting critical values and trends.
                                 </p>
                             </div>
@@ -237,24 +237,24 @@ const HeroSection = ({ onOverviewClick, onAddClick, onNavigate }) => {
                                 <div className="mb-4 p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_-3px_rgba(16,185,129,0.2)]">
                                     <BarChart2 size={28} className="text-emerald-400" />
                                 </div>
-                                <h3 className="text-slate-200 font-bold text-xl leading-tight mb-2 group-hover:text-emerald-400 transition-colors">Cure Stat</h3>
-                                <p className="text-slate-400 text-sm leading-relaxed">
+                                <h3 className="text-white font-bold text-xl leading-tight mb-2 group-hover:text-emerald-400 transition-colors">Cure Stat</h3>
+                                <p className="text-white font-bold text-sm leading-relaxed">
                                     Visualizes real-time disease trends and epidemic data globally, keeping you informed about public health risks.
                                 </p>
                             </div>
                         </div>
 
                         <div className="flex flex-wrap items-center justify-center gap-4 pt-8">
-                            <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-full border border-white/5 hover:bg-white/10 transition-colors cursor-default">
+                            <div className="flex items-center gap-2 text-[10px] font-bold text-white uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-full border border-white/5 hover:bg-white/10 transition-colors cursor-default">
                                 <ShieldPlus size={12} className="text-emerald-500" /> Secure HIPAA Analytics
                             </div>
-                            <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-full border border-white/5 hover:bg-white/10 transition-colors cursor-default">
+                            <div className="flex items-center gap-2 text-[10px] font-bold text-white uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-full border border-white/5 hover:bg-white/10 transition-colors cursor-default">
                                 <Activity size={12} className="text-sky-500" /> Real-time Synthesis
                             </div>
-                            <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-full border border-white/5 hover:bg-white/10 transition-colors cursor-default">
+                            <div className="flex items-center gap-2 text-[10px] font-bold text-white uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-full border border-white/5 hover:bg-white/10 transition-colors cursor-default">
                                 <FileText size={12} className="text-amber-500" /> Multi-Format Support
                             </div>
-                            <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-full border border-white/5 hover:bg-white/10 transition-colors cursor-default">
+                            <div className="flex items-center gap-2 text-[10px] font-bold text-white uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-full border border-white/5 hover:bg-white/10 transition-colors cursor-default">
                                 <Sparkles size={12} className="text-purple-500" /> Predictive Modeling
                             </div>
                         </div>

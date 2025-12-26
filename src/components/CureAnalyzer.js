@@ -82,17 +82,17 @@ const CureAnalyzer = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigat
                 <div className="flex justify-center gap-8 mt-8 opacity-70">
                     <div className="flex flex-col items-center gap-2">
                         <div className="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-sky-400"><UploadCloud /></div>
-                        <span className="text-xs uppercase tracking-widest font-bold text-slate-500">Upload</span>
+                        <span className="text-xs uppercase tracking-widest font-bold text-white">Upload</span>
                     </div>
                     <div className="w-16 h-px bg-slate-700 self-center"></div>
                     <div className="flex flex-col items-center gap-2">
                         <div className="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-amber-400"><Bot /></div>
-                        <span className="text-xs uppercase tracking-widest font-bold text-slate-500">Analyze</span>
+                        <span className="text-xs uppercase tracking-widest font-bold text-white">Analyze</span>
                     </div>
                     <div className="w-16 h-px bg-slate-700 self-center"></div>
                     <div className="flex flex-col items-center gap-2">
                         <div className="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-emerald-400"><Stethoscope /></div>
-                        <span className="text-xs uppercase tracking-widest font-bold text-slate-500">Understand</span>
+                        <span className="text-xs uppercase tracking-widest font-bold text-white">Understand</span>
                     </div>
                 </div>
             </div>
@@ -267,7 +267,7 @@ const CureAnalyzer = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigat
                                     <div className="w-24 h-24 rounded-full border border-dashed border-slate-500 flex items-center justify-center">
                                         <Bot size={40} className="text-slate-500" />
                                     </div>
-                                    <p className="text-slate-400 font-mono text-xs tracking-widest uppercase">System Standby // Awaiting Input</p>
+                                    <p className="text-white font-bold font-mono text-xs tracking-widest uppercase">System Standby // Awaiting Input</p>
                                 </div>
                             )}
                         </div>

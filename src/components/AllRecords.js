@@ -112,7 +112,7 @@ const AllRecords = ({ user, db, storage, appId, onLogout, onLoginClick, onToggle
                     onAddClick={() => { setEditingRecord(null); setIsFormModalOpen(true); }}
                 />
 
-                <main className={`flex-1 flex flex-col transition-all duration-500 ${!isSearchActive ? 'justify-center items-center' : 'justify-start'}`}>
+                <main className={`flex-1 flex flex-col transition-all duration-500 overflow-y-auto custom-scrollbar ${!isSearchActive ? 'justify-center items-center' : 'justify-start'}`}>
                     {/* Centered Initial Search State */}
                     {!isSearchActive && (
                         <motion.div
@@ -126,7 +126,7 @@ const AllRecords = ({ user, db, storage, appId, onLogout, onLoginClick, onToggle
                                 <h2 className="text-4xl md:text-5xl font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-600 drop-shadow-sm">
                                     Find Your Medical History
                                 </h2>
-                                <p className="text-slate-400 text-lg">Search across reports, prescriptions, and doctor notes instantly.</p>
+                                <p className="text-white font-bold text-lg">Search across reports, prescriptions, and doctor notes instantly.</p>
                             </div>
 
                             <div className="relative w-full group">
@@ -135,7 +135,7 @@ const AllRecords = ({ user, db, storage, appId, onLogout, onLoginClick, onToggle
                                 <input
                                     type="text"
                                     placeholder="Search by doctor, hospital, or type..."
-                                    className="relative z-10 w-full bg-slate-900/60 backdrop-blur-2xl border border-white/10 rounded-2xl pl-16 pr-6 py-6 text-xl shadow-2xl shadow-black/50 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 text-white placeholder:text-slate-500 transition-all"
+                                    className="relative z-10 w-full bg-slate-900/60 backdrop-blur-2xl border border-white/10 rounded-2xl pl-16 pr-6 py-6 text-xl shadow-2xl shadow-black/50 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 text-white placeholder:text-white font-bold transition-all"
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     onFocus={() => setIsSearchActive(true)}
