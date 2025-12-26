@@ -29,7 +29,7 @@ const RareDisease = () => {
                 </div>
             </div>
 
-            <div className="glass p-8 rounded-3xl border border-white/5 mb-8">
+            <div className="glass-card p-8 rounded-3xl border border-white/5 mb-8">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
                     {/* CHART 1: The Invisible Wedge */}

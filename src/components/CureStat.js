@@ -187,10 +187,10 @@ const DiseaseCard = ({ disease, onClick, getRiskLevel }) => {
 
     return (
         <motion.div
-            whileHover={{ scale: 1.02, y: -5 }}
+            whileHover={{ scale: 1.02, translateY: -5 }}
             whileTap={{ scale: 0.98 }}
             onClick={onClick}
-            className="bg-[#090e1a] backdrop-blur-xl rounded-[23px] border border-slate-700 p-6 group cursor-pointer border-l-4 border-l-transparent hover:border-l-sky-500 relative overflow-hidden flex flex-col h-full shadow-lg"
+            className="glass-card p-6 group cursor-pointer relative overflow-hidden flex flex-col h-full"
         >
             <div className="absolute top-0 right-0 p-3 opacity-5 group-hover:opacity-10 transition-opacity">
                 <Activity size={80} />
@@ -439,7 +439,7 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigate })
                     </div>
                 </div>
 
-                <div className="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between bg-[#090e1a] backdrop-blur-xl rounded-[23px] border border-slate-700 p-4 shadow-xl">
+                <div className="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between glass-card p-4">
                     <div className="relative w-full md:w-96 group">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-sky-400 transition-colors" size={20} />
                         <input type="text" placeholder="Search diseases, symptoms..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full bg-slate-900/50 border border-white/10 rounded-xl py-2.5 pl-10 pr-4 text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-sky-500/50 focus:ring-2 focus:ring-sky-500/20 transition-all shadow-inner" />
@@ -454,7 +454,7 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigate })
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-                    <motion.div initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="bg-[#090e1a] backdrop-blur-xl rounded-[23px] border border-slate-700 p-6 shadow-xl">
+                    <motion.div initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="glass-card p-6">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-xl font-bold text-white">Regional Impact</h2>
                             <button onClick={() => setShowHeatmap(true)} className="group relative overflow-hidden bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 px-5 py-2.5 rounded-xl transition-all shadow-lg hover:shadow-sky-500/25 flex items-center gap-2 border border-white/10">
@@ -486,7 +486,7 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigate })
                         </div>
                     </motion.div>
 
-                    <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }} className="bg-[#090e1a] backdrop-blur-xl rounded-[23px] border border-slate-700 p-6 shadow-xl">
+                    <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }} className="glass-card p-6">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-xl font-bold text-white">Disease Distribution</h2>
                             <div className="bg-purple-500/20 p-2 rounded-lg border border-purple-500/30"><Sparkles size={20} className="text-purple-400" /></div>
@@ -538,7 +538,7 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigate })
 
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                             {/* Chart 1: Bed Density Urban vs Rural */}
-                            <div className="bg-[#090e1a] backdrop-blur-xl rounded-[23px] border border-slate-700 p-6 shadow-xl border border-white/5">
+                            <div className="glass-card p-6">
                                 <h3 className="text-lg font-semibold text-slate-200 mb-6 flex items-center gap-2">
                                     Infrastructure Density
                                     <span className="text-xs font-normal text-slate-500 ml-auto bg-slate-800 px-2 py-1 rounded">Beds per 1000 Population</span>
@@ -559,7 +559,7 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigate })
                             </div>
 
                             {/* Chart 2: Sector Utilization */}
-                            <div className="bg-[#090e1a] backdrop-blur-xl rounded-[23px] border border-slate-700 p-6 shadow-xl border border-white/5">
+                            <div className="glass-card p-6">
                                 <h3 className="text-lg font-semibold text-slate-200 mb-6 flex items-center gap-2">
                                     Sector Participation
                                     <span className="text-xs font-normal text-slate-500 ml-auto bg-slate-800 px-2 py-1 rounded">% Share of Healthcare</span>

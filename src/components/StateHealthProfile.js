@@ -98,7 +98,7 @@ const StateHealthProfile = () => {
                                     animate={{ opacity: 1, scale: 1 }}
                                     transition={{ delay: idx * 0.1 }}
                                     whileHover={{ y: -8, scale: 1.02 }}
-                                    className="glass p-6 rounded-2xl border border-white/5 hover:border-blue-500/30 transition-all cursor-pointer group relative overflow-hidden"
+                                    className="glass-card p-6 rounded-2xl border border-white/5 hover:border-blue-500/30 transition-all cursor-pointer group relative overflow-hidden"
                                     onClick={() => setSelectedDisease(disease)}
                                 >
                                     <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
@@ -110,8 +110,8 @@ const StateHealthProfile = () => {
                                             <Activity size={24} className="text-slate-400 group-hover:text-blue-400 transition-colors" />
                                         </div>
                                         <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full border shadow-sm ${disease.prevalence.includes('Very High') || disease.prevalence === 'Critical' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
-                                                disease.prevalence.includes('High') ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
-                                                    'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
+                                            disease.prevalence.includes('High') ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
+                                                'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
                                             }`}>
                                             {disease.prevalence}
                                         </span>

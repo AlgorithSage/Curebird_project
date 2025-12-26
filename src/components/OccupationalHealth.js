@@ -533,7 +533,7 @@ const OccupationalHealth = () => {
                 </div>
             </div>
 
-            <div className="glass p-8 rounded-3xl border border-white/5 mb-8">
+            <div className="glass-card p-8 rounded-3xl border border-white/5 mb-8">
                 <form onSubmit={handleSearch} className="max-w-2xl mx-auto relative mb-8">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
                     <input

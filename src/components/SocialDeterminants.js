@@ -38,7 +38,7 @@ const SocialDeterminants = () => {
                 </div>
             </div>
 
-            <div className="glass p-8 rounded-3xl border border-white/5 mb-8">
+            <div className="glass-card p-8 rounded-3xl border border-white/5 mb-8">
                 {/* Tabs */}
                 <div className="flex gap-4 mb-8">
                     <button
