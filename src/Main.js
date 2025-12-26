@@ -39,6 +39,7 @@ export default function Main() {
                     if (doctorDoc.exists() && doctorDoc.data().role === 'doctor') {
                         setDoctorRoleVerified(true);
                     } else {
+                        // Correct flow: User authenticated but no doctor profile -> Send to onboarding
                         setDoctorRoleVerified(false);
                     }
                 } catch (error) {
@@ -73,45 +74,8 @@ export default function Main() {
                 // Authenticated Doctor in Doctor Area -> Allow
                 return <DoctorPortal user={user} />;
             } else {
-                // Authenticated but NOT a verified Doctor -> Access Denied
-                // (e.g. a Patient tried to go to /doctor/dashboard)
-                return (
-                    <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center text-white p-4">
-                        <h1 className="text-2xl font-bold text-red-500 mb-2">Access Denied</h1>
-                        <p className="text-slate-400 mb-6">This account is not authorized to access the Doctor Portal.</p>
-                        <button
-                            onClick={() => {
-                                auth.signOut();
-                                window.location.href = '/doctor/login'; // Force reload/nav to doctor login
-                            }}
-                            className="bg-slate-700 px-4 py-2 rounded hover:bg-slate-600 mb-4"
-                        >
-                            Sign Out & Return to Login
-                        </button>
-
-                        {/* Developer Helper to Fix "Access Denied" for testers */}
-                        <button
-                            onClick={async () => {
-                                try {
-                                    const { setDoc, doc, serverTimestamp } = await import('firebase/firestore');
-                                    await setDoc(doc(db, 'doctors', user.uid), {
-                                        uid: user.uid,
-                                        email: user.email,
-                                        role: 'doctor',
-                                        createdAt: serverTimestamp(),
-                                        joinedVia: 'dev_fix'
-                                    });
-                                    window.location.reload();
-                                } catch (e) {
-                                    alert("Error fixing account: " + e.message);
-                                }
-                            }}
-                            className="text-xs text-amber-500 underline opacity-60 hover:opacity-100"
-                        >
-                            (DEV ONLY) Enable Doctor Access for this Account
-                        </button>
-                    </div>
-                );
+                // Authenticated but NOT a verified Doctor -> New Doctor Onboarding
+                return <DoctorPortal user={user} isNewDoctor={true} />;
             }
         } else {
             // Not logged in -> Show Doctor Login (handled by Portal)

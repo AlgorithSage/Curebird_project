@@ -16,10 +16,17 @@ import CurebirdLogo from '../curebird_loading_logo.png'; // Using the loading lo
 
 const googleProvider = new GoogleAuthProvider();
 
-export default function DoctorAuth() {
+export default function DoctorAuth({ initialUser }) {
     // Auth State
     const [authStep, setAuthStep] = useState('login'); // 'login' | 'profile'
     const [currentUser, setCurrentUser] = useState(null);
+
+    // Effect: Handle Initial User (Redirected from Main.js)
+    useEffect(() => {
+        if (initialUser) {
+            checkAndRedirect(initialUser);
+        }
+    }, [initialUser]);
 
     // Login Form State
     const [phoneNumber, setPhoneNumber] = useState('+91 ');
