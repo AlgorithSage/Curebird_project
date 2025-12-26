@@ -29,12 +29,12 @@ const FOOD_SECURITY_DATA = [
 ];
 
 // VERIFIED DATA SOURCE: National Health Accounts (NHA) Estimates for India & Jan Aushadhi Pariyojana
-const MEDICINE_ACCESS_DATA = [
-    { category: 'Medicines', value: 48, fill: '#ef4444', label: 'Medicines (48%)' },
-    { category: 'Diagnostics', value: 15, fill: '#f59e0b', label: 'Diagnostics (15%)' },
-    { category: 'Doctor Fees', value: 20, fill: '#3b82f6', label: 'Consultation (20%)' },
-    { category: 'Hospital/Bed', value: 12, fill: '#10b981', label: 'Hospital Charges (12%)' },
-    { category: 'Other', value: 5, fill: '#64748b', label: 'Transport/Other (5%)' },
+const DRUG_CONSUMPTION_DATA = [
+    { type: 'Antibiotics', value: 35, fill: '#f43f5e', label: 'Antibiotics' },
+    { type: 'Analgesics', value: 25, fill: '#8b5cf6', label: 'Painkillers' },
+    { type: 'Antidiabetics', value: 15, fill: '#f59e0b', label: 'Diabetes' },
+    { type: 'Cardiovascular', value: 15, fill: '#10b981', label: 'Heart Meds' },
+    { type: 'Others', value: 10, fill: '#64748b', label: 'Others' },
 ];
 
 const ImprovedTooltip = ({ active, payload }) => {
@@ -84,11 +84,11 @@ const SocialDeterminants = () => {
                         Food Security & Nutrition
                     </button>
                     <button
-                        onClick={() => setActiveTab('pharmacy')}
-                        className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all ${activeTab === 'pharmacy' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30' : 'bg-slate-800/50 text-slate-400 hover:bg-slate-800'}`}
+                        onClick={() => setActiveTab('drugs')}
+                        className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all ${activeTab === 'drugs' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30' : 'bg-slate-800/50 text-slate-400 hover:bg-slate-800'}`}
                     >
                         <Pill size={18} />
-                        Pharmacy & Access
+                        Drug Usage Trends
                     </button>
                 </div>
 
@@ -238,81 +238,56 @@ const SocialDeterminants = () => {
                     }
 
                     {
-                        activeTab === 'pharmacy' && (
+                        activeTab === 'drugs' && (
                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                                     <div className="lg:col-span-2 bg-slate-900/40 p-3 sm:p-6 rounded-2xl border border-white/5 flex flex-col items-center justify-center">
                                         <h3 className="text-white font-semibold mb-6 flex items-center gap-2 w-full text-left">
                                             <Info size={16} className="text-slate-500" />
-                                            "Financial Toxicity" of Healthcare
+                                            Drug Consumption by Category
                                             <div className="group relative ml-1">
                                                 <Info size={14} className="text-slate-500 cursor-help hover:text-slate-300 transition-colors" />
                                                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-slate-900/95 backdrop-blur-sm text-xs text-slate-300 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-white/10 shadow-xl z-50">
-                                                    <strong>Out-of-Pocket Expenditure (OOPE):</strong> Money patients pay directly. In India, medicines are the #1 cause of healthcare-related poverty.
+                                                    <strong>Antibiotics Overuse:</strong> A significant portion of drug consumption involves antibiotics, raising concerns about antimicrobial resistance.
                                                 </div>
                                             </div>
                                         </h3>
 
-                                        <div className="w-full max-w-md aspect-square">
+                                        <div className="w-full h-[300px]">
                                             <ResponsiveContainer width="100%" height="100%">
-                                                <PieChart>
-                                                    <Pie
-                                                        data={MEDICINE_ACCESS_DATA}
-                                                        innerRadius={80}
-                                                        outerRadius={120}
-                                                        paddingAngle={2}
-                                                        dataKey="value"
-                                                        stroke="none"
-                                                    >
-                                                        {MEDICINE_ACCESS_DATA.map((entry, index) => (
-                                                            <Cell key={`cell-${index}`} fill={entry.fill} />
-                                                        ))}
-                                                    </Pie>
+                                                <BarChart data={DRUG_CONSUMPTION_DATA} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
+                                                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.3} vertical={false} />
+                                                    <XAxis dataKey="type" stroke="#94a3b8" fontSize={11} angle={-45} textAnchor="end" height={60} />
+                                                    <YAxis stroke="#94a3b8" fontSize={12} label={{ value: 'Market Share (%)', angle: -90, position: 'insideLeft', fill: '#64748b' }} />
                                                     <Tooltip
-                                                        formatter={(value) => `${value}%`}
+                                                        cursor={{ fill: '#334155', opacity: 0.2 }}
                                                         contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#f1f5f9' }}
                                                     />
-                                                    <Legend verticalAlign="bottom" height={36} iconType="circle" />
-                                                </PieChart>
+                                                    <Bar dataKey="value" name="Usage Share (%)" radius={[4, 4, 0, 0]}>
+                                                        {DRUG_CONSUMPTION_DATA.map((entry, index) => (
+                                                            <Cell key={`cell-${index}`} fill={entry.fill} />
+                                                        ))}
+                                                    </Bar>
+                                                </BarChart>
                                             </ResponsiveContainer>
-                                        </div>
-
-                                        <div className="absolute flex flex-col items-center justify-center pointer-events-none mt-8">
-                                            <span className="text-4xl font-bold text-white">48%</span>
-                                            <span className="text-xs text-slate-500 uppercase tracking-widest text-center mt-1">Of Costs<br />are Medicines</span>
                                         </div>
                                     </div>
 
                                     <div className="space-y-6">
                                         <div className="bg-slate-900/40 p-3 sm:p-6 rounded-2xl border border-white/5">
-                                            <h4 className="text-lg font-bold text-white mb-4">The Cost of Cure</h4>
+                                            <h4 className="text-lg font-bold text-white mb-4">Medication Trends</h4>
                                             <p className="text-slate-300 text-sm leading-relaxed mb-4">
-                                                Nearly <strong>half</strong> of all money spent by Indian patients goes directly to buying medicines. This "OOP" (Out-of-Pocket) cost pushes millions into poverty every year.
+                                                <strong>Antibiotics</strong> and <strong>Painkillers</strong> dominate the pharmaceutical market. This trend highlights the need for better awareness regarding prescription drug usage.
                                             </p>
                                         </div>
 
-                                        <div className="bg-gradient-to-br from-emerald-500/20 to-teal-500/20 p-3 sm:p-6 rounded-2xl border border-emerald-500/20 relative overflow-hidden group">
+                                        <div className="bg-gradient-to-br from-rose-500/20 to-pink-500/20 p-3 sm:p-6 rounded-2xl border border-rose-500/20 relative overflow-hidden group">
                                             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                                                 <Pill size={80} />
                                             </div>
 
-                                            <h4 className="text-lg font-bold text-emerald-400 mb-2">Curebird Action Plan</h4>
-                                            <p className="text-slate-300 text-sm mb-4">Reduce your medical bills by switching to Generic Medicines.</p>
-
-                                            <div className="space-y-2">
-                                                <div className="flex justify-between items-center bg-black/20 p-3 rounded-lg border border-black/5">
-                                                    <span className="text-xs text-slate-400">Branded Drug</span>
-                                                    <span className="text-red-400 font-mono font-bold">₹100</span>
-                                                </div>
-                                                <div className="flex justify-between items-center bg-emerald-500/10 p-3 rounded-lg border border-emerald-500/30">
-                                                    <span className="text-xs text-white">Generic (Jan Aushadhi)</span>
-                                                    <span className="text-emerald-400 font-mono font-bold">₹15</span>
-                                                </div>
-                                            </div>
-
-                                            <button className="w-full mt-4 bg-emerald-500 hover:bg-emerald-400 text-black py-2.5 rounded-xl font-bold text-sm transition-colors shadow-lg shadow-emerald-500/20">
-                                                Find Generic Alternatives
-                                            </button>
+                                            <h4 className="text-lg font-bold text-rose-400 mb-2">Health Insight</h4>
+                                            <p className="text-slate-300 text-sm mb-4">High reliance on painkillers suggests widespread chronic pain or symptom management rather than root-cause treatment.</p>
                                         </div>
                                     </div>
                                 </div>
