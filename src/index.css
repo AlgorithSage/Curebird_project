@@ -71,26 +71,49 @@ body {
   }
 
   .glass-card {
-    @apply backdrop-blur-xl border border-yellow-500/30 hover:border-yellow-500/60 transition-all duration-300;
-    background: rgba(0, 0, 0, 0.5);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37),
-      0 0 0 1px rgba(234, 179, 8, 0.15),
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+    /* Base Glass Structure */
+    @apply backdrop-blur-2xl transition-all duration-500 rounded-[2rem] p-10;
+
+    /* 
+       Color & Contrast Strategy (Final Polish):
+       1. Non-Hover: "Whisper of Amber". 
+          Uses a high-luminosity amber (255, 200, 80) at very low opacity (0.03) blended with deep black.
+          This creates a "lighter shade" tint that is distinct but not muddy.
+    */
+    background: linear-gradient(160deg, rgba(255, 200, 80, 0.1) 0%, rgba(0, 0, 0, 0.85) 100%) !important;
+
+    /* 
+       Border & Edge Definition:
+       1. Physical Border: Visible Amber/Gold edge (opacity 0.25) to act as a container.
+    */
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    box-shadow:
+      0 15px 35px -5px rgba(0, 0, 0, 0.7),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.07),
+      inset 0 0 40px rgba(245, 158, 11, 0.08);
   }
 
   .glass-card:hover {
-    background: rgba(0, 0, 0, 0.55);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37),
-      0 0 20px rgba(234, 179, 8, 0.3),
+    transform: translateY(-6px);
+    border-color: rgba(245, 158, 11, 0.4);
+    /* Brighten border on hover */
+    background: linear-gradient(160deg, rgba(40, 35, 15, 0.7) 0%, rgba(5, 5, 5, 0.9) 100%) !important;
+
+    /* Enhanced Glow & Lift */
+    box-shadow:
+      0 30px 60px -10px rgba(0, 0, 0, 0.9),
+      /* Deeper lift shadow */
+      0 0 20px rgba(245, 158, 11, 0.15),
+      /* Outer Halo */
       inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
   }
 
   .text-glow {
-    text-shadow: 0 0 10px rgba(234, 179, 8, 0.4);
+    text-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
   }
 
   .border-glow {
-    box-shadow: 0 0 10px rgba(234, 179, 8, 0.15);
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
   }
 }
 
@@ -154,20 +177,21 @@ body {
   animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-  /* Fast text gradient flow */
-  @keyframes text-flow {
-    0% {
-      background-position: 0% 50%;
-    }
-    100% {
-      background-position: 200% 50%;
-    }
+/* Fast text gradient flow */
+@keyframes text-flow {
+  0% {
+    background-position: 0% 50%;
   }
 
-  .animate-text-flow {
-    background-size: 200% auto;
-    animation: text-flow 4s linear infinite;
+  100% {
+    background-position: 200% 50%;
   }
+}
+
+.animate-text-flow {
+  background-size: 200% auto;
+  animation: text-flow 4s linear infinite;
+}
 
 /* Fundamental Markdown Styling for Chat */
 .prose {
