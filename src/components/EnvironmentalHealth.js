@@ -1,63 +1,148 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Wind, CloudFog, AlertTriangle, MapPin, Cigarette, Info, Search } from 'lucide-react';
+import { Wind, CloudFog, AlertTriangle, MapPin, Cigarette, Info, Search, RefreshCw, Signal, Zap } from 'lucide-react';
 
 // Scientific conversion: approx 22ug/m3 of PM2.5 == 1 Cigarette
 const CIGARETTE_FACTOR = 22;
 
+const getAQIDescription = (aqi) => {
+    if (aqi > 300) return 'Hazardous';
+    if (aqi > 200) return 'Very Poor';
+    if (aqi > 150) return 'Unhealthy';
+    if (aqi > 100) return 'Poor';
+    if (aqi > 50) return 'Moderate';
+    return 'Good';
+};
+
 const CITIES_DATA = [
-    { name: 'New Delhi', aqi: 450, pm25: 290, description: 'Hazardous', image: '/assets/landmarks/delhi.png' },
-    { name: 'Lucknow', aqi: 340, pm25: 210, description: 'Hazardous' },
-    { name: 'Patna', aqi: 320, pm25: 180, description: 'Very Poor' },
-    { name: 'Kolkata', aqi: 240, pm25: 150, description: 'Poor' },
-    { name: 'Mumbai', aqi: 160, pm25: 75, description: 'Unhealthy' },
-    { name: 'Jaipur', aqi: 210, pm25: 120, description: 'Poor' },
-    { name: 'Ahmedabad', aqi: 190, pm25: 105, description: 'Unhealthy' },
-    { name: 'Bhopal', aqi: 180, pm25: 95, description: 'Unhealthy' },
-    { name: 'Chandigarh', aqi: 170, pm25: 85, description: 'Unhealthy' },
-    { name: 'Guwahati', aqi: 160, pm25: 80, description: 'Unhealthy' },
-    { name: 'Hyderabad', aqi: 130, pm25: 65, description: 'Unhealthy' },
-    { name: 'Bhubaneswar', aqi: 140, pm25: 70, description: 'Unhealthy' },
-    { name: 'Chennai', aqi: 110, pm25: 55, description: 'Moderate' },
-    { name: 'Dehradun', aqi: 130, pm25: 68, description: 'Unhealthy' },
-    { name: 'Raipur', aqi: 150, pm25: 82, description: 'Unhealthy' },
-    { name: 'Ranchi', aqi: 155, pm25: 85, description: 'Unhealthy' },
-    { name: 'Bangalore', aqi: 45, pm25: 18, description: 'Good' },
-    { name: 'Thiruvananthapuram', aqi: 50, pm25: 20, description: 'Good' },
-    { name: 'Srinagar', aqi: 90, pm25: 45, description: 'Moderate' },
-    { name: 'Shimla', aqi: 60, pm25: 35, description: 'Satisfactory' },
-    { name: 'Panaji', aqi: 55, pm25: 30, description: 'Satisfactory' },
-    { name: 'Gangtok', aqi: 35, pm25: 15, description: 'Good' },
-    { name: 'Shillong', aqi: 40, pm25: 18, description: 'Good' },
-    { name: 'Aizawl', aqi: 25, pm25: 10, description: 'Good' },
-    { name: 'Imphal', aqi: 50, pm25: 25, description: 'Good' },
-    { name: 'Kohima', aqi: 65, pm25: 32, description: 'Satisfactory' },
-    { name: 'Itanagar', aqi: 55, pm25: 28, description: 'Satisfactory' },
-    { name: 'Agartala', aqi: 110, pm25: 58, description: 'Moderate' },
+    { name: 'New Delhi', lat: 28.6139, lng: 77.2090, aqi: 450, pm25: 290, description: 'Hazardous' },
+    { name: 'Lucknow', lat: 26.8467, lng: 80.9462, aqi: 340, pm25: 210, description: 'Hazardous' },
+    { name: 'Patna', lat: 25.5941, lng: 85.1376, aqi: 320, pm25: 180, description: 'Very Poor' },
+    { name: 'Kolkata', lat: 22.5726, lng: 88.3639, aqi: 240, pm25: 150, description: 'Poor' },
+    { name: 'Mumbai', lat: 19.0760, lng: 72.8777, aqi: 160, pm25: 75, description: 'Unhealthy' },
+    { name: 'Jaipur', lat: 26.9124, lng: 75.7873, aqi: 210, pm25: 120, description: 'Poor' },
+    { name: 'Ahmedabad', lat: 23.0225, lng: 72.5714, aqi: 190, pm25: 105, description: 'Unhealthy' },
+    { name: 'Bhopal', lat: 23.2599, lng: 77.4126, aqi: 180, pm25: 95, description: 'Unhealthy' },
+    { name: 'Chandigarh', lat: 30.7333, lng: 76.7794, aqi: 170, pm25: 85, description: 'Unhealthy' },
+    { name: 'Guwahati', lat: 26.1445, lng: 91.7362, aqi: 160, pm25: 80, description: 'Unhealthy' },
+    { name: 'Hyderabad', lat: 17.3850, lng: 78.4867, aqi: 130, pm25: 65, description: 'Unhealthy' },
+    { name: 'Bhubaneswar', lat: 20.2961, lng: 85.8245, aqi: 140, pm25: 70, description: 'Unhealthy' },
+    { name: 'Chennai', lat: 13.0827, lng: 80.2707, aqi: 110, pm25: 55, description: 'Moderate' },
+    { name: 'Dehradun', lat: 30.3165, lng: 78.0322, aqi: 130, pm25: 68, description: 'Unhealthy' },
+    { name: 'Raipur', lat: 21.2514, lng: 81.6296, aqi: 150, pm25: 82, description: 'Unhealthy' },
+    { name: 'Ranchi', lat: 23.3441, lng: 85.3096, aqi: 155, pm25: 85, description: 'Unhealthy' },
+    { name: 'Bangalore', lat: 12.9716, lng: 77.5946, aqi: 45, pm25: 18, description: 'Good' },
+    { name: 'Thiruvananthapuram', lat: 8.5241, lng: 76.9366, aqi: 50, pm25: 20, description: 'Good' },
+    { name: 'Srinagar', lat: 34.0837, lng: 74.7973, aqi: 90, pm25: 45, description: 'Moderate' },
+    { name: 'Shimla', lat: 31.1048, lng: 77.1734, aqi: 60, pm25: 35, description: 'Satisfactory' },
+    { name: 'Panaji', lat: 15.4909, lng: 73.8278, aqi: 55, pm25: 30, description: 'Satisfactory' },
+    { name: 'Gangtok', lat: 27.3389, lng: 88.6065, aqi: 35, pm25: 15, description: 'Good' },
+    { name: 'Shillong', lat: 25.5788, lng: 91.8933, aqi: 40, pm25: 18, description: 'Good' },
+    { name: 'Aizawl', lat: 23.7307, lng: 92.7173, aqi: 25, pm25: 10, description: 'Good' },
+    { name: 'Imphal', lat: 24.8170, lng: 93.9368, aqi: 50, pm25: 25, description: 'Good' },
+    { name: 'Kohima', lat: 25.6751, lng: 94.1086, aqi: 65, pm25: 32, description: 'Satisfactory' },
+    { name: 'Itanagar', lat: 27.0844, lng: 93.6053, aqi: 55, pm25: 28, description: 'Satisfactory' },
+    { name: 'Agartala', lat: 23.8315, lng: 91.2868, aqi: 110, pm25: 58, description: 'Moderate' },
 ];
 
 const EnvironmentalHealth = () => {
     const [selectedCity, setSelectedCity] = useState(CITIES_DATA[0]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [liveData, setLiveData] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isLive, setIsLive] = useState(false);
 
     // Filter cities based on search
     const filteredCities = CITIES_DATA.filter(city =>
         city.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    const fetchAQI = async (city) => {
+        // Use WAQI API Token
+        const apiKey = process.env.REACT_APP_WAQI_API_TOKEN;
+
+        if (!apiKey) {
+            console.warn("WAQI API Key not found.");
+            setIsLive(false);
+            setLiveData(null);
+            return;
+        }
+
+        setIsLoading(true);
+        try {
+            // WAQI API Endpoint
+            const response = await fetch(`https://api.waqi.info/feed/geo:${city.lat};${city.lng}/?token=${apiKey}`);
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch AQI data');
+            }
+
+            const data = await response.json();
+
+            if (data.status !== 'ok') {
+                throw new Error('API returned error status');
+            }
+
+            const result = data.data;
+            let aqi = result.aqi;
+            let pm25 = 0;
+
+            // Extract PM2.5 if available
+            if (result.iaqi && result.iaqi.pm25) {
+                pm25 = result.iaqi.pm25.v;
+            }
+
+            // Fallback Logic
+            if (aqi && !isNaN(aqi)) {
+                if (!pm25 || isNaN(pm25)) {
+                    // Estimate if missing
+                    pm25 = aqi * 0.75;
+                }
+
+                const description = getAQIDescription(aqi);
+
+                setLiveData({
+                    aqi: Math.round(aqi),
+                    pm25: pm25,
+                    description: description
+                });
+                setIsLive(true);
+            } else {
+                setIsLive(false);
+                setLiveData(null);
+            }
+
+        } catch (error) {
+            console.error("Error fetching AQI:", error);
+            setIsLive(false);
+            setLiveData(null);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // Fetch data when city changes
+    useEffect(() => {
+        fetchAQI(selectedCity);
+    }, [selectedCity]);
+
+    // Use live data if available, otherwise static
+    const currentAQI = liveData ? liveData.aqi : selectedCity.aqi;
+    const currentPM25 = liveData ? liveData.pm25 : selectedCity.pm25;
+    const currentDesc = liveData ? liveData.description : selectedCity.description;
+
     // Calculation: cigarettes per day
-    const cigarettes = (selectedCity.pm25 / CIGARETTE_FACTOR).toFixed(1);
-    const cigaretteCount = Math.round(selectedCity.pm25 / CIGARETTE_FACTOR);
+    const cigarettes = (currentPM25 / CIGARETTE_FACTOR).toFixed(1);
+    const cigaretteCount = Math.round(currentPM25 / CIGARETTE_FACTOR);
 
     return (
         <div className="w-full">
-            <div className="flex items-center gap-3 mb-6">
-                <div className="bg-slate-500/20 p-2.5 rounded-xl border border-slate-500/30 shadow-lg shadow-slate-500/10">
-                    <Wind size={24} className="text-slate-200" />
+            <div className="flex items-center gap-3 mb-4 pl-4">
+                <div className="bg-slate-500/20 p-2 rounded-lg border border-slate-500/30">
+                    <CloudFog size={20} className="text-slate-200" />
                 </div>
                 <div>
-                    <h2 className="text-2xl font-bold text-white">Environmental Health & AQI</h2>
-                    <p className="text-slate-400 text-sm">Quantifying the biological cost of air pollution.</p>
+                    <h2 className="text-xl font-bold text-white">Environmental Health & AQI</h2>
                 </div>
             </div>
 
@@ -66,7 +151,7 @@ const EnvironmentalHealth = () => {
 
                 {/* Dynamic Smoke Background Overlay */}
                 <motion.div
-                    animate={{ opacity: Math.min(selectedCity.aqi / 600, 0.8) }}
+                    animate={{ opacity: Math.min(currentAQI / 600, 0.8) }}
                     transition={{ duration: 1 }}
                     className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-700 to-gray-900 pointer-events-none z-0"
                     style={{ filter: 'blur(40px)' }}
@@ -87,20 +172,20 @@ const EnvironmentalHealth = () => {
                             </p>
                         </div>
 
-                        {/* Metrics Section (Shifted up by removing mt-auto and using parent justify-center) */}
+                        {/* Metrics Section */}
                         <div className="flex flex-col gap-8">
                             <div>
                                 <span className="text-slate-400 font-bold tracking-[0.2em] text-sm mb-4 block uppercase opacity-80">Current Air Quality</span>
                                 <div className="flex items-end gap-6">
                                     <span className="text-8xl md:text-[8rem] font-black text-white leading-[0.85] tracking-tighter drop-shadow-2xl">
-                                        {selectedCity.aqi}
+                                        {currentAQI}
                                     </span>
-                                    <span className={`px-5 py-2 mb-4 rounded-full text-sm font-bold uppercase tracking-wider border-2 shadow-lg ${selectedCity.aqi > 300 ? 'bg-red-500/20 text-red-400 border-red-500/30 shadow-red-500/20' :
-                                            selectedCity.aqi > 200 ? 'bg-orange-500/20 text-orange-400 border-orange-500/30 shadow-orange-500/20' :
-                                                selectedCity.aqi > 100 ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30 shadow-yellow-500/20' :
+                                    <span className={`px-5 py-2 mb-4 rounded-full text-sm font-bold uppercase tracking-wider border-2 shadow-lg ${currentAQI > 300 ? 'bg-red-500/20 text-red-400 border-red-500/30 shadow-red-500/20' :
+                                            currentAQI > 200 ? 'bg-orange-500/20 text-orange-400 border-orange-500/30 shadow-orange-500/20' :
+                                                currentAQI > 100 ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30 shadow-yellow-500/20' :
                                                     'bg-emerald-500/20 text-emerald-400 border-emerald-500/30 shadow-emerald-500/20'
                                         }`}>
-                                        {selectedCity.description}
+                                        {currentDesc}
                                     </span>
                                 </div>
                             </div>
@@ -136,7 +221,24 @@ const EnvironmentalHealth = () => {
                         {/* City Selector */}
                         <div className="w-full bg-slate-900/50 p-6 rounded-3xl border border-white/10 backdrop-blur-md shadow-xl">
                             <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-3">
-                                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Select Location</h4>
+                                <div className="flex items-center gap-3">
+                                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Select Location</h4>
+                                    {/* Integrated Status Indicator */}
+                                    {isLoading ? (
+                                        <RefreshCw size={10} className="text-orange-400 animate-spin" />
+                                    ) : isLive ? (
+                                        <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                                            <span className="relative flex h-1.5 w-1.5">
+                                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                                            </span>
+                                            <span className="text-[0.6rem] font-bold text-emerald-400 tracking-wide uppercase">Live</span>
+                                        </div>
+                                    ) : (
+                                        <span className="text-[0.6rem] text-slate-600 font-medium tracking-wide uppercase border border-slate-700 px-1.5 rounded bg-slate-800/50">Est.</span>
+                                    )}
+                                </div>
+
                                 <div className="relative group">
                                     <Search size={16} className="text-slate-500 absolute left-3 top-1/2 -translate-y-1/2 group-focus-within:text-orange-400 transition-colors" />
                                     <input
@@ -178,7 +280,7 @@ const EnvironmentalHealth = () => {
 
                             {/* Background Atmosphere - Global Smog Density */}
                             <motion.div
-                                animate={{ opacity: Math.min(selectedCity.aqi / 500, 0.8) }}
+                                animate={{ opacity: Math.min(currentAQI / 500, 0.8) }}
                                 transition={{ duration: 1 }}
                                 className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-800/30 to-transparent pointer-events-none z-0"
                             ></motion.div>
