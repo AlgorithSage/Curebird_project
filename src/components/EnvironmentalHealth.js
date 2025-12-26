@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Wind, CloudFog, AlertTriangle, MapPin, Cigarette, Info } from 'lucide-react';
+import { Wind, CloudFog, AlertTriangle, MapPin, Cigarette, Info, Search } from 'lucide-react';
 
 // Scientific conversion: approx 22ug/m3 of PM2.5 == 1 Cigarette
 const CIGARETTE_FACTOR = 22;
 
 const CITIES_DATA = [
-    { name: 'New Delhi', aqi: 450, pm25: 290, description: 'Hazardous' },
+    { name: 'New Delhi', aqi: 450, pm25: 290, description: 'Hazardous', image: '/assets/landmarks/delhi.png' },
     { name: 'Lucknow', aqi: 340, pm25: 210, description: 'Hazardous' },
     { name: 'Patna', aqi: 320, pm25: 180, description: 'Very Poor' },
     { name: 'Kolkata', aqi: 240, pm25: 150, description: 'Poor' },
@@ -38,6 +38,12 @@ const CITIES_DATA = [
 
 const EnvironmentalHealth = () => {
     const [selectedCity, setSelectedCity] = useState(CITIES_DATA[0]);
+    const [searchTerm, setSearchTerm] = useState('');
+
+    // Filter cities based on search
+    const filteredCities = CITIES_DATA.filter(city =>
+        city.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     // Calculation: cigarettes per day
     const cigarettes = (selectedCity.pm25 / CIGARETTE_FACTOR).toFixed(1);
@@ -56,7 +62,7 @@ const EnvironmentalHealth = () => {
             </div>
 
             {/* CONCEPT 1: THE SMOKER'S EQUIVALENT */}
-            <div className="glass-card p-8 rounded-3xl border border-white/5 mb-8 relative overflow-hidden">
+            <div className="glass-card p-8 lg:p-12 rounded-[2.5rem] border border-white/5 mb-8 relative overflow-hidden min-h-[600px]">
 
                 {/* Dynamic Smoke Background Overlay */}
                 <motion.div
@@ -66,97 +72,184 @@ const EnvironmentalHealth = () => {
                     style={{ filter: 'blur(40px)' }}
                 />
 
-                <div className="relative z-10">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+                <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 h-full">
+
+                    {/* LEFT COLUMN: Narrative & Metrics (Full Height) */}
+                    <div className="flex flex-col justify-center h-full gap-20">
+                        {/* Header Section */}
                         <div>
-                            <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                                <Cigarette size={20} className="text-orange-400" />
+                            <h3 className="text-3xl md:text-5xl font-black text-white flex items-center gap-3 mb-6 tracking-tight">
+                                <Cigarette size={40} className="text-orange-400" />
                                 "The Smoker's Equivalent"
                             </h3>
-                            <p className="text-slate-400 text-sm mt-1 max-w-lg">
-                                AQI numbers are abstract. We translate pollution into a metric everyone understands: <strong>Cigarettes smoked per day.</strong>
+                            <p className="text-slate-300 text-lg md:text-xl leading-relaxed max-w-2xl font-light">
+                                AQI numbers are abstract. We translate pollution into a metric everyone understands: <strong className="text-white font-semibold">Cigarettes smoked per day.</strong>
                             </p>
                         </div>
 
-                        {/* City Selector */}
-                        {/* City Selector */}
-                        <div className="w-full lg:w-96 bg-slate-900/50 p-4 rounded-2xl border border-white/10 backdrop-blur-md">
-                            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Select Location</h4>
-                            <div className="grid grid-cols-2 gap-2 max-h-[160px] overflow-y-auto pr-2 custom-scrollbar">
-                                {CITIES_DATA.map((city) => (
-                                    <button
-                                        key={city.name}
-                                        onClick={() => setSelectedCity(city)}
-                                        className={`px-3 py-2 rounded-lg text-xs font-medium transition-all text-left truncate flex items-center gap-2 ${selectedCity.name === city.name
-                                                ? 'bg-slate-700 text-white shadow-lg border border-white/20'
-                                                : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
-                                            }`}
-                                    >
-                                        <div className={`w-2 h-2 rounded-full shrink-0 ${city.aqi > 300 ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]' : city.aqi > 200 ? 'bg-orange-500' : city.aqi > 100 ? 'bg-yellow-500' : 'bg-emerald-500'}`}></div>
-                                        {city.name}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Main Visualization Area */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-
-                        {/* Left: The Metric */}
-                        <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
-                            <div className="mb-6">
-                                <span className="text-slate-400 text-sm uppercase tracking-wider font-semibold block mb-2">Current Air Quality</span>
-                                <div className="flex items-baseline gap-2 justify-center lg:justify-start">
-                                    <span className="text-6xl font-black text-white">{selectedCity.aqi}</span>
-                                    <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide border ${selectedCity.aqi > 300 ? 'bg-red-500/20 text-red-400 border-red-500/30' :
-                                        selectedCity.aqi > 100 ? 'bg-orange-500/20 text-orange-400 border-orange-500/30' :
-                                            'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                        {/* Metrics Section (Shifted up by removing mt-auto and using parent justify-center) */}
+                        <div className="flex flex-col gap-8">
+                            <div>
+                                <span className="text-slate-400 font-bold tracking-[0.2em] text-sm mb-4 block uppercase opacity-80">Current Air Quality</span>
+                                <div className="flex items-end gap-6">
+                                    <span className="text-8xl md:text-[8rem] font-black text-white leading-[0.85] tracking-tighter drop-shadow-2xl">
+                                        {selectedCity.aqi}
+                                    </span>
+                                    <span className={`px-5 py-2 mb-4 rounded-full text-sm font-bold uppercase tracking-wider border-2 shadow-lg ${selectedCity.aqi > 300 ? 'bg-red-500/20 text-red-400 border-red-500/30 shadow-red-500/20' :
+                                            selectedCity.aqi > 200 ? 'bg-orange-500/20 text-orange-400 border-orange-500/30 shadow-orange-500/20' :
+                                                selectedCity.aqi > 100 ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30 shadow-yellow-500/20' :
+                                                    'bg-emerald-500/20 text-emerald-400 border-emerald-500/30 shadow-emerald-500/20'
                                         }`}>
                                         {selectedCity.description}
                                     </span>
                                 </div>
                             </div>
 
-                            <div className="bg-black/40 p-6 rounded-2xl border border-white/10 backdrop-blur-sm w-full">
-                                <div className="flex items-center gap-3 mb-4">
-                                    <AlertTriangle size={20} className="text-orange-500" />
-                                    <span className="text-slate-200 font-medium">Biological Impact Today</span>
+                            <div className="bg-black/40 p-10 rounded-[2rem] border border-white/10 backdrop-blur-md shadow-2xl relative overflow-hidden group">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-orange-500/20 transition-all duration-700"></div>
+
+                                <div className="flex items-center gap-3 mb-6 relative z-10">
+                                    <div className="bg-orange-500/20 p-2.5 rounded-xl">
+                                        <AlertTriangle size={24} className="text-orange-500" />
+                                    </div>
+                                    <span className="text-slate-200 font-bold text-lg tracking-wide">Biological Impact Today</span>
                                 </div>
-                                <div className="flex items-center gap-4">
-                                    <div className="bg-white/5 p-3 rounded-full">
-                                        <Cigarette size={32} className="text-white" />
+                                <div className="flex items-end gap-6 relative z-10">
+                                    <div className="bg-white/5 p-5 rounded-2xl border border-white/10 backdrop-blur-sm">
+                                        <Cigarette size={48} className="text-white opacity-90" />
                                     </div>
                                     <div>
-                                        <p className="text-slate-400 text-xs">Breathing this air is roughly equal to:</p>
-                                        <p className="text-3xl font-bold text-white mt-1">
-                                            <span className="text-orange-400">{cigarettes}</span> Cigarettes
+                                        <p className="text-slate-400 text-sm font-medium mb-1 tracking-wide uppercase opacity-70">Breathing this air is roughly equal to:</p>
+                                        <p className="text-5xl md:text-7xl font-black text-white leading-none mt-2">
+                                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-300 to-orange-500">{cigarettes}</span> <span className="text-3xl md:text-4xl text-slate-400 font-bold tracking-tight">Cigarettes</span>
                                         </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        {/* Right: The Visualizer */}
-                        <div className="bg-slate-800/30 p-8 rounded-3xl border border-white/5 min-h-[250px] flex flex-col justify-center relative">
-                            <p className="absolute top-4 left-6 text-xs text-slate-500 font-mono">VISUALIZATION</p>
 
-                            <div className="flex flex-wrap gap-2 justify-center content-center py-6">
+                    {/* RIGHT COLUMN: Selector & Visualization (Full Height) */}
+                    <div className="flex flex-col gap-6 h-full">
+
+                        {/* City Selector */}
+                        <div className="w-full bg-slate-900/50 p-6 rounded-3xl border border-white/10 backdrop-blur-md shadow-xl">
+                            <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-3">
+                                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Select Location</h4>
+                                <div className="relative group">
+                                    <Search size={16} className="text-slate-500 absolute left-3 top-1/2 -translate-y-1/2 group-focus-within:text-orange-400 transition-colors" />
+                                    <input
+                                        type="text"
+                                        placeholder="Search city..."
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        className="bg-slate-800/80 border border-slate-700 rounded-xl py-2 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500/50 w-40 focus:w-64 transition-all placeholder:text-slate-600 shadow-inner"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3 max-h-[220px] overflow-y-auto pr-2 custom-scrollbar content-start">
+                                {filteredCities.map((city) => (
+                                    <button
+                                        key={city.name}
+                                        onClick={() => setSelectedCity(city)}
+                                        className={`px-4 py-3 rounded-xl text-xs font-semibold transition-all text-left truncate flex items-center gap-3 ${selectedCity.name === city.name
+                                            ? 'bg-slate-700 text-white shadow-lg border border-white/20'
+                                            : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
+                                            }`}
+                                    >
+                                        <div className={`w-2.5 h-2.5 rounded-full shrink-0 shadow-sm ${city.aqi > 300 ? 'bg-red-500 shadow-red-500/50' : city.aqi > 200 ? 'bg-orange-500 shadow-orange-500/50' : city.aqi > 100 ? 'bg-yellow-500' : 'bg-emerald-500'}`}></div>
+                                        {city.name}
+                                    </button>
+                                ))}
+                                {filteredCities.length === 0 && (
+                                    <div className="col-span-2 flex flex-col items-center justify-center py-8 text-slate-500 gap-3">
+                                        <Search size={28} className="opacity-20" />
+                                        <span className="text-sm font-medium">No city found</span>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Visualizer */}
+                        <div className="bg-slate-800/30 p-8 rounded-[2rem] border border-white/5 flex-grow min-h-[400px] flex flex-col items-center justify-center relative overflow-hidden group shadow-inner">
+                            <p className="absolute top-6 left-8 text-xs text-slate-500 font-mono z-20 tracking-widest opacity-50">VISUALIZATION</p>
+
+                            {/* Background Atmosphere - Global Smog Density */}
+                            <motion.div
+                                animate={{ opacity: Math.min(selectedCity.aqi / 500, 0.8) }}
+                                transition={{ duration: 1 }}
+                                className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-800/30 to-transparent pointer-events-none z-0"
+                            ></motion.div>
+
+                            <div className="flex flex-wrap gap-4 justify-center content-center py-6 px-4 relative z-10 perspective-[1000px] w-full h-full items-center">
                                 <AnimatePresence mode="popLayout">
                                     {Array.from({ length: cigaretteCount }).map((_, i) => (
                                         <motion.div
                                             key={`${selectedCity.name}-${i}`}
-                                            initial={{ opacity: 0, scale: 0, y: 20 }}
-                                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                                            exit={{ opacity: 0, scale: 0 }}
-                                            transition={{ delay: i * 0.05, type: 'spring' }}
-                                            className="relative group"
+                                            initial={{ opacity: 0, scale: 0, y: 100, rotate: Math.random() * 10 - 5 }}
+                                            animate={{
+                                                opacity: 1,
+                                                scale: 1,
+                                                y: 0,
+                                                rotate: 0,
+                                                transition: {
+                                                    type: "spring",
+                                                    stiffness: 260,
+                                                    damping: 20,
+                                                    delay: i * 0.05
+                                                }
+                                            }}
+                                            exit={{ opacity: 0, scale: 0, transition: { duration: 0.2 } }}
+                                            className="relative group flex flex-col items-center"
                                         >
-                                            {/* Cigarette Icon Representation */}
-                                            <div className="w-2 h-16 bg-gradient-to-b from-orange-300 via-white to-white rounded-full shadow-[0_0_10px_rgba(255,255,255,0.2)] transform rotate-12 group-hover:rotate-0 transition-transform origin-bottom" title="~1 Cigarette"></div>
+                                            {/* ADVANCED SMOKE PHYSICS */}
+                                            <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-12 h-24 pointer-events-none overflow-visible opacity-80 mix-blend-screen">
+                                                {/* Smoke Stream 1: Fast & Narrow */}
+                                                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-2 bg-slate-400 rounded-full blur-[2px] animate-[smoke-rise_2s_linear_infinite]" style={{ animationDelay: `${Math.random()}s` }}></div>
+                                                {/* Smoke Stream 2: Slow & Wide */}
+                                                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-3 h-3 bg-slate-500 rounded-full blur-md animate-[smoke-curl_3s_ease-out_infinite]" style={{ animationDelay: `${Math.random() + 0.5}s` }}></div>
+                                                {/* Smoke Stream 3: Dissipating Haze */}
+                                                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-6 h-6 bg-slate-600/30 rounded-full blur-xl animate-[smoke-fade_4s_linear_infinite]" style={{ animationDelay: `${Math.random() + 1}s` }}></div>
+                                            </div>
 
-                                            {/* Smoke particle effect per cig */}
-                                            <div className="absolute -top-4 -left-2 w-6 h-6 bg-gray-400/20 rounded-full blur-md animate-pulse"></div>
+                                            {/* ULTRA-REALISTIC CIGARETTE */}
+                                            <div className="w-3.5 h-24 flex flex-col items-center relative shadow-2xl drop-shadow-2xl transform transition-transform group-hover:-translate-y-3 duration-300">
+
+                                                {/* 1. The Cherry (Burning Ember with Glow) */}
+                                                <div className="w-full h-2 rounded-t-sm relative z-30 overflow-visible">
+                                                    <div className="absolute inset-x-0 top-0 h-3 bg-gradient-to-t from-red-600 via-orange-500 to-transparent animate-pulse rounded-full blur-[1px]"></div>
+                                                    <div className="absolute inset-0 bg-[#331111] overflow-hidden rounded-t-sm">
+                                                        <div className="w-full h-full bg-orange-500 animate-[ember-flicker_0.1s_infinite] opacity-80"></div>
+                                                    </div>
+                                                    {/* Glow Halo */}
+                                                    <div className="absolute -top-1 -left-1 -right-1 h-4 bg-orange-500/40 blur-md rounded-full animate-pulse"></div>
+                                                </div>
+
+                                                {/* 2. Ash Line */}
+                                                <div className="w-full h-4 bg-gradient-to-b from-[#2a2a2a] to-[#cccccc] relative z-20 border-x border-black/10">
+                                                    <div className="absolute top-1 left-0 w-full h-[1px] bg-white/20"></div>
+                                                    <div className="absolute bottom-0 left-0 w-full h-[1px] bg-black/20"></div>
+                                                </div>
+
+                                                {/* 3. Paper Body (Matte White with texture) */}
+                                                <div className="w-full h-12 bg-gradient-to-r from-[#e5e5e5] via-[#ffffff] to-[#d6d6d6] border-x border-black/5 relative z-10 z-10">
+                                                    <div className="w-full h-[1px] bg-black/5 absolute top-3"></div>
+                                                    <div className="w-full h-[1px] bg-black/5 absolute top-6"></div>
+                                                    <div className="w-full h-[1px] bg-black/5 absolute top-9"></div>
+                                                </div>
+
+                                                {/* 4. Gold Ring */}
+                                                <div className="w-full h-0.5 bg-yellow-600/90 z-10"></div>
+
+                                                {/* 5. Filter (Cork Texture) */}
+                                                <div className="w-full h-6 bg-[#ce8f4b] rounded-b-sm relative border-x border-black/10 overflow-hidden z-10">
+                                                    <div className="absolute inset-0 opacity-40 bg-[url('https://www.transparenttextures.com/patterns/cork-board.png')] bg-[length:10px_10px]"></div>
+                                                    {/* Fallback texture if image fails */}
+                                                    <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(#5c3a12 1px, transparent 1px)', backgroundSize: '2px 2px' }}></div>
+                                                </div>
+                                            </div>
                                         </motion.div>
                                     ))}
                                     {cigaretteCount === 0 && (
@@ -165,20 +258,23 @@ const EnvironmentalHealth = () => {
                                             animate={{ opacity: 1 }}
                                             className="text-emerald-400 font-medium flex flex-col items-center gap-2"
                                         >
-                                            <Wind size={40} />
-                                            <span>Start Breathing Freely!</span>
+                                            <div className="p-4 bg-emerald-500/10 rounded-full animate-pulse shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+                                                <Wind size={40} />
+                                            </div>
+                                            <span className="text-lg font-light tracking-wide">Pure Air. Breathe Deep.</span>
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
                             </div>
 
                             {cigaretteCount > 0 && (
-                                <p className="text-center text-xs text-slate-500 mt-4">
-                                    Each bar represents ~1 cigarette worth of PM2.5 inhaled over 24 hours.
+                                <p className="absolute bottom-4 left-0 right-0 text-center text-xs text-slate-500 z-20 pointer-events-none">
+                                    Each object represents ~1 cigarette worth of toxic particulate matter.
                                 </p>
                             )}
                         </div>
                     </div>
+
                 </div>
             </div>
 
