@@ -124,7 +124,7 @@ const SocialDeterminants = () => {
                                             </div>
 
                                             <ResponsiveContainer width="100%" height="100%">
-                                                <ScatterChart margin={{ top: 20, right: 30, bottom: 20, left: 10 }}>
+                                                <ScatterChart margin={{ top: 20, right: 30, bottom: 40, left: 10 }}>
                                                     <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.2} />
                                                     <XAxis type="number" dataKey="clean_fuel" name="Clean Fuel" unit="%" stroke="#94a3b8" fontSize={11}
                                                         label={{ value: 'Households with Clean Fuel (LPG/Electric) →', position: 'bottom', offset: 0, fill: '#64748b', fontSize: 12 }}
@@ -144,8 +144,8 @@ const SocialDeterminants = () => {
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-col gap-6">
-                                        <div className="bg-slate-900/40 p-6 rounded-2xl border border-white/5 flex-1">
+                                    <div className="flex flex-col gap-6 mt-16 lg:mt-0">
+                                        <div className="bg-slate-900/40 p-3 sm:p-6 rounded-2xl border border-white/5 flex-1">
                                             <h4 className="text-lg font-bold text-white mb-3">Understanding the Graph</h4>
                                             <p className="text-slate-300 text-sm leading-relaxed mb-4">
                                                 <span className="text-rose-400 font-bold">Top-Left (Danger):</span> Low clean fuel access leads to high respiratory illness (e.g., Bihar).<br />
@@ -178,7 +178,7 @@ const SocialDeterminants = () => {
                                             </BarChart>
                                         </ResponsiveContainer>
                                     </div>
-                                    <div className="bg-cyan-900/10 p-6 rounded-2xl border border-cyan-500/20 flex flex-col justify-center">
+                                    <div className="bg-cyan-900/10 p-3 sm:p-6 rounded-2xl border border-cyan-500/20 flex flex-col justify-center mt-16 lg:mt-0">
                                         <h4 className="text-lg font-bold text-cyan-400 mb-4">Hygiene Hypothesis</h4>
                                         <p className="text-slate-300 text-sm leading-relaxed mb-4">
                                             States with &gt;90% sanitation coverage (like Kerala) see Diarrheal disease rates drop to <span className="text-white font-bold">below 4%</span>.
@@ -221,7 +221,7 @@ const SocialDeterminants = () => {
                                             </BarChart>
                                         </ResponsiveContainer>
                                     </div>
-                                    <div className="bg-slate-900/40 p-6 rounded-2xl border border-white/5">
+                                    <div className="bg-slate-900/40 p-3 sm:p-6 rounded-2xl border border-white/5">
                                         <h4 className="text-lg font-bold text-white mb-4">The Wealth Gap</h4>
                                         <p className="text-slate-300 text-sm leading-relaxed mb-4">
                                             Economic status is the primary driver of food security. Children in the lowest wealth quintile are <strong>more than 2x</strong> likely to be stunted compared to the richest.
@@ -241,7 +241,7 @@ const SocialDeterminants = () => {
                         activeTab === 'pharmacy' && (
                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                                    <div className="lg:col-span-2 bg-slate-900/40 p-6 rounded-2xl border border-white/5 flex flex-col items-center justify-center">
+                                    <div className="lg:col-span-2 bg-slate-900/40 p-3 sm:p-6 rounded-2xl border border-white/5 flex flex-col items-center justify-center">
                                         <h3 className="text-white font-semibold mb-6 flex items-center gap-2 w-full text-left">
                                             <Info size={16} className="text-slate-500" />
                                             "Financial Toxicity" of Healthcare
@@ -284,14 +284,14 @@ const SocialDeterminants = () => {
                                     </div>
 
                                     <div className="space-y-6">
-                                        <div className="bg-slate-900/40 p-6 rounded-2xl border border-white/5">
+                                        <div className="bg-slate-900/40 p-3 sm:p-6 rounded-2xl border border-white/5">
                                             <h4 className="text-lg font-bold text-white mb-4">The Cost of Cure</h4>
                                             <p className="text-slate-300 text-sm leading-relaxed mb-4">
                                                 Nearly <strong>half</strong> of all money spent by Indian patients goes directly to buying medicines. This "OOP" (Out-of-Pocket) cost pushes millions into poverty every year.
                                             </p>
                                         </div>
 
-                                        <div className="bg-gradient-to-br from-emerald-500/20 to-teal-500/20 p-6 rounded-2xl border border-emerald-500/20 relative overflow-hidden group">
+                                        <div className="bg-gradient-to-br from-emerald-500/20 to-teal-500/20 p-3 sm:p-6 rounded-2xl border border-emerald-500/20 relative overflow-hidden group">
                                             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                                                 <Pill size={80} />
                                             </div>

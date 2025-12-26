@@ -94,7 +94,7 @@ const HeroSection = ({ onOverviewClick, onAddClick, onNavigate }) => {
                             </motion.div>
 
                             <div className="space-y-6">
-                                <h1 className="text-5xl sm:text-8xl lg:text-[11rem] font-black tracking-tighter leading-[0.9] text-transparent bg-clip-text bg-gradient-to-r from-white via-amber-200 via-yellow-300 via-amber-200 to-white animate-text-flow drop-shadow-[0_0_30px_rgba(245,158,11,0.5)] pb-2 sm:pb-4">
+                                <h1 className="text-7xl sm:text-8xl lg:text-[11rem] font-black tracking-tighter leading-[0.9] text-transparent bg-clip-text bg-gradient-to-r from-white via-amber-200 via-yellow-300 via-amber-200 to-white animate-text-flow drop-shadow-[0_0_30px_rgba(245,158,11,0.5)] pb-2 sm:pb-4">
                                     CureBird
                                 </h1>
                                 <h2 className="text-lg sm:text-3xl font-semibold tracking-wide text-slate-200 max-w-2xl leading-relaxed">
@@ -106,11 +106,11 @@ const HeroSection = ({ onOverviewClick, onAddClick, onNavigate }) => {
                             <div className="bg-gradient-to-br from-slate-900/60 to-slate-800/60 backdrop-blur-xl border border-white/10 rounded-3xl p-8 w-full max-w-2xl transform-gpu hover:border-white/20 transition-all shadow-2xl">
                                 <ul className="space-y-5">
                                     {[
-                                        "Instant Clinical Report Analysis",
-                                        "24/7 AI Health Consultation",
-                                        "Real-time Epidemic Tracking",
-                                        "Secure Digital Health Archives",
-                                        "Predictive Wellness Analytics"
+                                        "Instant medical prescription/report analysis",
+                                        "24/7 AI Health assistance",
+                                        "Real-time National Epidemiological insights",
+                                        "Secure and personalized Health storage system",
+                                        "Intelligent medical history tracker"
                                     ].map((feature, index) => (
                                         <motion.li
                                             key={index}
@@ -211,7 +211,7 @@ const HeroSection = ({ onOverviewClick, onAddClick, onNavigate }) => {
                                 <div className="mb-4 p-3 rounded-2xl bg-amber-500/10 border border-amber-500/20 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_-3px_rgba(245,158,11,0.2)]">
                                     <Bot size={28} className="text-amber-400" />
                                 </div>
-                                <h3 className="text-white font-bold text-xl leading-tight mb-2 group-hover:text-amber-400 transition-colors">Cure AI</h3>
+                                <h3 className="text-amber-100 font-bold text-xl leading-tight mb-2 group-hover:text-amber-400 transition-colors">Cure AI</h3>
                                 <p className="text-white font-bold text-sm leading-relaxed">
                                     Your dedicated 24/7 health consultant. Ask anything, anytime, and get intelligent answers based on your medical history.
                                 </p>
@@ -224,7 +224,7 @@ const HeroSection = ({ onOverviewClick, onAddClick, onNavigate }) => {
                                 <div className="mb-4 p-3 rounded-2xl bg-sky-500/10 border border-sky-500/20 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_-3px_rgba(14,165,233,0.2)]">
                                     <Activity size={28} className="text-sky-400" />
                                 </div>
-                                <h3 className="text-white font-bold text-xl leading-tight mb-2 group-hover:text-sky-400 transition-colors">Cure Analyzer</h3>
+                                <h3 className="text-amber-100 font-bold text-xl leading-tight mb-2 group-hover:text-sky-400 transition-colors">Cure Analyzer</h3>
                                 <p className="text-white font-bold text-sm leading-relaxed">
                                     Instantly decodes complex lab reports into clear, actionable insights, highlighting critical values and trends.
                                 </p>
@@ -237,7 +237,7 @@ const HeroSection = ({ onOverviewClick, onAddClick, onNavigate }) => {
                                 <div className="mb-4 p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_-3px_rgba(16,185,129,0.2)]">
                                     <BarChart2 size={28} className="text-emerald-400" />
                                 </div>
-                                <h3 className="text-white font-bold text-xl leading-tight mb-2 group-hover:text-emerald-400 transition-colors">Cure Stat</h3>
+                                <h3 className="text-amber-100 font-bold text-xl leading-tight mb-2 group-hover:text-emerald-400 transition-colors">Cure Stat</h3>
                                 <p className="text-white font-bold text-sm leading-relaxed">
                                     Visualizes real-time disease trends and epidemic data globally, keeping you informed about public health risks.
                                 </p>

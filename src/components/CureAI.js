@@ -10,27 +10,27 @@ const ChatMessage = ({ message, isUser }) => {
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`flex gap-3 ${isUser ? 'flex-row-reverse' : 'flex-row'} mb-4`}
+            className={`flex gap-2 sm:gap-3 ${isUser ? 'flex-row-reverse' : 'flex-row'} mb-3 sm:mb-4`}
         >
-            <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${isUser ? 'bg-gradient-to-r from-amber-500 to-yellow-600' : 'bg-gradient-to-r from-blue-600 to-purple-600'
+            <div className={`flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center ${isUser ? 'bg-gradient-to-r from-amber-500 to-yellow-600' : 'bg-gradient-to-r from-blue-600 to-purple-600'
                 }`}>
-                {isUser ? <User size={20} className="text-white" /> : <Bot size={20} className="text-white" />}
+                {isUser ? <User size={16} className="text-white sm:w-5 sm:h-5" /> : <Bot size={16} className="text-white sm:w-5 sm:h-5" />}
             </div>
 
-            <div className={`max-w-[85%] sm:max-w-[70%] ${isUser ? 'items-end' : 'items-start'} flex flex-col gap-1`}>
-                <div className={`px-4 py-3 rounded-2xl ${isUser
+            <div className={`max-w-[90%] sm:max-w-[70%] ${isUser ? 'items-end' : 'items-start'} flex flex-col gap-1`}>
+                <div className={`px-3 py-2 sm:px-4 sm:py-3 rounded-2xl ${isUser
                     ? 'bg-gradient-to-r from-amber-500 to-yellow-600 text-black'
                     : 'glass-card text-slate-100'
                     }`}>
                     {isUser ? (
-                        <p className="text-sm font-medium">{message.text}</p>
+                        <p className="text-xs sm:text-sm font-medium">{message.text}</p>
                     ) : (
-                        <div className="prose prose-invert prose-sm max-w-none">
+                        <div className="prose prose-invert prose-sm max-w-none text-xs sm:text-sm leading-relaxed">
                             <ReactMarkdown>{message.text}</ReactMarkdown>
                         </div>
                     )}
                 </div>
-                <span className="text-xs text-slate-500 px-2">
+                <span className="text-[10px] sm:text-xs text-slate-500 px-2">
                     {new Date(message.timestamp).toLocaleTimeString('en-US', {
                         hour: '2-digit',
                         minute: '2-digit'
@@ -199,46 +199,43 @@ const CureAI = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigate }) =
             />
 
             {/* Premium Hero Section - Compact AI Console Look */}
-            {/* MATCHING CURE ANALYZER HERO STYLE EXACTLY but keeping compact height */}
-            {/* Premium Hero Section - Expanded Dimensions */}
-            {/* Premium Hero Section - Exact Match to CureAnalyzer */}
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-500/20 via-orange-500/10 to-transparent border border-amber-500/20 p-8 mb-12 text-center mt-6">
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-500/20 via-orange-500/10 to-transparent border border-amber-500/20 p-4 sm:p-8 mb-6 sm:mb-12 text-center mt-4 sm:mt-6">
                 {/* Decorative background glow */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-amber-500/20 blur-[100px] rounded-full -z-10 pointer-events-none"></div>
 
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm font-bold mb-6 animate-pulse">
-                    <Bot size={16} /> NEURAL INTERFACE
+                <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs sm:text-sm font-bold mb-4 sm:mb-6 animate-pulse">
+                    <Bot size={14} className="sm:w-4 sm:h-4" /> NEURAL INTERFACE
                 </div>
 
-                <h1 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight drop-shadow-lg">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-amber-100 mb-3 sm:mb-4 tracking-tight drop-shadow-lg">
                     Cure Personal <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">AI</span>
                 </h1>
 
-                <p className="text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
+                <p className="text-sm sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
                     Advanced diagnostics support and health queries. Our <span className="text-amber-400 font-semibold">Dual-Core AI</span> will instantly answer your questions and provide personalized health guidance effectively.
                 </p>
 
-                <div className="flex justify-center gap-8 mt-8 opacity-70">
+                <div className="flex justify-center gap-6 sm:gap-8 mt-6 sm:mt-8 opacity-70">
                     <div className="flex flex-col items-center gap-2">
-                        <div className="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-sky-400"><Bot /></div>
-                        <span className="text-xs uppercase tracking-widest font-bold text-slate-500">Ask</span>
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-slate-800 flex items-center justify-center text-sky-400"><Bot size={20} className="sm:w-6 sm:h-6" /></div>
+                        <span className="text-[10px] sm:text-xs uppercase tracking-widest font-bold text-slate-500">Ask</span>
                     </div>
-                    <div className="w-16 h-px bg-slate-700 self-center"></div>
+                    <div className="w-12 h-px bg-slate-700 self-center"></div>
                     <div className="flex flex-col items-center gap-2">
-                        <div className="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-amber-400"><Brain /></div>
-                        <span className="text-xs uppercase tracking-widest font-bold text-slate-500">Reason</span>
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-slate-800 flex items-center justify-center text-amber-400"><Brain size={20} className="sm:w-6 sm:h-6" /></div>
+                        <span className="text-[10px] sm:text-xs uppercase tracking-widest font-bold text-slate-500">Reason</span>
                     </div>
-                    <div className="w-16 h-px bg-slate-700 self-center"></div>
+                    <div className="w-12 h-px bg-slate-700 self-center"></div>
                     <div className="flex flex-col items-center gap-2">
-                        <div className="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-emerald-400"><ShieldCheck /></div>
-                        <span className="text-xs uppercase tracking-widest font-bold text-slate-500">Verify</span>
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-slate-800 flex items-center justify-center text-emerald-400"><ShieldCheck size={20} className="sm:w-6 sm:h-6" /></div>
+                        <span className="text-[10px] sm:text-xs uppercase tracking-widest font-bold text-slate-500">Verify</span>
                     </div>
                 </div>
             </div>
 
-            <div className="flex flex-col lg:flex-row gap-8 mt-2 min-h-0 relative z-10 pb-2">
+            <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 mt-2 min-h-0 relative z-10 pb-2">
                 {/* Main Chat Area - Premium Glass Console */}
-                <div className="flex-1 flex flex-col bg-[#090e1a] backdrop-blur-xl rounded-[23px] border border-slate-700 shadow-[0_0_50px_-10px_rgba(0,0,0,0.5)] relative h-[800px]">
+                <div className="flex-1 flex flex-col bg-[#090e1a] backdrop-blur-xl rounded-[23px] border border-slate-700 shadow-[0_0_50px_-10px_rgba(0,0,0,0.5)] relative h-[600px] sm:h-[800px]">
                     {/* Subtle Grid - Professional */}
                     <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '60px 60px' }}></div>
 
@@ -246,7 +243,7 @@ const CureAI = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigate }) =
                     <div className="absolute -top-24 -right-24 w-48 h-48 bg-sky-500/5 blur-[80px] rounded-full pointer-events-none"></div>
 
                     {/* Messages Area */}
-                    <div className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-6 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent relative z-10">
+                    <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent relative z-10">
                         <AnimatePresence>
                             {messages.map((message, index) => (
                                 <ChatMessage key={index} message={message} isUser={message.isUser} />
@@ -259,8 +256,8 @@ const CureAI = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigate }) =
                     </div>
 
                     {/* Input Area - Integrated Control Panel */}
-                    <div className="p-6 bg-[#090e1a]/95 border-t border-slate-800 backdrop-blur-xl relative z-20">
-                        <div className="flex gap-4 items-end max-w-5xl mx-auto">
+                    <div className="p-3 sm:p-6 bg-[#090e1a]/95 border-t border-slate-800 backdrop-blur-xl relative z-20">
+                        <div className="flex gap-2 sm:gap-4 items-end max-w-5xl mx-auto">
                             <div className="flex-1 relative group/input">
                                 <div className="absolute inset-0 bg-sky-500/5 blur-lg rounded-xl opacity-0 group-focus-within/input:opacity-100 transition-opacity duration-500"></div>
                                 <textarea
@@ -269,11 +266,11 @@ const CureAI = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigate }) =
                                     onKeyPress={handleKeyPress}
                                     placeholder="Access Neural Health Database..."
                                     rows={1}
-                                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-5 py-4 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-sky-500/30 focus:bg-slate-900/80 transition-all resize-none font-medium relative z-10 shadow-inner"
+                                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 sm:px-5 sm:py-4 text-xs sm:text-base text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-sky-500/30 focus:bg-slate-900/80 transition-all resize-none font-medium relative z-10 shadow-inner"
                                     disabled={isLoading}
-                                    style={{ minHeight: '60px', maxHeight: '120px' }}
+                                    style={{ minHeight: '45px', maxHeight: '120px' }}
                                 />
-                                <div className="absolute right-3 bottom-3 flex gap-2">
+                                <div className="hidden sm:flex absolute right-3 bottom-3 gap-2">
                                     <div className="p-1.5 rounded-lg bg-slate-800 text-slate-500 border border-slate-700/50 text-[10px] font-mono">CMD+ENTER</div>
                                 </div>
                             </div>
@@ -281,17 +278,17 @@ const CureAI = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigate }) =
                             <button
                                 onClick={sendMessage}
                                 disabled={isLoading || !inputMessage.trim()}
-                                className="px-6 h-[60px] bg-sky-600 text-white rounded-xl hover:bg-sky-500 hover:shadow-[0_0_20px_rgba(14,165,233,0.4)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-bold flex items-center justify-center shadow-lg"
+                                className="px-4 sm:px-6 h-[45px] sm:h-[60px] bg-sky-600 text-white rounded-xl hover:bg-sky-500 hover:shadow-[0_0_20px_rgba(14,165,233,0.4)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-bold flex items-center justify-center shadow-lg"
                             >
-                                <Send size={20} />
+                                <Send size={18} className="sm:w-5 sm:h-5" />
                             </button>
 
                             <button
                                 onClick={clearChat}
-                                className="px-4 h-[60px] bg-slate-800/50 border border-slate-700 rounded-xl hover:bg-rose-500/10 hover:border-rose-500/50 hover:text-rose-400 transition-all text-slate-500 flex items-center justify-center group/clear"
+                                className="px-3 sm:px-4 h-[45px] sm:h-[60px] bg-slate-800/50 border border-slate-700 rounded-xl hover:bg-rose-500/10 hover:border-rose-500/50 hover:text-rose-400 transition-all text-slate-500 flex items-center justify-center group/clear"
                                 title="Reset Session"
                             >
-                                <Trash2 size={18} className="group-hover/clear:scale-110 transition-transform" />
+                                <Trash2 size={16} className="sm:w-[18px] sm:h-[18px] group-hover/clear:scale-110 transition-transform" />
                             </button>
                         </div>
                     </div>
