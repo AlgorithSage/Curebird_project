@@ -6,6 +6,7 @@ import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import Header from './Header';
 import OccupationalHealth from './OccupationalHealth';
 import SocialDeterminants from './SocialDeterminants';
+import EnvironmentalHealth from './EnvironmentalHealth';
 import RareDisease from './RareDisease';
 import StateHealthProfile from './StateHealthProfile';
 import { API_BASE_URL } from '../config';
@@ -600,6 +601,11 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigate })
                 {/* --- NEW SECTION: SDOH --- */}
                 <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.45 }} className="mb-12">
                     <SocialDeterminants />
+                </motion.div>
+
+                {/* --- NEW SECTION: Environmental Health --- */}
+                <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.48 }} className="mb-12">
+                    <EnvironmentalHealth />
                 </motion.div>
 
                 {/* --- NEW SECTION: Rare Diseases --- */}
