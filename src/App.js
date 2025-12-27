@@ -72,10 +72,20 @@ export default function App() {
                     if (userDoc.exists()) {
                         // Merge Auth user with Firestore data
                         const userData = userDoc.data();
-                        setUser({ ...currentUser, ...userData });
+                        const fullUser = { ...currentUser, ...userData };
+                        setUser(fullUser);
+
+                        // FORCE PROFILE SETUP: If profile exists but marked incomplete (or missing critical fields)
+                        // Note: We check 'isProfileComplete'. 
+                        // If it's undefined for old users, we might want to default to true or check fields.
+                        if (userData.isProfileComplete === false) {
+                            setIsAuthModalOpen(true);
+                        }
                     } else {
-                        // If no profile yet, just use Auth user (AuthModals will handle creation)
+                        // If no profile yet, just use Auth user
+                        // AND FORCE OPEN MODAL so they create a profile
                         setUser(currentUser);
+                        setIsAuthModalOpen(true);
                     }
                 } catch (error) {
                     console.error("Error fetching user profile:", error);

@@ -57,6 +57,15 @@ const AuthModals = ({ onClose, db, storage, auth }) => {
     const [authStep, setAuthStep] = useState('selection'); // 'selection' | 'login' | 'profile'
     const [currentUser, setCurrentUser] = useState(null);
 
+    // Sync with external user prop (from App.js)
+    // If App.js passes a user who needs profile setup, jump to 'profile'
+    useEffect(() => {
+        const user = auth.currentUser; // Or use props.user if passed, but auth.currentUser is reliable
+        if (user) {
+            checkAndRedirect(user);
+        }
+    }, [auth.currentUser]);
+
     // Login Form State
     const [phoneNumber, setPhoneNumber] = useState('+91 ');
     const [otp, setOtp] = useState('');

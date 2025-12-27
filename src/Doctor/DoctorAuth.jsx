@@ -35,17 +35,23 @@ export default function DoctorAuth({ initialUser }) {
     const [confirmationResult, setConfirmationResult] = useState(null);
 
     // Profile Form State
+    // Profile Form State
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
+    const [degree, setDegree] = useState('');
+    const [specialization, setSpecialization] = useState('');
     const [email, setEmail] = useState(''); // Secondary email or main contact
     const [profileImage, setProfileImage] = useState(null);
     const [profilePreview, setProfilePreview] = useState(null);
+    const [licenseImage, setLicenseImage] = useState(null);
+    const [licensePreview, setLicensePreview] = useState(null);
 
     // UI State
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
     const fileInputRef = useRef(null);
+    const licenseInputRef = useRef(null);
 
     // --- RECAPTCHA SETUP ---
     const onCaptchVerify = () => {
@@ -141,7 +147,11 @@ export default function DoctorAuth({ initialUser }) {
             return;
         }
 
+
         setLoading(true);
+        // FIX: Ensure container is ready before verify
+        // In render, 'recaptcha-container' is only shown if !isOtpSent.
+        // But we call this BEFORE we set isOtpSent=true, so it SHOULD be there.
         onCaptchVerify();
         const appVerifier = window.recaptchaVerifier;
 
@@ -172,12 +182,19 @@ export default function DoctorAuth({ initialUser }) {
         }
     };
 
-    const handleImageSelect = (e) => {
+    const handleImageSelect = (e, type) => {
         const file = e.target.files[0];
         if (file) {
-            setProfileImage(file);
             const reader = new FileReader();
-            reader.onloadend = () => setProfilePreview(reader.result);
+            reader.onloadend = () => {
+                if (type === 'profile') {
+                    setProfileImage(file);
+                    setProfilePreview(reader.result);
+                } else {
+                    setLicenseImage(file);
+                    setLicensePreview(reader.result);
+                }
+            };
             reader.readAsDataURL(file);
         }
     };
@@ -186,8 +203,8 @@ export default function DoctorAuth({ initialUser }) {
         e.preventDefault();
         setError('');
 
-        if (!firstName.trim() || !lastName.trim()) {
-            setError("First Name and Last Name are required.");
+        if (!firstName.trim() || !lastName.trim() || !degree.trim() || !specialization.trim()) {
+            setError("All fields (Name, Degree, Specialization) are required.");
             return;
         }
 
@@ -195,7 +212,9 @@ export default function DoctorAuth({ initialUser }) {
 
         try {
             let photoURL = profilePreview || '';
+            let licenseURL = '';
 
+            // Upload Profile Image
             if (profileImage) {
                 const storageRef = ref(storage, `doctor_profiles/${currentUser.uid}`);
                 await uploadBytes(storageRef, profileImage);
@@ -204,15 +223,25 @@ export default function DoctorAuth({ initialUser }) {
                 photoURL = currentUser.photoURL || '';
             }
 
+            // Upload License Image (Required if new)
+            if (licenseImage) {
+                const licenseRef = ref(storage, `doctor_licenses/${currentUser.uid}`);
+                await uploadBytes(licenseRef, licenseImage);
+                licenseURL = await getDownloadURL(licenseRef);
+            }
+
             // Create Doctor Profile
             await setDoc(doc(db, 'doctors', currentUser.uid), {
                 uid: currentUser.uid,
                 firstName: firstName.trim(),
                 lastName: lastName.trim(),
                 name: `${firstName} ${lastName}`,
+                degree: degree.trim(),
+                specialization: specialization.trim(),
                 email: email.trim(),
                 phoneNumber: currentUser.phoneNumber || '',
                 photoURL: photoURL,
+                licenseURL: licenseURL,
                 role: 'doctor',
                 createdAt: serverTimestamp(),
                 joinedVia: currentUser.phoneNumber ? 'phone' : 'google',
@@ -335,12 +364,17 @@ export default function DoctorAuth({ initialUser }) {
                                         {profilePreview ? <img src={profilePreview} alt="Profile" className="w-full h-full rounded-full object-cover" /> : <div className="flex flex-col items-center gap-1"><User size={32} className="text-slate-500 group-hover:text-amber-500" /><span className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Upload</span></div>}
                                         <div className="absolute bottom-1 right-1 bg-amber-500 text-slate-900 p-1.5 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"><Camera size={14} /></div>
                                     </div>
-                                    <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageSelect} />
+                                    <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={(e) => handleImageSelect(e, 'profile')} />
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-1.5"><label className="text-xs font-bold text-slate-400 uppercase tracking-wider">First Name</label><input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} className="w-full bg-slate-800/50 border border-slate-700/50 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50" placeholder="John" /></div>
                                     <div className="space-y-1.5"><label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Last Name</label><input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} className="w-full bg-slate-800/50 border border-slate-700/50 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50" placeholder="Doe" /></div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-1.5"><label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Degree</label><input type="text" value={degree} onChange={(e) => setDegree(e.target.value)} className="w-full bg-slate-800/50 border border-slate-700/50 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50" placeholder="MBBS, MD" /></div>
+                                    <div className="space-y-1.5"><label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Specialization</label><input type="text" value={specialization} onChange={(e) => setSpecialization(e.target.value)} className="w-full bg-slate-800/50 border border-slate-700/50 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50" placeholder="Cardiology" /></div>
                                 </div>
 
                                 <div className="space-y-1.5">
@@ -351,8 +385,22 @@ export default function DoctorAuth({ initialUser }) {
                                     </div>
                                 </div>
 
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Medical License</label>
+                                    <div className="flex items-center gap-4 bg-slate-800/30 p-3 rounded-xl border border-slate-700/50 cursor-pointer hover:border-amber-500/50 transition-colors" onClick={() => licenseInputRef.current?.click()}>
+                                        <div className="w-12 h-12 rounded-lg bg-slate-800 flex items-center justify-center shrink-0">
+                                            {licensePreview ? <img src={licensePreview} alt="License" className="w-full h-full object-cover rounded-lg" /> : <div className="text-amber-500"><Camera size={20} /></div>}
+                                        </div>
+                                        <div className="flex-1">
+                                            <p className="text-sm font-bold text-slate-300">{licenseImage ? licenseImage.name : "Upload License Photo"}</p>
+                                            <p className="text-xs text-slate-500">Required for verification</p>
+                                        </div>
+                                    </div>
+                                    <input type="file" ref={licenseInputRef} className="hidden" accept="image/*" onChange={(e) => handleImageSelect(e, 'license')} />
+                                </div>
+
                                 <button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white py-3.5 rounded-xl font-bold transition-all shadow-lg shadow-amber-500/20 disabled:opacity-50 mt-2">
-                                    {loading ? <Loader2 size={20} className="animate-spin" /> : "Complete & Enter"}
+                                    {loading ? <Loader2 size={20} className="animate-spin" /> : "Submit Application"}
                                 </button>
                             </form>
                         )}
