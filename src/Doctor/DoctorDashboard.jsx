@@ -310,7 +310,10 @@ const DoctorDashboard = ({ user }) => {
                 initialPatientId={targetChatPatientId} // Pass target ID
                 onNavigateToPatient={(p) => { setWorkspacePatient(p); setActiveView('patient_workspace'); }}
             />;
-            case 'notifications': return <DoctorNotifications onNavigate={handleNavigate} />;
+            case 'notifications': return <DoctorNotifications
+                onNavigate={handleNavigate}
+                onNavigateToPatient={(p) => { setWorkspacePatient(p); setActiveView('patient_workspace'); }}
+            />;
             case 'profile': return <DoctorProfile user={user} />;
             case 'security': return <PlaceholderView title="Security" icon={Shield} />;
             case 'help': return <PlaceholderView title="Help & Support" icon={HelpCircle} />;

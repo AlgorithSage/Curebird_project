@@ -23,7 +23,9 @@ const MOCK_NOTIFICATIONS = [
         message: 'Patient detected with irregular heart rhythm (Arrhythmia) exceeding threshold.',
         time: '10 mins ago',
         read: false,
-        action: 'Review Vitals'
+        action: 'Review Vitals',
+        target: 'patient_workspace',
+        patientData: { id: 'P-101', name: 'Sarah Jenkins', condition: 'Arrhythmia', age: 45, gender: 'Female' }
     },
     {
         id: 2,
@@ -32,7 +34,9 @@ const MOCK_NOTIFICATIONS = [
         message: 'Potential interaction detected between prescribed Amoxicillin and recent Lisinopril refill.',
         time: '35 mins ago',
         read: false,
-        action: 'Review Prescription'
+        action: 'Review Prescription',
+        target: 'medical_records',
+        patientData: { id: 'P-102', name: 'James Wilson', condition: 'Hypertension', age: 52, gender: 'Male' }
     },
     {
         id: 3,
@@ -41,7 +45,9 @@ const MOCK_NOTIFICATIONS = [
         message: 'Dr. Smith, I am feeling slight dizziness after the new medication.',
         time: '1 hour ago',
         read: true,
-        action: 'Reply'
+        action: 'Reply',
+        target: 'messages',
+        patientData: { id: 'P-102', name: 'James Wilson', condition: 'Hypertension', age: 52, gender: 'Male' }
     },
     {
         id: 4,
@@ -50,7 +56,8 @@ const MOCK_NOTIFICATIONS = [
         message: 'Comprehensive Metabolic Panel results are available for review.',
         time: '2 hours ago',
         read: false,
-        action: 'View Report'
+        action: 'View Report',
+        target: 'medical_records'
     },
     {
         id: 5,
@@ -59,7 +66,8 @@ const MOCK_NOTIFICATIONS = [
         message: 'Michael Brown cancelled the 3:00 PM consultation.',
         time: '3 hours ago',
         read: true,
-        action: 'View Schedule'
+        action: 'View Schedule',
+        target: 'appointments_schedule'
     },
     {
         id: 6,
@@ -68,11 +76,12 @@ const MOCK_NOTIFICATIONS = [
         message: 'Routine maintenance is scheduled for Sunday at 2:00 AM EST.',
         time: '5 hours ago',
         read: true,
-        action: 'Details'
+        action: 'Details',
+        target: 'dashboard'
     }
 ];
 
-export default function DoctorNotifications({ onNavigate }) {
+export default function DoctorNotifications({ onNavigate, onNavigateToPatient }) {
     const [activeTab, setActiveTab] = useState('all');
     const [notifications, setNotifications] = useState(MOCK_NOTIFICATIONS);
     const [searchQuery, setSearchQuery] = useState('');
@@ -94,6 +103,15 @@ export default function DoctorNotifications({ onNavigate }) {
         setNotifications(notifications.map(n =>
             n.id === id ? { ...n, read: !n.read } : n
         ));
+    };
+
+    const handleActionClick = (notification) => {
+        console.log("Action Clicked:", notification.action, notification.target);
+        if (notification.target === 'patient_workspace' && notification.patientData && onNavigateToPatient) {
+            onNavigateToPatient(notification.patientData);
+        } else if (onNavigate) {
+            onNavigate(notification.target || 'dashboard');
+        }
     };
 
     return (
@@ -201,12 +219,21 @@ export default function DoctorNotifications({ onNavigate }) {
 
                                         {/* ACTION FOOTER */}
                                         <div className="flex items-center gap-4 mt-3 pt-3 border-t border-white/5 opacity-90 group-hover:opacity-100 transition-opacity">
-                                            <button className="flex items-center gap-1.5 text-xs font-bold text-amber-500 hover:text-amber-400 transition-colors uppercase tracking-wider">
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleActionClick(notification);
+                                                }}
+                                                className="flex items-center gap-1.5 text-xs font-bold text-amber-500 hover:text-amber-400 transition-colors uppercase tracking-wider"
+                                            >
                                                 {notification.action} <ArrowUpRight size={14} />
                                             </button>
 
                                             <button
-                                                onClick={() => handleReadToggle(notification.id)}
+                                                onClick={(e) => {
+                                                    e.stopPropagation(); // Prevent parent click
+                                                    handleReadToggle(notification.id);
+                                                }}
                                                 className="text-xs text-stone-600 hover:text-stone-400 transition-colors"
                                             >
                                                 {notification.read ? 'Mark as Unread' : 'Mark as Read'}
