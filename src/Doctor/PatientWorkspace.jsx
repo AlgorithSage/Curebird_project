@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     ArrowLeft, Activity, Calendar, FileText, Pill, Microscope,
-    AlertCircle, CheckCircle, Clock, File, Download, Search, X, MessageSquare
+    AlertCircle, Clock, File, Download, Search, MessageSquare
 } from 'lucide-react';
 
 // --- Sub-Components ---
