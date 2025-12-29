@@ -26,25 +26,32 @@ const SidebarItem = ({ icon: Icon, label, active, onClick, delay, subItems, expa
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay }}
                 onClick={handleMainClick}
-                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group relative overflow-hidden ${active
-                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-emerald-500/10 shadow-lg'
-                    : (subItems && expanded ? 'bg-white/5 text-slate-200' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200 border border-transparent')
+                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 group relative overflow-hidden ${active
+                    ? 'bg-gradient-to-r from-amber-500/10 via-emerald-500/10 to-transparent border border-amber-500/30 text-emerald-100 shadow-[0_4px_30px_rgba(16,185,129,0.1)] backdrop-blur-md'
+                    : (subItems && expanded ? 'bg-emerald-500/5 text-emerald-100 border border-transparent' : 'text-slate-400 hover:bg-emerald-500/5 hover:text-emerald-200 hover:border-amber-500/20 hover:backdrop-blur-sm border border-transparent')
                     }`}
             >
+                {/* Active Gloss (Top Highlight - Warm Amber/Green) */}
+                {active && (
+                    <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-amber-200/20 to-transparent" />
+                )}
+
+                {/* Active Glow Bar (Amber for contrast) */}
+                {active && (
+                    <div className="absolute left-0 top-1 bottom-1 w-1 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full shadow-[0_0_12px_#f59e0b]" />
+                )}
+
                 <div className="flex items-center gap-4">
-                    {active && (
-                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-500 rounded-full" />
-                    )}
-                    <Icon size={20} className={`relative z-10 transition-transform group-hover:scale-110 ${active ? 'text-emerald-400' : 'text-slate-500 group-hover:text-slate-300'}`} />
+                    <Icon size={20} className={`relative z-10 transition-transform duration-300 group-hover:scale-110 ${active ? 'text-amber-400 drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]' : 'text-slate-500 group-hover:text-amber-400'}`} />
                     <span className="relative z-10 font-medium tracking-wide text-sm">{label}</span>
                 </div>
 
-                {/* Chevron or Badge */}
+                {/* Chevron */}
                 {subItems ? (
-                    <ChevronDown size={16} className={`transition-transform duration-300 ${expanded ? 'rotate-180 text-emerald-400' : 'text-slate-600'}`} />
+                    <ChevronDown size={16} className={`transition-transform duration-300 ${expanded ? 'rotate-180 text-amber-400' : 'text-slate-600 group-hover:text-amber-400'}`} />
                 ) : (
                     label === 'Notifications' && (
-                        <span className="w-5 h-5 flex items-center justify-center bg-rose-500 text-white text-[10px] font-bold rounded-full">3</span>
+                        <span className="w-5 h-5 flex items-center justify-center bg-rose-500 text-white text-[10px] font-bold rounded-full shadow-lg shadow-rose-900/50">3</span>
                     )
                 )}
             </motion.button>
@@ -56,18 +63,18 @@ const SidebarItem = ({ icon: Icon, label, active, onClick, delay, subItems, expa
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        className="overflow-hidden ml-10 space-y-1 pt-1 border-l border-white/5 pl-2"
+                        className="overflow-hidden ml-10 space-y-1 pt-1 border-l border-amber-500/20 pl-2"
                     >
                         {subItems.map((sub, idx) => (
                             <button
                                 key={sub.id}
                                 onClick={() => onClick(sub.id)}
-                                className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${active === sub.id // Check if sub-item ID matches active view (need to pass full ID logic)
-                                    ? 'text-emerald-400 bg-emerald-500/5'
-                                    : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'
+                                className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 border ${active === sub.id // Check if sub-item ID matches active view (need to pass full ID logic)
+                                    ? 'text-emerald-300 bg-emerald-500/10 backdrop-blur-sm border-amber-500/20'
+                                    : 'text-slate-500 hover:text-emerald-200 hover:bg-emerald-500/5 border-transparent'
                                     }`}
                             >
-                                <div className={`w-1.5 h-1.5 rounded-full ${active === sub.id ? 'bg-emerald-500' : 'bg-slate-700'}`} />
+                                <div className={`w-1.5 h-1.5 rounded-full ${active === sub.id ? 'bg-amber-500 shadow-[0_0_8px_#f59e0b]' : 'bg-slate-700 group-hover:bg-amber-500/50'}`} />
                                 {sub.label}
                             </button>
                         ))}
@@ -160,16 +167,20 @@ const DoctorSidebar = ({ isOpen, onClose, activeView, onNavigate, onLogout }) =>
                         animate={{ x: 0 }}
                         exit={{ x: '-100%' }}
                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                        className="fixed top-0 left-0 bottom-0 w-72 bg-slate-900 border-r border-white/10 z-50 shadow-2xl flex flex-col"
+                        // EMERALD GLASS WITH AMBER BORDERS
+                        // Reverted to the 30% opacity Green glass
+                        // Added Amber border
+                        className="fixed top-0 left-0 bottom-0 w-72 bg-gradient-to-b from-slate-950/40 via-slate-950/40 to-emerald-950/30 backdrop-blur-3xl border-r border-amber-500/20 z-50 shadow-[20px_0_60px_rgba(16,185,129,0.05)] flex flex-col"
                     >
-                        <div className="p-6 border-b border-white/5 flex items-center justify-between">
+                        {/* Header with Warm Amber Hue */}
+                        <div className="p-6 border-b border-amber-500/10 flex items-center justify-between bg-gradient-to-b from-amber-500/10 to-transparent border-t border-amber-500/10">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full bg-slate-800 p-2 flex items-center justify-center shadow-inner border border-white/5">
+                                <div className="w-10 h-10 rounded-full bg-white/5 p-2 flex items-center justify-center shadow-inner border border-white/10 group-hover:border-amber-500/50 transition-colors backdrop-blur-md">
                                     <img src={CurebirdLogo} alt="Logo" className="w-full h-full object-contain" />
                                 </div>
                                 <div>
-                                    <h2 className="font-bold text-white text-lg tracking-tight">Curebird</h2>
-                                    <p className="text-xs text-emerald-400 font-bold uppercase tracking-wider">Doctor Portal</p>
+                                    <h2 className="font-bold text-white text-lg tracking-tight drop-shadow-md">Curebird</h2>
+                                    <p className="text-xs text-emerald-400 font-bold uppercase tracking-wider drop-shadow-sm">Doctor Portal</p>
                                 </div>
                             </div>
                             <button onClick={onClose} className="lg:hidden p-2 text-slate-400 hover:text-white transition-colors">
@@ -177,10 +188,11 @@ const DoctorSidebar = ({ isOpen, onClose, activeView, onNavigate, onLogout }) =>
                             </button>
                         </div>
 
+                        {/* Scrollable Content */}
                         <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-8">
                             {menuGroups.map((group, idx) => (
                                 <div key={idx}>
-                                    <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 pl-2">{group.title}</h3>
+                                    <h3 className="text-xs font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-500 uppercase tracking-[0.2em] mb-4 pl-2 drop-shadow-[0_0_10px_rgba(245,158,11,0.2)]">{group.title}</h3>
                                     <div className="space-y-1">
                                         {group.items.map((item, itemIdx) => (
                                             <SidebarItem
@@ -210,13 +222,14 @@ const DoctorSidebar = ({ isOpen, onClose, activeView, onNavigate, onLogout }) =>
                             ))}
                         </div>
 
-                        <div className="p-6 border-t border-white/5 bg-slate-950/30">
+                        {/* Footer */}
+                        <div className="p-6 border-t border-amber-500/10 bg-emerald-950/10 backdrop-blur-md">
                             <button
                                 onClick={onLogout}
-                                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 transition-all font-medium"
+                                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 transition-all font-medium hover:backdrop-blur-sm"
                             >
                                 <LogOut size={20} />
-                                <span>Logout</span>
+                                <span className="text-rose-100/80">Logout</span>
                             </button>
                         </div>
                     </motion.aside>
