@@ -156,12 +156,17 @@ export default function DoctorAuth({ initialUser }) {
         onCaptchVerify();
         const appVerifier = window.recaptchaVerifier;
 
+        const formattedNumber = phoneNumber.replace(/\s/g, '');
+        console.log("Doctor Auth: Requesting SMS to", formattedNumber);
+
         try {
-            const confirmation = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
+            const confirmation = await signInWithPhoneNumber(auth, formattedNumber, appVerifier);
+            console.log("Doctor Auth: SMS Sent Successfully");
             setConfirmationResult(confirmation);
             setIsOtpSent(true);
             setLoading(false);
         } catch (error) {
+            console.error("Doctor Auth OTP Error:", error);
             setError(error.message);
             setLoading(false);
         }

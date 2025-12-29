@@ -166,18 +166,24 @@ const AuthModals = ({ onClose, db, storage, auth }) => {
             return;
         }
 
-        setLoading(true);
-        onCaptchVerify();
+        // Strip spaces for E.164 format (e.g., +919999999999)
+        const formattedNumber = phoneNumber.replace(/\s/g, '');
 
+        setLoading(true);
+        console.log("Starting reCAPTCHA verification for:", formattedNumber);
+
+        onCaptchVerify();
         const appVerifier = window.recaptchaVerifier;
 
         try {
+            console.log("Requesting Firebase SMS...");
             const confirmation = await signInWithPhoneNumber(auth, formattedNumber, appVerifier);
+            console.log("Firebase SMS Request Success!");
             setConfirmationResult(confirmation);
             setIsOtpSent(true);
             setLoading(false);
         } catch (error) {
-            console.error("OTP Error:", error);
+            console.error("OTP Error Details:", error);
             setError(error.message);
             setLoading(false);
             // DO NOT clear verifier here; allows retry with same instance
