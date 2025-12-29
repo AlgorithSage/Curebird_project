@@ -22,6 +22,7 @@ import DoctorAnalytics from './DoctorAnalytics';
 import DoctorChat from './chat/DoctorChat';
 import DoctorNotifications from './DoctorNotifications';
 import DoctorSecurity from './DoctorSecurity';
+import DoctorHelp from './DoctorHelp';
 
 // --- Background Components (Top Level) ---
 const InteractiveHexGrid = () => {
@@ -317,7 +318,7 @@ const DoctorDashboard = ({ user }) => {
             />;
             case 'profile': return <DoctorProfile user={user} />;
             case 'security': return <DoctorSecurity />;
-            case 'help': return <PlaceholderView title="Help & Support" icon={HelpCircle} />;
+            case 'help': return <DoctorHelp />;
             default: return <DashboardOverview />;
         }
     };
