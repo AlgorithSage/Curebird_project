@@ -160,8 +160,8 @@ const AuthModals = ({ onClose, db, storage, auth }) => {
         e.preventDefault();
         setError('');
 
-        const formattedNumber = phoneNumber.trim();
-        if (formattedNumber.length < 12) {
+        const inputNumber = phoneNumber.trim();
+        if (inputNumber.length < 12) {
             setError("Please enter a valid 10-digit number.");
             return;
         }
