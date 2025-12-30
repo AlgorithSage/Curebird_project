@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Activity, Plus, ChevronRight, CheckCircle, AlertTriangle } from 'lucide-react';
+import { Activity, Plus, ChevronRight, CheckCircle, AlertTriangle, Trash2 } from 'lucide-react';
 import { DiseaseService } from '../../services/DiseaseService';
 import AddDiseaseModal from './AddDiseaseModal';
 
@@ -19,6 +19,19 @@ const DiseaseList = ({ userId, onSelectDisease }) => {
             console.error(error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleDeleteDisease = async (e, diseaseId) => {
+        e.stopPropagation(); // Prevent card click
+        if (!window.confirm("Are you sure you want to delete this condition? This action cannot be undone.")) return;
+
+        try {
+            await DiseaseService.deleteDisease(userId, diseaseId);
+            fetchDiseases();
+        } catch (error) {
+            console.error("Failed to delete disease:", error);
+            alert("Failed to delete condition.");
         }
     };
 
@@ -70,8 +83,17 @@ const DiseaseList = ({ userId, onSelectDisease }) => {
                                 </span>
                             </div>
 
-                            <div className="bg-slate-800/50 p-2 rounded-full text-slate-500 group-hover:text-amber-400 group-hover:bg-amber-400/10 transition-colors">
-                                <ChevronRight size={20} />
+                            <div className="flex flex-col items-end gap-2">
+                                <button
+                                    onClick={(e) => handleDeleteDisease(e, disease.id)}
+                                    className="p-2 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-full transition-colors z-10"
+                                    title="Delete Condition"
+                                >
+                                    <Trash2 size={16} />
+                                </button>
+                                <div className="bg-slate-800/50 p-2 rounded-full text-slate-500 group-hover:text-amber-400 group-hover:bg-amber-400/10 transition-colors">
+                                    <ChevronRight size={20} />
+                                </div>
                             </div>
                         </motion.div>
                     ))}
@@ -91,14 +113,16 @@ const DiseaseList = ({ userId, onSelectDisease }) => {
                 )}
             </div>
 
-            {isAddModalOpen && (
-                <AddDiseaseModal
-                    userId={userId}
-                    onClose={() => setIsAddModalOpen(false)}
-                    onDiseaseAdded={fetchDiseases}
-                />
-            )}
-        </div>
+            {
+                isAddModalOpen && (
+                    <AddDiseaseModal
+                        userId={userId}
+                        onClose={() => setIsAddModalOpen(false)}
+                        onDiseaseAdded={fetchDiseases}
+                    />
+                )
+            }
+        </div >
     );
 };
 

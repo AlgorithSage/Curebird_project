@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Plus, Activity, Calendar, TrendingUp, AlertCircle, FileText } from 'lucide-react';
+import { ArrowLeft, Plus, Activity, Calendar, TrendingUp, AlertCircle, FileText, Trash2 } from 'lucide-react';
 import { DiseaseService } from '../../services/DiseaseService';
 import { DISEASE_CONFIG } from '../../data/diseaseMetrics';
 import AddMetricModal from './AddMetricModal';
@@ -45,6 +45,18 @@ const DiseaseDetail = ({ userId, disease, onBack }) => {
             console.error(error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleDeleteMetric = async (metricId) => {
+        if (!window.confirm("Are you sure you want to delete this log?")) return;
+        try {
+            await DiseaseService.deleteMetric(userId, disease.id, metricId);
+            // Refresh metrics
+            fetchMetrics();
+        } catch (error) {
+            console.error("Failed to delete metric:", error);
+            alert("Failed to delete record.");
         }
     };
 
@@ -221,8 +233,16 @@ const DiseaseDetail = ({ userId, disease, onBack }) => {
                                                         {new Date(log.timestamp.seconds * 1000).toLocaleDateString()} • {new Date(log.timestamp.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                                     </div>
                                                 </div>
-                                                {/* Placeholder for status dot */}
-                                                <div className={`w-2 h-2 rounded-full ${Number(log.value) > 100 ? 'bg-red-500' : 'bg-green-500'}`} />
+                                                <div className="flex items-center gap-3">
+                                                    <div className={`w-2 h-2 rounded-full ${Number(log.value) > 100 ? 'bg-red-500' : 'bg-green-500'}`} />
+                                                    <button
+                                                        onClick={() => handleDeleteMetric(log.id)}
+                                                        className="p-1.5 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                                                        title="Delete Log"
+                                                    >
+                                                        <Trash2 size={14} />
+                                                    </button>
+                                                </div>
                                             </div>
                                         ))}
                                         {metrics.length === 0 && <span className="text-sm text-slate-500">No logs found.</span>}

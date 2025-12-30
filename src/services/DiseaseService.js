@@ -10,7 +10,8 @@ import {
     orderBy,
     limit,
     serverTimestamp,
-    setDoc
+    setDoc,
+    deleteDoc
 } from 'firebase/firestore';
 import { API_BASE_URL } from '../config';
 import { db } from '../App';
@@ -87,6 +88,21 @@ export const DiseaseService = {
             return docRef.id;
         } catch (error) {
             console.error("Error adding disease:", error);
+            throw error;
+        }
+    },
+
+    /**
+     * Delete a disease.
+     * @param {string} userId
+     * @param {string} diseaseId
+     */
+    async deleteDisease(userId, diseaseId) {
+        try {
+            const diseaseRef = doc(db, 'users', userId, 'diseases', diseaseId);
+            await deleteDoc(diseaseRef);
+        } catch (error) {
+            console.error("Error deleting disease:", error);
             throw error;
         }
     },
@@ -170,6 +186,22 @@ export const DiseaseService = {
             }).reverse(); // Return in chronological order (Oldest -> Newest) for graphs
         } catch (error) {
             console.error("Error fetching metrics:", error);
+            throw error;
+        }
+    },
+
+    /**
+     * Delete a specific metric.
+     * @param {string} userId
+     * @param {string} diseaseId
+     * @param {string} metricId
+     */
+    async deleteMetric(userId, diseaseId, metricId) {
+        try {
+            const metricRef = doc(db, 'users', userId, 'diseases', diseaseId, 'metrics', metricId);
+            await deleteDoc(metricRef);
+        } catch (error) {
+            console.error("Error deleting metric:", error);
             throw error;
         }
     },
