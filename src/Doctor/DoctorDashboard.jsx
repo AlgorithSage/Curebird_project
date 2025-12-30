@@ -156,31 +156,43 @@ const DashboardOverview = ({ onAddRecord }) => (
                     transition={{ delay: i * 0.1 }}
                     whileHover={{ scale: 1.05, translateY: -5 }}
                     onClick={() => onAddRecord(b.type)}
-                    className="group relative flex flex-col items-center justify-center p-8 rounded-[2rem] bg-gradient-to-br from-[#2e2a0a] via-[#1c1a05] to-[#0c0a05] border border-amber-500/30 shadow-2xl overflow-hidden text-center"
+                    className="group relative flex flex-col items-center justify-center p-[3px] rounded-[2.1rem] overflow-hidden shadow-2xl transition-all duration-500 bg-amber-500/10"
                 >
-                    {/* Subtle Internal Glow */}
-                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent opacity-30" />
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,_rgba(251,191,36,0.1),_transparent_70%)] pointer-events-none" />
-
-                    {/* Content Container */}
-                    <div className="relative z-10 flex flex-col items-center">
-                        <div className={`p-6 rounded-2xl bg-amber-950/40 border border-amber-500/20 shadow-lg group-hover:border-amber-400/50 group-hover:shadow-amber-500/40 group-hover:scale-110 transition-all duration-300 mb-6 ${b.c}`}>
-                            <b.icon size={42} strokeWidth={2.5} />
-                        </div>
-
-                        <div className="space-y-2">
-                            <span className="block text-sm font-black uppercase tracking-[0.25em] text-amber-50/90 group-hover:text-amber-300 transition-colors drop-shadow-lg">
-                                {b.l}
-                            </span>
-                            <span className="block text-[10px] font-bold text-amber-500/30 uppercase tracking-[0.15em] group-hover:text-amber-500/60 transition-colors">
-                                {b.desc}
-                            </span>
-                        </div>
+                    {/* Persistent & Enhanced Rotating Rim (Border) */}
+                    <div className="absolute inset-0 z-0 overflow-hidden rounded-[2.1rem]">
+                        <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                            className="absolute -inset-[150%] bg-[conic-gradient(from_0deg,transparent_0deg,transparent_180deg,rgba(251,191,36,0.4)_270deg,#fbbf24_360deg)] opacity-40 group-hover:opacity-100 transition-opacity duration-500"
+                        />
                     </div>
 
-                    {/* Interaction Flare */}
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1/2 bg-amber-500/5 blur-3xl rounded-full" />
+                    {/* Inner Card Body */}
+                    <div className="relative z-10 w-full h-full flex flex-col items-center justify-center p-8 rounded-[2rem] bg-gradient-to-br from-[#2e2a0a] via-[#1c1a05] to-[#0c0a05] overflow-hidden">
+                        {/* Subtle Internal Glow */}
+                        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent opacity-30" />
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,_rgba(251,191,36,0.1),_transparent_70%)] pointer-events-none" />
+
+                        {/* Content Container */}
+                        <div className="relative z-10 flex flex-col items-center">
+                            <div className={`p-6 rounded-2xl bg-amber-950/40 border border-amber-500/20 shadow-lg group-hover:border-amber-400/50 group-hover:shadow-amber-500/40 group-hover:scale-110 transition-all duration-300 mb-6 ${b.c}`}>
+                                <b.icon size={42} strokeWidth={2.5} />
+                            </div>
+
+                            <div className="space-y-2">
+                                <span className="block text-sm font-black uppercase tracking-[0.25em] text-amber-50/90 group-hover:text-amber-300 transition-colors drop-shadow-lg">
+                                    {b.l}
+                                </span>
+                                <span className="block text-[10px] font-bold text-amber-500/30 uppercase tracking-[0.15em] group-hover:text-amber-500/60 transition-colors">
+                                    {b.desc}
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Interaction Flare */}
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1/2 bg-amber-500/5 blur-3xl rounded-full" />
+                        </div>
                     </div>
                 </motion.button>
             ))}
