@@ -115,6 +115,27 @@ const NotificationDropdown = ({ alerts, onClose }) => {
 // This Header component is now fully responsive
 const Header = ({ title, description, user, onAddClick, onShareClick, onLoginClick, onLogout, onToggleSidebar, onNavigate, alerts = [] }) => {
     const [isNotifOpen, setIsNotifOpen] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            // Check if any element is scrolled (using capture phase allows this)
+            // We use a small threshold to prevent flickering
+            setIsScrolled(true);
+
+            // Re-evaluating: simpler logic. If *any* scroll happens that is significant.
+            // Actually, we want to hide it if the USER has scrolled down. 
+            // Since we can't easily check 'which' container, let's just check if the event target has scrollTop > 10.
+        };
+
+        const onScroll = (e) => {
+            const scrollTop = e.target.scrollTop || window.scrollY;
+            setIsScrolled(scrollTop > 10);
+        };
+
+        window.addEventListener('scroll', onScroll, true); // Capture phase is key here
+        return () => window.removeEventListener('scroll', onScroll, true);
+    }, []);
 
     // Quick Navigation Items
     const navItems = [
@@ -251,9 +272,19 @@ const Header = ({ title, description, user, onAddClick, onShareClick, onLoginCli
             </header>
 
             {/* Mobile/Zoomed Text: Visible OUTSIDE Header on Smaller Screens (< XL) */}
-            <div className="xl:hidden w-full px-4 mt-6 mb-2 flex justify-center animate-in fade-in slide-in-from-top-2 duration-300">
-                <HeaderText />
-            </div>
+            <AnimatePresence>
+                {!isScrolled && (
+                    <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto', marginTop: 24, marginBottom: 8 }}
+                        exit={{ opacity: 0, height: 0, marginTop: 0, marginBottom: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="xl:hidden w-full px-4 flex justify-center overflow-hidden"
+                    >
+                        <HeaderText />
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </>
     );
 }

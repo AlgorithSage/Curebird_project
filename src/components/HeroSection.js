@@ -103,7 +103,7 @@ const HeroSection = ({ onOverviewClick, onAddClick, onNavigate, healthScore }) =
                             </div>
 
                             {/* Feature Overview Glass Card */}
-                            <div className="bg-gradient-to-br from-slate-900/60 to-slate-800/60 backdrop-blur-xl border border-white/10 rounded-3xl p-8 w-full max-w-2xl transform-gpu hover:border-white/20 transition-all shadow-2xl">
+                            <div className="glass-card w-full max-w-2xl transform-gpu hover:border-white/20 transition-all shadow-2xl">
                                 <ul className="space-y-5">
                                     {[
                                         "Instant medical prescription/report analysis",
@@ -241,7 +241,7 @@ const HeroSection = ({ onOverviewClick, onAddClick, onNavigate, healthScore }) =
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                             <div
                                 onClick={() => onNavigate && onNavigate('Cure AI')}
                                 className="glass-card flex flex-col items-center cursor-pointer text-center h-full group"
@@ -278,6 +278,19 @@ const HeroSection = ({ onOverviewClick, onAddClick, onNavigate, healthScore }) =
                                 <h3 className="text-amber-100 font-bold text-xl leading-tight mb-2 group-hover:text-emerald-400 transition-colors">Cure Stat</h3>
                                 <p className="text-white font-bold text-sm leading-relaxed">
                                     Visualizes real-time disease trends and epidemic data globally, keeping you informed about public health risks.
+                                </p>
+                            </div>
+
+                            <div
+                                onClick={() => onNavigate && onNavigate('Cure Tracker')}
+                                className="glass-card flex flex-col items-center cursor-pointer text-center h-full group"
+                            >
+                                <div className="mb-4 p-3 rounded-2xl bg-purple-500/10 border border-purple-500/20 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_-3px_rgba(168,85,247,0.2)]">
+                                    <Calendar size={28} className="text-purple-400" />
+                                </div>
+                                <h3 className="text-amber-100 font-bold text-xl leading-tight mb-2 group-hover:text-purple-400 transition-colors">Cure Tracker</h3>
+                                <p className="text-white font-bold text-sm leading-relaxed">
+                                    Log and monitor your daily symptoms, medications, and vitals to build a comprehensive health timeline.
                                 </p>
                             </div>
                         </div>
