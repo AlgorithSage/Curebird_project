@@ -14,8 +14,6 @@ import { SkeletonDashboard, SkeletonCard } from './SkeletonLoaders';
 import DashboardOverview from './DashboardOverview';
 
 import HeroSection from './HeroSection';
-import DiseaseList from './diseases/DiseaseList';
-import DiseaseDetail from './diseases/DiseaseDetail';
 import EmergencySettingsModal from './emergency/EmergencySettingsModal';
 import EmergencyMedicalCard from './emergency/EmergencyMedicalCard';
 import SOSButton from './emergency/SOSButton';
@@ -31,7 +29,6 @@ const MedicalPortfolio = ({ user, db, storage, appId, formatDate, capitalize, on
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [recordToDelete, setRecordToDelete] = useState(null);
     const [editingRecord, setEditingRecord] = useState(null);
-    const [selectedDisease, setSelectedDisease] = useState(null);
     const [activeTypeFilter, setActiveTypeFilter] = useState(null); // Default to null (collapsed)
     const [isEmergencySetupOpen, setIsEmergencySetupOpen] = useState(false);
     const [isSOSActive, setIsSOSActive] = useState(false);
@@ -188,187 +185,178 @@ const MedicalPortfolio = ({ user, db, storage, appId, formatDate, capitalize, on
             />
 
             <main className="mt-8">
-                {selectedDisease ? (
-                    <DiseaseDetail
-                        userId={userId}
-                        disease={selectedDisease}
-                        onBack={() => setSelectedDisease(null)}
-                    />
-                ) : (
-                    <>
-                        {/* Flashy Hero Section - Always visible */}
-                        <div className="mb-10">
-                            <HeroSection
-                                onOverviewClick={scrollToDashboard}
-                                onAddClick={() => { setEditingRecord(null); setIsFormModalOpen(true); }}
-                                onNavigate={onNavigate}
-                                healthScore={healthScore}
-                            />
-                        </div>
+                {/* Content Removed - Moved to Cure Tracker */}
+                <>
+                    {/* Flashy Hero Section - Always visible */}
+                    <div className="mb-10">
+                        <HeroSection
+                            onOverviewClick={scrollToDashboard}
+                            onAddClick={() => { setEditingRecord(null); setIsFormModalOpen(true); }}
+                            onNavigate={onNavigate}
+                            healthScore={healthScore}
+                        />
+                    </div>
 
 
-                        {/* Dashboard Overview Banner */}
-                        <div className="mb-12">
-                            <DashboardOverview user={user} />
-                        </div>
+                    {/* Dashboard Overview Banner */}
+                    <div className="mb-12">
+                        <DashboardOverview user={user} />
+                    </div>
 
-                        {isLoading ? <SkeletonDashboard /> : (
-                            <>
-                                {/* Standard Stat Cards for Dashboard Overview */}
-                                <div ref={dashboardRef} className="grid grid-cols-1 sm:grid-cols-3 gap-6 scroll-mt-24">
-                                    <StatCard icon={<FileText size={24} className="text-black" />} label="Total Records" value={records.length} color="bg-yellow-500" />
-                                    <StatCard icon={<ShieldCheck size={24} className="text-black" />} label="Identity Verified" value="Active" color="bg-amber-400" />
-                                    <StatCard icon={<Calendar size={24} className="text-black" />} label="Last Visit" value={lastVisit} color="bg-yellow-600" />
-                                </div>
-                                <div className="mt-8">
-                                    <RecordsChart data={dashboardData} />
-                                </div>
-                                <div className="mt-8">
-                                    <DiseaseList userId={user?.uid} onSelectDisease={setSelectedDisease} />
-                                </div>
-                            </>
-                        )}
-
-                        <div className="mt-12 mb-6 flex items-center justify-between" ref={medicalHistoryRef}>
-                            <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400">Medical History Categories</h2>
-                            {activeTypeFilter && (
-                                <button
-                                    onClick={() => setActiveTypeFilter(null)}
-                                    className="text-sm px-4 py-2 rounded-full bg-slate-800/80 text-amber-400 border border-amber-500/30 hover:bg-slate-700 transition flex items-center gap-2"
-                                >
-                                    <ChevronUp size={16} /> Close View
-                                </button>
-                            )}
-                        </div>
-
-                        {isLoading ? (
-                            <div className="space-y-4">
-                                <SkeletonCard /><SkeletonCard />
+                    {isLoading ? <SkeletonDashboard /> : (
+                        <>
+                            {/* Standard Stat Cards for Dashboard Overview */}
+                            <div ref={dashboardRef} className="grid grid-cols-1 sm:grid-cols-3 gap-6 scroll-mt-24">
+                                <StatCard icon={<FileText size={24} className="text-black" />} label="Total Records" value={records.length} color="bg-yellow-500" />
+                                <StatCard icon={<ShieldCheck size={24} className="text-black" />} label="Identity Verified" value="Active" color="bg-amber-400" />
+                                <StatCard icon={<Calendar size={24} className="text-black" />} label="Last Visit" value={lastVisit} color="bg-yellow-600" />
                             </div>
-                        ) : (
-                            <>
-                                {/* Opaque Amber & High Visibility Category Grid */}
-                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4">
-                                    {[
-                                        { id: 'prescription', label: 'Prescriptions', icon: <Pill size={32} />, count: records.filter(r => r.type === 'prescription').length },
-                                        { id: 'test_report', label: 'Test Reports', icon: <FileText size={32} />, count: records.filter(r => r.type === 'test_report').length },
-                                        { id: 'diagnosis', label: 'Diagnoses', icon: <Stethoscope size={32} />, count: records.filter(r => r.type === 'diagnosis').length },
-                                        { id: 'admission', label: 'Admissions', icon: <Hospital size={32} />, count: records.filter(r => r.type === 'admission').length },
-                                        { id: 'ecg', label: 'ECG Records', icon: <HeartPulse size={32} />, count: records.filter(r => r.type === 'ecg').length },
-                                    ].map((cat) => (
-                                        <motion.div
-                                            key={cat.id}
-                                            whileHover={{ scale: 1.02, translateY: -5 }}
-                                            whileTap={{ scale: 0.98 }}
-                                            onClick={() => handleCategoryClick(cat.id)}
-                                            // Solid Amber/Orange Gradient Style to match reference
-                                            className={`relative aspect-[4/5] sm:aspect-square flex flex-col items-center justify-center p-6 rounded-3xl cursor-pointer transition-all duration-300 group overflow-hidden ${activeTypeFilter === cat.id
-                                                ? `bg-gradient-to-kb from-amber-500 to-amber-700 ring-4 ring-amber-400/50 scale-105 z-10 shadow-2xl`
-                                                : `bg-gradient-to-br from-amber-500 to-amber-700 shadow-xl hover:shadow-amber-500/40 border border-white/10`
-                                                }`}
-                                        >
-                                            {/* Icon Container - Darkened Squircle */}
-                                            <div className={`mb-6 p-4 rounded-2xl ${activeTypeFilter === cat.id
-                                                ? 'bg-black/40 text-white'
-                                                : 'bg-black/20 text-black/80 group-hover:bg-black/30 group-hover:text-black'
-                                                } transition-all duration-300 backdrop-blur-sm border border-black/5 shadow-inner`}>
-                                                {React.cloneElement(cat.icon, { strokeWidth: 2 })}
-                                            </div>
+                            <div className="mt-8">
+                                <RecordsChart data={dashboardData} />
+                            </div>
 
-                                            {/* Typography - Centered & Bold */}
-                                            <div className="text-center z-10 flex flex-col items-center">
-                                                <h3 className={`text-4xl sm:text-5xl font-black mb-2 leading-none tracking-tighter ${activeTypeFilter === cat.id
-                                                    ? 'text-white drop-shadow-md'
-                                                    : 'text-black/90 group-hover:text-black'
-                                                    } transition-colors`}>
-                                                    {cat.count}
-                                                </h3>
+                        </>
+                    )}
 
-                                                <p className={`text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em] ${activeTypeFilter === cat.id
-                                                    ? 'text-white/90'
-                                                    : 'text-black/60 group-hover:text-black/80'
-                                                    } transition-colors`}>
-                                                    {cat.label}
-                                                </p>
-                                            </div>
+                    <div className="mt-12 mb-6 flex items-center justify-between" ref={medicalHistoryRef}>
+                        <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400">Medical History Categories</h2>
+                        {activeTypeFilter && (
+                            <button
+                                onClick={() => setActiveTypeFilter(null)}
+                                className="text-sm px-4 py-2 rounded-full bg-slate-800/80 text-amber-400 border border-amber-500/30 hover:bg-slate-700 transition flex items-center gap-2"
+                            >
+                                <ChevronUp size={16} /> Close View
+                            </button>
+                        )}
+                    </div>
 
-                                            {/* Subtle sheen effect */}
-                                            <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-                                        </motion.div>
-                                    ))}
-                                </div>
+                    {isLoading ? (
+                        <div className="space-y-4">
+                            <SkeletonCard /><SkeletonCard />
+                        </div>
+                    ) : (
+                        <>
+                            {/* Opaque Amber & High Visibility Category Grid */}
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4">
+                                {[
+                                    { id: 'prescription', label: 'Prescriptions', icon: <Pill size={32} />, count: records.filter(r => r.type === 'prescription').length },
+                                    { id: 'test_report', label: 'Test Reports', icon: <FileText size={32} />, count: records.filter(r => r.type === 'test_report').length },
+                                    { id: 'diagnosis', label: 'Diagnoses', icon: <Stethoscope size={32} />, count: records.filter(r => r.type === 'diagnosis').length },
+                                    { id: 'admission', label: 'Admissions', icon: <Hospital size={32} />, count: records.filter(r => r.type === 'admission').length },
+                                    { id: 'ecg', label: 'ECG Records', icon: <HeartPulse size={32} />, count: records.filter(r => r.type === 'ecg').length },
+                                ].map((cat) => (
+                                    <motion.div
+                                        key={cat.id}
+                                        whileHover={{ scale: 1.02, translateY: -5 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        onClick={() => handleCategoryClick(cat.id)}
+                                        // Solid Amber/Orange Gradient Style to match reference
+                                        className={`relative aspect-[4/5] sm:aspect-square flex flex-col items-center justify-center p-6 rounded-3xl cursor-pointer transition-all duration-300 group overflow-hidden ${activeTypeFilter === cat.id
+                                            ? `bg-gradient-to-kb from-amber-500 to-amber-700 ring-4 ring-amber-400/50 scale-105 z-10 shadow-2xl`
+                                            : `bg-gradient-to-br from-amber-500 to-amber-700 shadow-xl hover:shadow-amber-500/40 border border-white/10`
+                                            }`}
+                                    >
+                                        {/* Icon Container - Darkened Squircle */}
+                                        <div className={`mb-6 p-4 rounded-2xl ${activeTypeFilter === cat.id
+                                            ? 'bg-black/40 text-white'
+                                            : 'bg-black/20 text-black/80 group-hover:bg-black/30 group-hover:text-black'
+                                            } transition-all duration-300 backdrop-blur-sm border border-black/5 shadow-inner`}>
+                                            {React.cloneElement(cat.icon, { strokeWidth: 2 })}
+                                        </div>
 
-                                {/* Collapsible Section - Only shows when filter is active */}
-                                <AnimatePresence>
-                                    {activeTypeFilter && (
-                                        <motion.div
-                                            initial={{ opacity: 0, height: 0 }}
-                                            animate={{ opacity: 1, height: 'auto' }}
-                                            exit={{ opacity: 0, height: 0 }}
-                                            className="overflow-hidden"
-                                        >
-                                            <div className="py-4">
-                                                {displayedRecords.length > 0 ? (
-                                                    <div className="space-y-4">
-                                                        <div className="flex items-center justify-between mb-2 px-2">
-                                                            <h3 className="text-xl font-bold text-amber-400">
-                                                                {activeTypeFilter === 'All' ? 'All Records' : capitalize(activeTypeFilter.replace('_', ' '))}
-                                                            </h3>
-                                                            <span className="text-sm text-slate-400">Showing {displayedRecords.length} records</span>
-                                                        </div>
-                                                        <AnimatePresence mode="popLayout">
-                                                            {displayedRecords.map(record => (
-                                                                <motion.div
-                                                                    key={record.id}
-                                                                    initial={{ opacity: 0, x: -20 }}
-                                                                    animate={{ opacity: 1, x: 0 }}
-                                                                    exit={{ opacity: 0, x: 20 }}
-                                                                    layout
-                                                                >
-                                                                    <RecordCard
-                                                                        record={record}
-                                                                        onEdit={() => { setEditingRecord(record); setIsFormModalOpen(true); }}
-                                                                        onDelete={() => { setRecordToDelete(record.id); setIsDeleteModalOpen(true); }}
-                                                                    />
-                                                                </motion.div>
-                                                            ))}
-                                                        </AnimatePresence>
+                                        {/* Typography - Centered & Bold */}
+                                        <div className="text-center z-10 flex flex-col items-center">
+                                            <h3 className={`text-4xl sm:text-5xl font-black mb-2 leading-none tracking-tighter ${activeTypeFilter === cat.id
+                                                ? 'text-white drop-shadow-md'
+                                                : 'text-black/90 group-hover:text-black'
+                                                } transition-colors`}>
+                                                {cat.count}
+                                            </h3>
+
+                                            <p className={`text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em] ${activeTypeFilter === cat.id
+                                                ? 'text-white/90'
+                                                : 'text-black/60 group-hover:text-black/80'
+                                                } transition-colors`}>
+                                                {cat.label}
+                                            </p>
+                                        </div>
+
+                                        {/* Subtle sheen effect */}
+                                        <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                                    </motion.div>
+                                ))}
+                            </div>
+
+                            {/* Collapsible Section - Only shows when filter is active */}
+                            <AnimatePresence>
+                                {activeTypeFilter && (
+                                    <motion.div
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: 'auto' }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        className="overflow-hidden"
+                                    >
+                                        <div className="py-4">
+                                            {displayedRecords.length > 0 ? (
+                                                <div className="space-y-4">
+                                                    <div className="flex items-center justify-between mb-2 px-2">
+                                                        <h3 className="text-xl font-bold text-amber-400">
+                                                            {activeTypeFilter === 'All' ? 'All Records' : capitalize(activeTypeFilter.replace('_', ' '))}
+                                                        </h3>
+                                                        <span className="text-sm text-slate-400">Showing {displayedRecords.length} records</span>
                                                     </div>
-                                                ) : (
-                                                    <div className="glass-card text-center py-16 rounded-2xl border-dashed border-2 border-white/10 bg-slate-900/50">
-                                                        <div className="bg-slate-800 p-4 rounded-full w-20 h-20 mx-auto flex items-center justify-center mb-4">
-                                                            <BarChart2 size={40} className="text-slate-500" />
-                                                        </div>
-                                                        <h3 className="text-xl font-bold text-white">No {activeTypeFilter.replace('_', ' ')} records found.</h3>
-                                                        <p className="text-slate-400 mt-2">There are no uploaded records for this category yet.</p>
-                                                        <button
-                                                            onClick={() => { setEditingRecord(null); setIsFormModalOpen(true); }}
-                                                            className="mt-6 px-6 py-2 bg-amber-500 hover:bg-amber-400 text-black rounded-lg font-semibold transition-colors"
-                                                        >
-                                                            Add New Record
-                                                        </button>
+                                                    <AnimatePresence mode="popLayout">
+                                                        {displayedRecords.map(record => (
+                                                            <motion.div
+                                                                key={record.id}
+                                                                initial={{ opacity: 0, x: -20 }}
+                                                                animate={{ opacity: 1, x: 0 }}
+                                                                exit={{ opacity: 0, x: 20 }}
+                                                                layout
+                                                            >
+                                                                <RecordCard
+                                                                    record={record}
+                                                                    onEdit={() => { setEditingRecord(record); setIsFormModalOpen(true); }}
+                                                                    onDelete={() => { setRecordToDelete(record.id); setIsDeleteModalOpen(true); }}
+                                                                />
+                                                            </motion.div>
+                                                        ))}
+                                                    </AnimatePresence>
+                                                </div>
+                                            ) : (
+                                                <div className="glass-card text-center py-16 rounded-2xl border-dashed border-2 border-white/10 bg-slate-900/50">
+                                                    <div className="bg-slate-800 p-4 rounded-full w-20 h-20 mx-auto flex items-center justify-center mb-4">
+                                                        <BarChart2 size={40} className="text-slate-500" />
                                                     </div>
-                                                )}
-                                            </div>
-                                            {/* Bottom Close Button for Convenience */}
-                                            {displayedRecords.length > 3 && (
-                                                <div className="flex justify-center mt-4 mb-8">
+                                                    <h3 className="text-xl font-bold text-white">No {activeTypeFilter.replace('_', ' ')} records found.</h3>
+                                                    <p className="text-slate-400 mt-2">There are no uploaded records for this category yet.</p>
                                                     <button
-                                                        onClick={() => setActiveTypeFilter(null)}
-                                                        className="text-sm px-6 py-2 rounded-full bg-slate-800 text-slate-300 hover:bg-slate-700 transition flex items-center gap-2 border border-slate-700"
+                                                        onClick={() => { setEditingRecord(null); setIsFormModalOpen(true); }}
+                                                        className="mt-6 px-6 py-2 bg-amber-500 hover:bg-amber-400 text-black rounded-lg font-semibold transition-colors"
                                                     >
-                                                        <ChevronUp size={16} /> Retract List
+                                                        Add New Record
                                                     </button>
                                                 </div>
                                             )}
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
-                            </>
+                                        </div>
+                                        {/* Bottom Close Button for Convenience */}
+                                        {displayedRecords.length > 3 && (
+                                            <div className="flex justify-center mt-4 mb-8">
+                                                <button
+                                                    onClick={() => setActiveTypeFilter(null)}
+                                                    className="text-sm px-6 py-2 rounded-full bg-slate-800 text-slate-300 hover:bg-slate-700 transition flex items-center gap-2 border border-slate-700"
+                                                >
+                                                    <ChevronUp size={16} /> Retract List
+                                                </button>
+                                            </div>
+                                        )}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </>
 
-                        )}
-                    </>
-                )}
+                    )}
+                </>
             </main>
 
             {/* SOS System */}

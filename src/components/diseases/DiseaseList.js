@@ -50,17 +50,38 @@ const DiseaseList = ({ userId, onSelectDisease }) => {
 
     return (
         <div className="mb-8">
-            <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                    <Activity className="text-amber-500" size={24} />
-                    Your Active Conditions
-                </h2>
-                <button
-                    onClick={() => setIsAddModalOpen(true)}
-                    className="text-sm px-4 py-2 bg-slate-800 hover:bg-slate-700 text-amber-400 rounded-lg transition-colors flex items-center gap-2"
-                >
-                    <Plus size={16} /> Add New
-                </button>
+            <div className="relative mb-8 p-8 rounded-3xl overflow-hidden bg-slate-900/50 border border-slate-800 backdrop-blur-sm">
+                {/* Background Glows */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-3xl bg-amber-500/10 blur-[100px] -z-10" />
+
+                <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
+                    {/* Pill Label */}
+                    <div className="mb-6 px-4 py-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-400 text-xs font-bold tracking-widest uppercase shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+                        Overview
+                    </div>
+
+                    {/* Main Heading */}
+                    <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+                        Live Health <span className="text-amber-400">Tracker</span>
+                    </h2>
+
+                    {/* Description */}
+                    <p className="text-slate-400 text-lg leading-relaxed mb-8 max-w-2xl">
+                        Your central command center for health data. <span className="text-white font-semibold">Track conditions</span>, monitor <span className="text-amber-400 font-semibold">vital trends</span>, and manage your <span className="text-emerald-400 font-semibold">daily insights</span> in one secure, real-time dashboard.
+                    </p>
+
+                    {/* Action Button */}
+                    <button
+                        onClick={() => setIsAddModalOpen(true)}
+                        className="group relative inline-flex items-center gap-3 px-8 py-4 bg-slate-950 text-white font-semibold rounded-2xl border border-slate-800 hover:border-amber-500/50 hover:shadow-[0_0_30px_rgba(245,158,11,0.15)] transition-all duration-300"
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-orange-500/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
+                        <span className="p-1.5 bg-amber-400/10 text-amber-400 rounded-lg group-hover:bg-amber-400 group-hover:text-slate-900 transition-colors duration-300">
+                            <Plus size={18} />
+                        </span>
+                        <span>Add New Condition</span>
+                    </button>
+                </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

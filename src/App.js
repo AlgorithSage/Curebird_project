@@ -25,6 +25,7 @@ import Settings from './components/Settings';
 import CureStat from './components/CureStat';
 import CureAnalyzer from './components/CureAnalyzer';
 import CureAI from './components/CureAI';
+import CureTracker from './components/CureTracker';
 import LandingPage from './components/LandingPage';
 import TermsOfService from './components/TermsOfService';
 import PrivacyPolicy from './components/PrivacyPolicy';
@@ -150,6 +151,7 @@ export default function App() {
             case 'All Records': return <AllRecords {...pageProps} />;
             case 'Appointments': return <Appointments {...pageProps} />;
             case 'Medications': return <Medications {...pageProps} />;
+            case 'Cure Tracker': return <CureTracker {...pageProps} />;
             case 'Cure Analyzer': return <CureAnalyzer {...pageProps} />;
             case 'Cure Stat': return <CureStat {...pageProps} />;
             case 'Cure AI': return <CureAI {...pageProps} />;
