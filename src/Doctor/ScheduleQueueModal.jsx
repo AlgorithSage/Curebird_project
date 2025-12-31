@@ -102,7 +102,7 @@ const ScheduleQueueModal = ({ isOpen, onClose }) => {
                                                 )}
                                             </div>
 
-                                            <div className="flex flex-col gap-1">
+                                            <div className="flex flex-col gap-1.5">
                                                 <h4 className="text-lg font-bold text-white group-hover:text-emerald-400 transition-colors uppercase tracking-tight">{appt.patient}</h4>
                                                 <p className="text-xs font-black text-stone-500 uppercase tracking-widest flex items-center gap-2">
                                                     {appt.type}

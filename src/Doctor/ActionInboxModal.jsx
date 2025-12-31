@@ -84,14 +84,14 @@ const ActionInboxModal = ({ isOpen, onClose }) => {
                                                         action.category === 'diagnostic' ? <Bell size={20} /> : <FileCheck size={20} />}
                                                 </div>
                                                 <div>
-                                                    <div className="flex items-center gap-3 mb-1">
+                                                    <div className="flex items-center gap-4 mb-2">
                                                         <span className="text-[10px] font-black text-stone-500 uppercase tracking-widest">{action.type}</span>
                                                         <span className={`px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-tighter border ${getPriorityColor(action.priority)}`}>
                                                             {action.priority}
                                                         </span>
                                                     </div>
-                                                    <h4 className="text-lg font-bold text-white group-hover:text-rose-400 transition-colors tracking-tight leading-tight">{action.title}</h4>
-                                                    <p className="text-sm text-stone-400 font-medium mt-1">Patient: <span className="text-white font-bold uppercase">{action.patient}</span></p>
+                                                    <h4 className="text-lg font-bold text-white group-hover:text-rose-400 transition-colors tracking-tight leading-tight mb-2">{action.title}</h4>
+                                                    <p className="text-sm text-stone-400 font-medium">Patient: <span className="text-white font-bold uppercase">{action.patient}</span></p>
                                                 </div>
                                             </div>
                                             <span className="text-[10px] font-black text-stone-600 uppercase tracking-widest">{action.time}</span>

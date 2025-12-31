@@ -87,7 +87,7 @@ const PatientRosterModal = ({ isOpen, onClose, patients = [], onViewPatient }) =
                                                         {patient.name.charAt(0)}
                                                     </div>
                                                     <div>
-                                                        <h4 className="text-lg font-bold text-white group-hover:text-amber-400 transition-colors tracking-tight uppercase">{patient.name}</h4>
+                                                        <h4 className="text-lg font-bold text-white group-hover:text-amber-400 transition-colors tracking-tight uppercase mb-1">{patient.name}</h4>
                                                         <p className="text-[10px] text-amber-200/30 font-bold uppercase tracking-[0.2em]">{patient.id}</p>
                                                     </div>
                                                 </div>
