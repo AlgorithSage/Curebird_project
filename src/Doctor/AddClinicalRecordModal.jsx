@@ -39,7 +39,7 @@ const TabButton = ({ children, active, onClick, colorClass = "text-amber-400" })
     );
 };
 
-const AddClinicalRecordModal = ({ isOpen, onClose, patients = [], doctorId, doctorName }) => {
+const AddClinicalRecordModal = ({ isOpen, onClose, patients = [], user }) => {
     // Firebase instances
     const storage = getStorage();
 
@@ -119,8 +119,8 @@ const AddClinicalRecordModal = ({ isOpen, onClose, patients = [], doctorId, doct
                 title: formData.title,
                 description: formData.description,
                 date: formData.date,
-                doctorId: doctorId || auth.currentUser?.uid,
-                doctorName: doctorName || auth.currentUser?.displayName || 'Dr. Curebird',
+                doctorId: user?.uid || auth.currentUser?.uid,
+                doctorName: user?.name || user?.displayName || auth.currentUser?.displayName || 'Dr. Curebird',
                 patientId: formData.patientId,
                 patientName: patients.find(p => p.id === formData.patientId)?.name || 'Unknown Patient',
                 priority: formData.priority,

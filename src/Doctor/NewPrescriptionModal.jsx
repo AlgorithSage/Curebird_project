@@ -38,7 +38,7 @@ const ModalTabButton = ({ children, active, onClick, colorClass = "text-amber-40
     );
 };
 
-const NewPrescriptionModal = ({ isOpen, onClose, patients = [] }) => {
+const NewPrescriptionModal = ({ isOpen, onClose, patients = [], user }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
@@ -86,8 +86,8 @@ const NewPrescriptionModal = ({ isOpen, onClose, patients = [] }) => {
                 diagnosis,
                 medicines: medications,
                 date: new Date().toISOString().split('T')[0],
-                doctorId: auth.currentUser?.uid,
-                doctorName: auth.currentUser?.displayName || 'Dr. Curebird',
+                doctorId: user?.uid || auth.currentUser?.uid,
+                doctorName: user?.name || user?.displayName || auth.currentUser?.displayName || 'Dr. Curebird',
                 patientId,
                 patientName,
                 priority: 'routine',
