@@ -2,19 +2,23 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ClipboardList, Bell, Zap, FileCheck, Loader2, ShieldAlert } from 'lucide-react';
 
-const ActionInboxModal = ({ isOpen, onClose }) => {
+const ActionInboxModal = ({ isOpen, onClose, onResolve }) => {
+    const [activeTab, setActiveTab] = React.useState('pending');
+
     const actions = [
-        { id: 'act_1', type: 'Lab Approval', title: 'Complete Blood Count', patient: 'Sarah Connor', time: '10m ago', priority: 'High', category: 'diagnostic' },
-        { id: 'act_2', type: 'Clinical Alert', title: 'Hyperkalemia Risk', patient: 'John Smith', time: '25m ago', priority: 'Critical', category: 'alert' },
-        { id: 'act_3', type: 'Report Sign-off', title: 'Radiology Report (Chest X-Ray)', patient: 'Ellen Ripley', time: '1h ago', priority: 'Medium', category: 'paperwork' },
-        { id: 'act_4', type: 'Lab Approval', title: 'Lipid Profile', patient: 'Marty McFly', time: '2h ago', priority: 'Low', category: 'diagnostic' },
-        { id: 'act_5', type: 'Critical Notice', title: 'Abnormal Creatinine Levels', patient: 'Tony Stark', time: '3h ago', priority: 'Critical', category: 'alert' },
+        { id: '1', title: 'Complete Blood Count', patient: 'Sarah Connor', type: 'Lab Approval', priority: 'High', time: '2m ago', category: 'diagnostic' },
+        { id: '2', title: 'Chest X-Ray Review', patient: 'John Smith', type: 'Imaging', priority: 'Urgent', time: '15m ago', category: 'imaging' },
+        { id: '3', title: 'Medication Amendment', patient: 'Ellen Ripley', type: 'Prescription', priority: 'Routine', time: '1h ago', category: 'rx' },
+        { id: '4', title: 'Abnormal Glucose Level', patient: 'Tony Stark', type: 'Alert', priority: 'Critical', time: 'Just Now', category: 'diagnostic' },
     ];
 
     const getPriorityColor = (p) => {
-        if (p === 'Critical') return 'bg-rose-500/20 text-rose-500 border-rose-500/30';
-        if (p === 'High') return 'bg-amber-500/20 text-amber-500 border-amber-500/30';
-        return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+        switch (p) {
+            case 'Critical': return 'text-rose-500 border-rose-500/30 bg-rose-500/10';
+            case 'Urgent': return 'text-amber-500 border-amber-500/30 bg-amber-500/10';
+            case 'High': return 'text-amber-400 border-amber-400/30 bg-amber-400/10';
+            default: return 'text-slate-400 border-white/10 bg-white/5';
+        }
     };
 
     return (
@@ -36,7 +40,7 @@ const ActionInboxModal = ({ isOpen, onClose }) => {
                     >
                         {/* Background Glows */}
                         <div className="absolute top-0 left-0 w-96 h-96 bg-rose-500/10 blur-[120px] pointer-events-none" />
-                        <div className="absolute bottom-0 right-0 w-64 h-64 bg-amber-500/5 blur-[100px] pointer-events-none" />
+                        <div className="absolute bottom-0 right-0 w-64 h-64 bg-slate-500/5 blur-[100px] pointer-events-none" />
 
                         {/* Header */}
                         <div className="p-8 border-b border-white/5 flex items-center justify-between bg-black/40 relative z-10">
@@ -55,33 +59,36 @@ const ActionInboxModal = ({ isOpen, onClose }) => {
                         </div>
 
                         {/* Filter Tabs */}
-                        <div className="px-8 py-3 bg-rose-500/5 border-b border-white/5 flex gap-4 overflow-x-auto relative z-10 custom-scrollbar">
-                            {['All Tasks', 'Lab Approvals', 'Urgent Alerts', 'Documentation'].map((tab, i) => (
-                                <button key={i} className={`whitespace-nowrap px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${i === 0 ? 'bg-rose-500 text-black shadow-lg shadow-rose-500/20' : 'text-stone-500 hover:text-white'
-                                    }`}>
+                        <div className="px-8 py-4 bg-rose-500/5 border-b border-white/5 flex gap-8 items-center relative z-10 overflow-x-auto no-scrollbar">
+                            {['Pending', 'Urgent Alerts', 'Documentation', 'Resolved'].map((tab) => (
+                                <button
+                                    key={tab}
+                                    onClick={() => setActiveTab(tab.toLowerCase())}
+                                    className={`text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all pb-1 border-b-2 ${activeTab === tab.toLowerCase()
+                                        ? 'text-rose-400 border-rose-500 shadow-[0_10px_20px_-5px_rgba(244,63,94,0.3)]'
+                                        : 'text-stone-600 border-transparent hover:text-stone-400'
+                                        }`}
+                                >
                                     {tab}
                                 </button>
                             ))}
                         </div>
 
-                        {/* Task List Content */}
-                        <div className="flex-1 overflow-y-auto p-10 relative z-10 custom-scrollbar">
-                            <div className="space-y-6 max-w-3xl mx-auto">
+                        {/* Content */}
+                        <div className="flex-1 overflow-y-auto p-8 relative z-10 custom-scrollbar">
+                            <div className="space-y-4 max-w-3xl mx-auto">
                                 {actions.map((action, i) => (
                                     <motion.div
                                         key={action.id}
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: i * 0.05 }}
-                                        className="group bg-white/[0.02] border border-white/5 rounded-3xl p-6 hover:bg-rose-500/5 hover:border-rose-500/20 transition-all duration-300"
+                                        transition={{ delay: i * 0.1 }}
+                                        className="group glass-card animated-border animated-border-rose overflow-hidden transition-all duration-300 hover:bg-rose-500/5 p-6 flex flex-col gap-6"
                                     >
-                                        <div className="flex items-start justify-between mb-4">
-                                            <div className="flex items-start gap-4">
-                                                <div className={`p-3 rounded-xl bg-black/40 border border-white/5 ${action.category === 'alert' ? 'text-rose-500' :
-                                                    action.category === 'diagnostic' ? 'text-emerald-400' : 'text-blue-400'
-                                                    }`}>
-                                                    {action.category === 'alert' ? <ShieldAlert size={20} /> :
-                                                        action.category === 'diagnostic' ? <Bell size={20} /> : <FileCheck size={20} />}
+                                        <div className="flex items-start justify-between">
+                                            <div className="flex items-start gap-5">
+                                                <div className="p-3 bg-rose-500/10 rounded-xl text-rose-500 border border-white/5 group-hover:scale-110 transition-transform">
+                                                    {action.category === 'diagnostic' ? <Bell size={20} /> : <FileCheck size={20} />}
                                                 </div>
                                                 <div>
                                                     <div className="flex items-center gap-4 mb-2">
@@ -97,14 +104,23 @@ const ActionInboxModal = ({ isOpen, onClose }) => {
                                             <span className="text-[10px] font-black text-stone-600 uppercase tracking-widest">{action.time}</span>
                                         </div>
 
-                                        <div className="flex items-center gap-3 mt-8">
-                                            <button className="flex-1 py-3.5 rounded-xl bg-white/5 hover:bg-rose-500 border border-white/5 hover:border-rose-500 text-stone-400 hover:text-black text-[10px] font-black uppercase tracking-widest transition-all">
+                                        <div className="flex items-center gap-3">
+                                            <button
+                                                onClick={() => onResolve?.('review', action)}
+                                                className="flex-1 py-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-[10px] font-black uppercase tracking-widest hover:bg-rose-500 hover:text-black transition-all"
+                                            >
                                                 Review & Finalize
                                             </button>
-                                            <button className="px-6 py-3.5 rounded-xl bg-black/40 text-stone-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-all">
+                                            <button
+                                                onClick={() => onResolve?.('approve', action)}
+                                                className="px-6 py-3 rounded-xl bg-stone-900 border border-white/5 text-stone-400 text-[10px] font-black uppercase tracking-widest hover:text-white transition-all hover:bg-white/5"
+                                            >
                                                 Approve
                                             </button>
-                                            <button className="px-6 py-3.5 rounded-xl bg-black/40 text-stone-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-all">
+                                            <button
+                                                onClick={() => onResolve?.('forward', action)}
+                                                className="px-6 py-3 rounded-xl bg-stone-900 border border-white/5 text-stone-400 text-[10px] font-black uppercase tracking-widest hover:text-white transition-all hover:bg-white/5"
+                                            >
                                                 Forward
                                             </button>
                                         </div>

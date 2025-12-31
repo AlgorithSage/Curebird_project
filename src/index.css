@@ -153,6 +153,7 @@ body {
   /* Independent Animated Border Class (For Custom Backgrounds) */
   .animated-border {
     position: relative;
+    @apply transition-all duration-300;
   }
 
   .animated-border::before {
@@ -160,10 +161,7 @@ body {
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    padding: 1.5px;
-    /* Border width */
-
-    /* The Rotating Gold Gradient */
+    padding: 2px;
     background: conic-gradient(from var(--border-angle),
         transparent 20%,
         #854d0e 40%,
@@ -171,22 +169,50 @@ body {
         #fef08a 60%,
         #854d0e 70%,
         transparent 80%);
-
-    /* Masking to create border stroke */
-    -webkit-mask:
-      linear-gradient(#fff 0 0) content-box,
-      linear-gradient(#fff 0 0);
-    mask:
-      linear-gradient(#fff 0 0) content-box,
-      linear-gradient(#fff 0 0);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
-
-    /* Animation Logic */
     animation: border-rotate 4s linear infinite;
     pointer-events: none;
     filter: blur(0.5px);
     opacity: 0.8;
+  }
+
+  .animated-border-rose::before {
+    background: conic-gradient(from var(--border-angle),
+        transparent 20%,
+        #9f1239 40%,
+        #f43f5e 50%,
+        #fda4af 60%,
+        #9f1239 70%,
+        transparent 80%);
+  }
+
+  .animated-border-emerald::before {
+    background: conic-gradient(from var(--border-angle),
+        transparent 20%,
+        #065f46 40%,
+        #10b981 50%,
+        #6ee7b7 60%,
+        #065f46 70%,
+        transparent 80%);
+  }
+
+  .animated-border-indigo::before {
+    background: conic-gradient(from var(--border-angle),
+        transparent 20%,
+        #3730a3 40%,
+        #6366f1 50%,
+        #a5b4fc 60%,
+        #3730a3 70%,
+        transparent 80%);
+  }
+
+  .animated-border:hover::before {
+    animation-duration: 2s;
+    opacity: 1;
+    filter: blur(0px);
   }
 
   .glass-card:hover {

@@ -511,21 +511,47 @@ const DoctorDashboard = ({ user }) => {
                     setActiveView('patient_workspace');
                     setActiveOversightModal(null);
                 }}
+                onAddPatient={() => {
+                    // Logic to open add patient workflow
+                    console.log('Opening Add Patient Workflow');
+                    setActiveOversightModal(null);
+                }}
             />
 
             <ScheduleQueueModal
                 isOpen={activeOversightModal === 'schedule'}
                 onClose={() => setActiveOversightModal(null)}
+                onStartConsultation={(appt) => {
+                    setWorkspacePatient(mockPatients.find(p => p.name === appt.patient) || mockPatients[0]);
+                    setActiveView('patient_workspace');
+                    setActiveOversightModal(null);
+                }}
+                onReschedule={(appt) => {
+                    console.log('Rescheduling:', appt);
+                }}
             />
 
             <ActionInboxModal
                 isOpen={activeOversightModal === 'actions'}
                 onClose={() => setActiveOversightModal(null)}
+                onResolve={(type, action) => {
+                    console.log(`Action ${type}:`, action);
+                    if (type === 'review') {
+                        setWorkspacePatient(mockPatients.find(p => p.name === action.patient) || mockPatients[0]);
+                        setActiveView('patient_workspace');
+                    }
+                    setActiveOversightModal(null);
+                }}
             />
 
             <VitalsWatchlistModal
                 isOpen={activeOversightModal === 'vitals'}
                 onClose={() => setActiveOversightModal(null)}
+                onAssess={(patient) => {
+                    setWorkspacePatient(mockPatients.find(p => p.id === patient.id) || mockPatients[0]);
+                    setActiveView('patient_workspace');
+                    setActiveOversightModal(null);
+                }}
             />
 
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

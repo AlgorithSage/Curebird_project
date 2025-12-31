@@ -12,24 +12,24 @@ import { db } from '../App';
 const ClinicalHeader = ({ patient, onBack, onOpenChat }) => (
     <div className="glass-card mb-8 relative group"> {/* Removed overflow-hidden to prevent clipping interaction */}
         {/* Decorative Background Elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div className="flex items-center gap-4">
                 <button
                     onClick={onBack}
-                    className="p-2 rounded-xl bg-slate-800/50 border border-white/5 hover:bg-slate-700/50 text-slate-400 hover:text-white transition-colors cursor-pointer"
+                    className="p-2 rounded-xl bg-stone-900 border border-white/5 hover:bg-stone-800 text-stone-400 hover:text-white transition-colors cursor-pointer"
                 >
                     <ArrowLeft size={20} />
                 </button>
                 <div>
                     <h1 className="text-3xl font-bold text-white tracking-tight flex items-center gap-3">
                         {patient.name}
-                        <span className={`px-3 py-1 rounded-full text-xs font-bold border ${patient.status === 'Critical' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'}`}>
+                        <span className={`px-3 py-1 rounded-full text-xs font-bold border ${patient.status === 'Critical' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' : 'bg-amber-500/10 text-amber-400 border-amber-500/20'}`}>
                             {patient.status}
                         </span>
                     </h1>
-                    <div className="flex items-center gap-4 text-sm text-slate-400 mt-1 font-mono">
+                    <div className="flex items-center gap-4 text-sm text-stone-400 mt-1 font-mono font-bold uppercase tracking-wider">
                         <span>ID: {patient.id}</span>
                         <span>•</span>
                         <span>{patient.age} Yrs / {patient.gender}</span>
@@ -56,7 +56,7 @@ const ClinicalHeader = ({ patient, onBack, onOpenChat }) => (
                             alert("Error: Chat function not connected.");
                         }
                     }}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm shadow-[0_0_20px_rgba(245,158,11,0.2)] transition-all hover:scale-105 active:scale-95 cursor-pointer select-none relative z-50"
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black uppercase tracking-widest text-xs shadow-lg shadow-amber-500/20 transition-all hover:scale-105 active:scale-95 cursor-pointer relative z-50 transition-all"
                     style={{ pointerEvents: 'auto' }}
                 >
                     <MessageSquare size={18} /> Open Chat
@@ -65,11 +65,11 @@ const ClinicalHeader = ({ patient, onBack, onOpenChat }) => (
                 <div className="h-8 w-px bg-white/10 mx-2 hidden md:block"></div>
 
                 <div className="hidden md:flex gap-3">
-                    <div className="px-4 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-bold flex items-center gap-2">
+                    <div className="px-4 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-500 text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
                         <AlertCircle size={16} />
                         Allergy: Penicillin
                     </div>
-                    <div className="px-4 py-2 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold flex items-center gap-2">
+                    <div className="px-4 py-2 rounded-xl bg-stone-900 border border-white/5 text-stone-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
                         <Activity size={16} />
                         Diabetic (Type 2)
                     </div>
@@ -84,33 +84,33 @@ const TimelineItem = ({ date, title, type, doctor, details, delay, data }) => (
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay }}
-        className="relative pl-8 pb-8 border-l border-slate-700/50 last:border-0 last:pb-0 group"
+        className="relative pl-8 pb-8 border-l border-stone-800 last:border-0 last:pb-0 group"
     >
-        <div className={`absolute -left-[17px] top-0 w-9 h-9 rounded-full border-4 border-slate-900 flex items-center justify-center shadow-lg bg-slate-800 text-slate-400 group-hover:scale-110 transition-transform ${type === 'Diagnosis' ? 'bg-purple-500/20 text-purple-400' :
-            type === 'Prescription' ? 'bg-sky-500/20 text-sky-400' :
-                type === 'Lab' ? 'bg-amber-500/20 text-amber-400' : 'bg-slate-800'
+        <div className={`absolute -left-[17px] top-0 w-9 h-9 rounded-full border-4 border-[#0c0a05] flex items-center justify-center shadow-lg transition-transform group-hover:scale-110 ${type === 'Diagnosis' ? 'bg-amber-500/20 text-amber-500' :
+            type === 'Prescription' ? 'bg-amber-500/20 text-amber-400' :
+                type === 'Lab' ? 'bg-amber-500/20 text-amber-300' : 'bg-stone-800 text-stone-400'
             }`}>
             {type === 'Diagnosis' ? <Activity size={16} /> :
                 type === 'Prescription' ? <Pill size={16} /> :
                     type === 'Lab' ? <Microscope size={16} /> : <FileText size={16} />}
         </div>
 
-        <div className="glass-card p-4 rounded-xl border border-white/5 bg-slate-800/40 hover:bg-slate-800/60 transition-colors">
-            <div className="flex justify-between items-start mb-2">
+        <div className="glass-card p-6 rounded-2xl border border-white/5 bg-stone-900/40 hover:bg-stone-900/60 transition-colors">
+            <div className="flex justify-between items-start mb-3">
                 <div>
-                    <h4 className="font-bold text-slate-200">{title}</h4>
-                    <p className="text-xs text-slate-500">Dr. {doctor} • {type}</p>
+                    <h4 className="font-bold text-white tracking-tight">{title}</h4>
+                    <p className="text-[10px] font-black text-stone-500 uppercase tracking-widest mt-1">Dr. {doctor} • {type}</p>
                 </div>
-                <span className="text-xs font-mono text-slate-500 bg-black/20 px-2 py-1 rounded">{date}</span>
+                <span className="text-[10px] font-black text-amber-500/50 bg-amber-500/5 px-2.5 py-1 rounded-lg border border-amber-500/10 uppercase tracking-widest">{date}</span>
             </div>
-            <p className="text-sm text-slate-400 leading-relaxed">{details}</p>
+            <p className="text-sm text-stone-400 leading-relaxed font-medium">{details}</p>
 
             {/* Metadata (Vitals) */}
             {data?.vitals && (
-                <div className="mt-3 flex flex-wrap gap-3 p-2 rounded-lg bg-black/20 border border-white/5">
-                    {data.vitals.bp && <div className="text-[10px] font-bold text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded">BP: {data.vitals.bp}</div>}
-                    {data.vitals.heartRate && <div className="text-[10px] font-bold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded">HR: {data.vitals.heartRate}</div>}
-                    {data.vitals.spo2 && <div className="text-[10px] font-bold text-sky-400 bg-sky-400/10 px-2 py-0.5 rounded">SpO2: {data.vitals.spo2}%</div>}
+                <div className="mt-4 flex flex-wrap gap-3 p-3 rounded-xl bg-black/40 border border-white/5">
+                    {data.vitals.bp && <div className="text-[10px] font-black text-amber-500 uppercase tracking-widest bg-amber-500/10 px-2 py-1 rounded-md border border-amber-500/20">BP: {data.vitals.bp}</div>}
+                    {data.vitals.heartRate && <div className="text-[10px] font-black text-amber-400 uppercase tracking-widest bg-amber-400/10 px-2 py-1 rounded-md border border-amber-400/20">HR: {data.vitals.heartRate}</div>}
+                    {data.vitals.spo2 && <div className="text-[10px] font-black text-amber-300 uppercase tracking-widest bg-amber-300/10 px-2 py-1 rounded-md border border-amber-300/20">SpO2: {data.vitals.spo2}%</div>}
                 </div>
             )}
 
@@ -118,9 +118,9 @@ const TimelineItem = ({ date, title, type, doctor, details, delay, data }) => (
             {data?.fileUrl && (
                 <button
                     onClick={() => window.open(data.fileUrl, '_blank')}
-                    className="mt-3 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900/50 border border-white/5 text-xs text-sky-400 hover:text-sky-300 hover:border-sky-500/30 transition-all"
+                    className="mt-4 flex items-center gap-3 px-4 py-2 rounded-xl bg-stone-950 border border-white/5 text-[10px] font-black text-stone-400 uppercase tracking-widest hover:text-white hover:border-amber-500/30 transition-all group/btn"
                 >
-                    <File size={14} /> {data.fileName || 'View Attachment'} <Download size={12} className="ml-auto opacity-50" />
+                    <File size={14} /> {data.fileName || 'View Attachment'} <Download size={12} className="ml-auto opacity-30 group-hover/btn:opacity-100 transition-opacity" />
                 </button>
             )}
         </div>
@@ -128,19 +128,19 @@ const TimelineItem = ({ date, title, type, doctor, details, delay, data }) => (
 );
 
 const DocumentGrid = () => (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
         {[1, 2, 3, 4, 5].map((i) => (
             <motion.div
                 key={i}
-                whileHover={{ y: -5 }}
-                className="aspect-[3/4] rounded-xl bg-slate-800/40 border border-white/5 hover:border-emerald-500/30 flex flex-col items-center justify-center gap-3 group cursor-pointer transition-all"
+                whileHover={{ y: -8 }}
+                className="aspect-[3/4] rounded-2xl bg-stone-900 border border-white/5 hover:border-amber-500/30 flex flex-col items-center justify-center gap-4 group cursor-pointer transition-all p-4"
             >
-                <div className="w-16 h-20 bg-slate-700/50 rounded-lg flex items-center justify-center shadow-inner group-hover:bg-emerald-500/10 transition-colors">
-                    <FileText size={32} className="text-slate-500 group-hover:text-emerald-400" />
+                <div className="w-16 h-20 bg-stone-800 rounded-xl flex items-center justify-center shadow-inner group-hover:bg-amber-500/10 transition-colors">
+                    <FileText size={32} className="text-stone-600 group-hover:text-amber-500" />
                 </div>
-                <div className="text-center px-2">
-                    <p className="text-xs font-bold text-slate-300 truncate w-full">Blood_Work_Oct.pdf</p>
-                    <p className="text-[10px] text-slate-500 mt-1">12 Oct 2023 • 2.4 MB</p>
+                <div className="text-center w-full">
+                    <p className="text-[11px] font-bold text-white truncate w-full group-hover:text-amber-400 transition-colors">Blood_Work_Oct.pdf</p>
+                    <p className="text-[9px] font-black text-stone-600 uppercase tracking-widest mt-1">12 Oct 2023 • 2.4 MB</p>
                 </div>
             </motion.div>
         ))}
@@ -197,7 +197,7 @@ const PatientWorkspace = ({ patient, onBack, onOpenChat, onAddAction }) => {
 
                 {/* Left: Quick Navigation (Vertical Tabs for Workspace) */}
                 <div className="lg:col-span-1 space-y-6 sticky top-24 h-fit">
-                    <div className="glass-card p-2 rounded-2xl bg-[#1c1917] backdrop-blur-xl border border-stone-800 flex lg:flex-col overflow-x-auto lg:overflow-visible custom-scrollbar">
+                    <div className="glass-card p-2 rounded-3xl bg-[#0c0a05] border border-stone-800 flex lg:flex-col overflow-x-auto lg:overflow-visible no-scrollbar">
                         {tabs.map((tab) => {
                             const Icon = tab.icon;
                             const isActive = activeTab === tab.id;
@@ -205,38 +205,38 @@ const PatientWorkspace = ({ patient, onBack, onOpenChat, onAddAction }) => {
                                 <button
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
-                                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all whitespace-nowrap ${isActive
-                                        ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20'
-                                        : 'text-stone-400 hover:text-amber-500 hover:bg-amber-500/5'
+                                    className={`flex items-center gap-3 px-5 py-4 rounded-2xl transition-all whitespace-nowrap relative ${isActive
+                                        ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20 animated-border z-10'
+                                        : 'text-stone-500 hover:text-amber-500 hover:bg-amber-500/5'
                                         }`}
                                 >
                                     <Icon size={18} />
-                                    <span className="font-bold text-sm tracking-wide">{tab.label}</span>
+                                    <span className="font-black text-[10px] uppercase tracking-widest">{tab.label}</span>
                                 </button>
                             );
                         })}
                     </div>
 
                     {/* Quick Vitals Summary */}
-                    <div className="glass-card p-6 rounded-2xl bg-gradient-to-br from-[#1c1917] to-[#292524] border border-stone-800 shadow-[inset_0_0_30px_-15px_rgba(245,158,11,0.15)] space-y-4">
-                        <h3 className="text-xs font-bold text-stone-500 uppercase tracking-widest mb-4">Current Vitals</h3>
+                    <div className="glass-card p-8 rounded-3xl bg-gradient-to-br from-[#1c1917] to-[#0c0a05] border border-stone-800 shadow-[inset_0_0_30px_-15px_rgba(245,158,11,0.15)] space-y-5 animated-border">
+                        <h3 className="text-[10px] font-black text-stone-600 uppercase tracking-widest mb-4">Current Vitals</h3>
                         <div className="flex justify-between items-end pb-2 border-b border-stone-800">
-                            <span className="text-stone-400 text-sm">BP</span>
+                            <span className="text-stone-400 text-xs font-bold font-mono tracking-tighter">BP</span>
                             <span className="text-xl font-bold text-white">120/80</span>
                         </div>
                         <div className="flex justify-between items-end pb-2 border-b border-stone-800">
-                            <span className="text-stone-400 text-sm">Heart Rate</span>
-                            <span className="text-xl font-bold text-emerald-400">72 <span className="text-xs text-stone-500 ml-1">bpm</span></span>
+                            <span className="text-stone-400 text-xs font-bold font-mono tracking-tighter">Heart Rate</span>
+                            <span className="text-xl font-bold text-amber-500">72 <span className="text-[10px] text-stone-600 ml-1">bpm</span></span>
                         </div>
                         <div className="flex justify-between items-end pb-2 border-b border-stone-800">
-                            <span className="text-stone-400 text-sm">Temp</span>
-                            <span className="text-xl font-bold text-white">98.6 <span className="text-xs text-stone-500 ml-1">°F</span></span>
+                            <span className="text-stone-400 text-xs font-bold font-mono tracking-tighter">Temp</span>
+                            <span className="text-xl font-bold text-white">98.6 <span className="text-[10px] text-stone-600 ml-1">°F</span></span>
                         </div>
                         <div className="flex justify-between items-end">
-                            <span className="text-stone-400 text-sm">SpO2</span>
-                            <span className="text-xl font-bold text-sky-400">98%</span>
+                            <span className="text-stone-400 text-xs font-bold font-mono tracking-tighter">SpO2</span>
+                            <span className="text-xl font-bold text-amber-400 font-mono">98%</span>
                         </div>
-                        <p className="text-[10px] text-stone-500 text-right mt-2">Last updated: 20 mins ago</p>
+                        <p className="text-[9px] font-black text-stone-600 text-right mt-2 uppercase tracking-widest grayscale opacity-50">Last updated: 20 mins ago</p>
                     </div>
                 </div>
 
@@ -249,40 +249,42 @@ const PatientWorkspace = ({ patient, onBack, onOpenChat, onAddAction }) => {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
                             transition={{ duration: 0.2 }}
-                            className="bg-slate-900/50 min-h-[500px] rounded-3xl"
+                            className="bg-black/20 min-h-[500px] rounded-3xl"
                         >
                             {activeTab === 'overview' && (
-                                <div className="space-y-6">
+                                <div className="space-y-8">
                                     {/* Charts / Graphs Placeholder */}
-                                    <div className="glass-card p-8 rounded-2xl bg-slate-800/30 border border-white/5 flex flex-col items-center justify-center text-center h-64">
-                                        <Activity size={48} className="text-emerald-500/50 mb-4" />
-                                        <h3 className="text-lg font-bold text-white">Vitals Trend Analysis</h3>
-                                        <p className="text-slate-400 max-w-md">Interactive sparklines and trend graphs will be visualized here to track patient progress over time.</p>
+                                    <div className="glass-card p-12 rounded-3xl bg-amber-500/5 border border-amber-500/10 flex flex-col items-center justify-center text-center h-[350px] animated-border">
+                                        <div className="p-6 rounded-3xl bg-amber-500/10 text-amber-500 mb-6 border border-amber-500/20 shadow-2xl animate-pulse">
+                                            <Activity size={64} />
+                                        </div>
+                                        <h3 className="text-2xl font-black text-white uppercase tracking-tight">Vitals Trend Analysis</h3>
+                                        <p className="text-stone-500 max-w-md mt-2 text-sm font-medium">Interactive sparklines and trend graphs will be visualized here to track patient progress over time.</p>
                                     </div>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div className="glass-card p-6 rounded-2xl bg-slate-800/30 border border-white/5">
-                                            <h3 className="text-sm font-bold text-slate-300 mb-4 flex items-center gap-2">
-                                                <Pill size={16} className="text-sky-400" /> Active Medications
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                        <div className="glass-card p-8 rounded-3xl bg-stone-900 border border-white/5">
+                                            <h3 className="text-[10px] font-black text-stone-500 mb-6 flex items-center gap-3 uppercase tracking-widest">
+                                                <Pill size={16} className="text-amber-500" /> Active Medications
                                             </h3>
-                                            <ul className="space-y-3">
-                                                <li className="flex justify-between text-sm p-3 rounded-xl bg-slate-900/50 border border-white/5">
-                                                    <span className="text-white font-medium">Metformin</span>
-                                                    <span className="text-slate-400">500mg • BID</span>
+                                            <ul className="space-y-4">
+                                                <li className="flex justify-between text-sm p-4 rounded-2xl bg-black/40 border border-white/5 hover:border-amber-500/20 transition-all cursor-default">
+                                                    <span className="text-white font-bold">Metformin</span>
+                                                    <span className="text-stone-400 font-medium">500mg • BID</span>
                                                 </li>
-                                                <li className="flex justify-between text-sm p-3 rounded-xl bg-slate-900/50 border border-white/5">
-                                                    <span className="text-white font-medium">Lisinopril</span>
-                                                    <span className="text-slate-400">10mg • OD</span>
+                                                <li className="flex justify-between text-sm p-4 rounded-2xl bg-black/40 border border-white/5 hover:border-amber-500/20 transition-all cursor-default">
+                                                    <span className="text-white font-bold">Lisinopril</span>
+                                                    <span className="text-stone-400 font-medium">10mg • OD</span>
                                                 </li>
                                             </ul>
                                         </div>
-                                        <div className="glass-card p-6 rounded-2xl bg-slate-800/30 border border-white/5">
-                                            <h3 className="text-sm font-bold text-slate-300 mb-4 flex items-center gap-2">
+                                        <div className="glass-card p-8 rounded-3xl bg-stone-900 border border-white/5">
+                                            <h3 className="text-[10px] font-black text-stone-500 mb-6 flex items-center gap-3 uppercase tracking-widest">
                                                 <Calendar size={16} className="text-amber-400" /> Upcoming
                                             </h3>
-                                            <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/10">
-                                                <p className="text-amber-200 font-bold text-sm">Follow-up Consult</p>
-                                                <p className="text-amber-500/70 text-xs mt-1">Tomorrow, 10:00 AM</p>
+                                            <div className="p-6 rounded-2xl bg-amber-500/10 border border-amber-500/20">
+                                                <p className="text-amber-400 font-extrabold text-base uppercase tracking-tight">Follow-up Consult</p>
+                                                <p className="text-amber-500/50 text-[10px] font-black mt-1 uppercase tracking-widest">Tomorrow, 10:00 AM</p>
                                             </div>
                                         </div>
                                     </div>
@@ -292,47 +294,49 @@ const PatientWorkspace = ({ patient, onBack, onOpenChat, onAddAction }) => {
                             {activeTab === 'timeline' && (
                                 <div className="p-4">
                                     {loading ? (
-                                        <div className="flex flex-col items-center justify-center py-20 text-slate-500">
-                                            <Loader size={40} className="animate-spin mb-4" />
-                                            <p>Loading clinical timeline...</p>
+                                        <div className="flex flex-col items-center justify-center py-24 text-stone-600">
+                                            <Loader size={48} className="animate-spin mb-6 opacity-30" />
+                                            <p className="text-[10px] font-black uppercase tracking-widest">Loading clinical timeline...</p>
                                         </div>
                                     ) : records.length > 0 ? (
-                                        records.map((rec, i) => (
-                                            <TimelineItem
-                                                key={rec.id}
-                                                delay={i * 0.1}
-                                                date={rec.date}
-                                                title={rec.title}
-                                                type={rec.type === 'consultation_note' ? 'Diagnosis' :
-                                                    rec.type === 'prescription' ? 'Prescription' :
-                                                        rec.type === 'lab_report' ? 'Lab' : 'General'}
-                                                doctor={rec.doctorName || 'Doctor'}
-                                                details={rec.description}
-                                                data={rec}
-                                            />
-                                        ))
+                                        <div className="max-w-4xl mx-auto space-y-2">
+                                            {records.map((rec, i) => (
+                                                <TimelineItem
+                                                    key={rec.id}
+                                                    delay={i * 0.1}
+                                                    date={rec.date}
+                                                    title={rec.title}
+                                                    type={rec.type === 'consultation_note' ? 'Diagnosis' :
+                                                        rec.type === 'prescription' ? 'Prescription' :
+                                                            rec.type === 'lab_report' ? 'Lab' : 'General'}
+                                                    doctor={rec.doctorName || 'Doctor'}
+                                                    details={rec.description}
+                                                    data={rec}
+                                                />
+                                            ))}
+                                        </div>
                                     ) : (
-                                        <div className="flex flex-col items-center justify-center py-20 text-slate-500">
-                                            <FileText size={40} className="mb-4 opacity-20" />
-                                            <p>No clinical records found for this patient.</p>
+                                        <div className="flex flex-col items-center justify-center py-32 text-stone-700">
+                                            <FileText size={48} className="mb-6 opacity-10" />
+                                            <p className="text-[10px] font-black uppercase tracking-widest">No clinical records found.</p>
                                         </div>
                                     )}
                                 </div>
                             )}
 
                             {activeTab === 'reports' && (
-                                <div className="p-4">
+                                <div className="p-6">
                                     {/* Search Bar for Docs */}
-                                    <div className="flex gap-4 mb-6">
+                                    <div className="flex gap-4 mb-8">
                                         <div className="relative flex-1">
-                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
-                                            <input type="text" placeholder="Search medical records..." className="w-full bg-slate-800/50 border border-slate-700/50 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-emerald-500/50 transition-all text-slate-200" />
+                                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-500" size={18} />
+                                            <input type="text" placeholder="SEARCH MEDICAL RECORDS..." className="w-full bg-stone-900 border border-white/5 rounded-2xl pl-12 pr-6 py-4 text-xs font-black uppercase tracking-widest focus:outline-none focus:border-amber-500/50 transition-all text-white placeholder:text-stone-700" />
                                         </div>
                                         <button
                                             onClick={() => onAddAction && onAddAction('report')}
-                                            className="px-4 py-2 bg-emerald-500 text-white text-sm font-bold rounded-xl shadow-lg shadow-emerald-500/20 hover:bg-emerald-600 transition-colors"
+                                            className="px-8 py-4 bg-amber-500 text-black text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl shadow-xl shadow-amber-500/20 hover:bg-amber-400 transition-all active:scale-95"
                                         >
-                                            <UploadIcon /> Upload
+                                            <UploadIcon />
                                         </button>
                                     </div>
                                     <DocumentGrid />
@@ -341,9 +345,11 @@ const PatientWorkspace = ({ patient, onBack, onOpenChat, onAddAction }) => {
 
                             {/* Fallbacks */}
                             {activeTab === 'medications' && (
-                                <div className="flex flex-col items-center justify-center h-64 text-slate-500">
-                                    <Pill size={48} className="mb-4 opacity-20" />
-                                    <p>Detailed medication history view coming soon.</p>
+                                <div className="flex flex-col items-center justify-center h-[500px] text-stone-700">
+                                    <div className="p-8 rounded-full bg-stone-900 border border-white/5 mb-8">
+                                        <Pill size={64} className="opacity-10" />
+                                    </div>
+                                    <p className="text-[10px] font-black uppercase tracking-widest">Medication history expansion pending.</p>
                                 </div>
                             )}
                         </motion.div>
@@ -356,7 +362,7 @@ const PatientWorkspace = ({ patient, onBack, onOpenChat, onAddAction }) => {
 
 // Helper for 'Upload' icon since lucide might not have 'UploadIcon' directly named that way in my mental map, using generic
 const UploadIcon = () => (
-    <span className="flex items-center gap-2"><FileText size={16} /> Add Record</span>
+    <span className="flex items-center gap-3"><FileText size={18} /> Add Record</span>
 );
 
 export default PatientWorkspace;

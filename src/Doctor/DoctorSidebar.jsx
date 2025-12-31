@@ -27,7 +27,7 @@ const SidebarItem = ({ icon: Icon, label, active, onClick, delay, subItems, expa
                 transition={{ delay }}
                 onClick={handleMainClick}
                 className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 group relative overflow-hidden ${active
-                    ? 'bg-gradient-to-r from-amber-500/10 via-emerald-500/10 to-transparent border border-amber-500/30 text-emerald-100 shadow-[0_4px_30px_rgba(16,185,129,0.1)] backdrop-blur-md'
+                    ? 'bg-gradient-to-r from-amber-500/10 via-emerald-500/10 to-transparent border border-amber-500/30 text-emerald-100 shadow-[0_4px_30px_rgba(16,185,129,0.1)] backdrop-blur-md animated-border'
                     : (subItems && expanded ? 'bg-emerald-500/5 text-emerald-100 border border-transparent' : 'text-slate-400 hover:bg-emerald-500/5 hover:text-emerald-200 hover:border-amber-500/20 hover:backdrop-blur-sm border border-transparent')
                     }`}
             >

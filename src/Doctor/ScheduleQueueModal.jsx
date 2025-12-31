@@ -2,7 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Calendar, Clock, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
 
-const ScheduleQueueModal = ({ isOpen, onClose }) => {
+const ScheduleQueueModal = ({ isOpen, onClose, onStartConsultation, onReschedule }) => {
     const appointments = [
         { id: '1', time: '09:30 AM', patient: 'Sarah Connor', type: 'Follow-up', status: 'Confirmed', urgency: 'Routine' },
         { id: '2', time: '10:15 AM', patient: 'John Smith', type: 'Consultation', status: 'Pending', urgency: 'Urgent' },
@@ -86,7 +86,7 @@ const ScheduleQueueModal = ({ isOpen, onClose }) => {
                                         </div>
 
                                         {/* Appointment Card */}
-                                        <div className="flex-1 bg-white/[0.02] border border-white/5 rounded-3xl p-6 hover:bg-emerald-500/5 hover:border-emerald-500/20 transition-all duration-300 relative overflow-hidden">
+                                        <div className="flex-1 glass-card animated-border animated-border-emerald rounded-3xl p-6 hover:bg-emerald-500/5 transition-all duration-300 relative overflow-hidden">
                                             <div className="absolute top-0 right-0 p-6 flex flex-col items-end gap-2">
                                                 <div className={`px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${appt.status === 'Confirmed' ? 'bg-emerald-500/20 text-emerald-400' :
                                                     appt.status === 'In-Queue' ? 'bg-amber-500/20 text-amber-500' :
@@ -112,11 +112,17 @@ const ScheduleQueueModal = ({ isOpen, onClose }) => {
                                             </div>
 
                                             <div className="mt-6 flex items-center gap-4">
-                                                <button className="flex-1 py-3.5 rounded-xl bg-emerald-500 text-black text-[10px] font-black uppercase tracking-widest hover:bg-emerald-400 transition-all flex items-center justify-center gap-2">
+                                                <button
+                                                    onClick={() => onStartConsultation?.(appt)}
+                                                    className="flex-1 py-3.5 rounded-xl bg-emerald-500 text-black text-[10px] font-black uppercase tracking-widest hover:bg-emerald-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20"
+                                                >
                                                     Start Consultation
                                                     <ArrowRight size={14} />
                                                 </button>
-                                                <button className="px-5 py-3.5 rounded-xl bg-stone-900 border border-white/5 text-stone-400 text-[10px] font-black uppercase tracking-widest hover:text-white transition-all">
+                                                <button
+                                                    onClick={() => onReschedule?.(appt)}
+                                                    className="px-5 py-3.5 rounded-xl bg-stone-900 border border-white/5 text-stone-400 text-[10px] font-black uppercase tracking-widest hover:text-white transition-all hover:bg-white/5"
+                                                >
                                                     Reschedule
                                                 </button>
                                             </div>
