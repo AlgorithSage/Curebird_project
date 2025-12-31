@@ -5,7 +5,8 @@ import {
     Microscope, Siren, FileText, Settings, LogOut, LayoutDashboard,
     Bell, Shield, HelpCircle, BarChart2, Search, ArrowRight
 } from 'lucide-react';
-import { auth } from '../App';
+import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';
+import { auth, db } from '../App';
 import Header from '../components/Header';
 import HeroSection from '../components/HeroSection'; // Keep if used, though strict hierarchy is preferred
 import StatCard from '../components/StatCard';
@@ -353,20 +354,30 @@ const DoctorDashboard = ({ user }) => {
     const [isAddPatientModalOpen, setIsAddPatientModalOpen] = useState(false);
     const [activeOversightModal, setActiveOversightModal] = useState(null); // 'patients', 'schedule', 'actions', 'vitals'
 
-    // Managed Patient State
-    const [patients, setPatients] = useState([
-        { id: 'pat_001', name: 'Sarah Jenkins', age: 34, gender: 'F', condition: 'Hypertension', status: 'Stable' },
-        { id: 'pat_002', name: 'Mike Ross', age: 45, gender: 'M', condition: 'Post-Op Recovery', status: 'Critical' },
-        { id: 'pat_003', name: 'James Wilson', age: 29, gender: 'M', condition: 'Routine Checkup', status: 'Stable' },
-        { id: 'pat_004', name: 'Emily Clark', age: 62, gender: 'F', condition: 'Arthritis', status: 'Stable' },
-        { id: 'pat_005', name: 'Robert Ford', age: 78, gender: 'M', condition: 'Cardiac Arrhythmia', status: 'At Risk' }
-    ]);
+    // Managed Patient State - Synced with Firestore
+    const [patients, setPatients] = useState([]);
+
+    // Fetch patients from Firestore
+    useEffect(() => {
+        const q = query(collection(db, "patients"), orderBy("createdAt", "desc"));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const patientsList = [];
+            querySnapshot.forEach((doc) => {
+                patientsList.push({ id: doc.id, ...doc.data() });
+            });
+            setPatients(patientsList);
+        });
+
+        return () => unsubscribe();
+    }, []);
 
     const handleAddPatient = (newPatient) => {
-        setPatients(prev => [newPatient, ...prev]);
+        // Optimistic update not strictly needed with real-time listener, 
+        // but can be kept if we want instant feedback before server roundtrip.
+        // However, since we are moving to Firestore in the Modal, 
+        // this handler might just be for closing the modal or local UI state if needed.
+        // For now, we rely on the Firestore listener to update the list.
         setIsAddPatientModalOpen(false);
-        // Ensure new patient is visible in roster
-        console.log("New Patient Added:", newPatient);
     };
 
     const handleLogout = () => {

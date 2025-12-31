@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { X, User, Activity, Calendar, HeartPulse, CheckCircle, Loader, AlertTriangle, Phone, Mail, MapPin, Shield, FileText, Droplet, UserPlus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../App';
 
 const AddPatientModal = ({ isOpen, onClose, onAddPatient }) => {
     const [loading, setLoading] = useState(false);
@@ -32,17 +34,28 @@ const AddPatientModal = ({ isOpen, onClose, onAddPatient }) => {
         setError('');
 
         try {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1200));
-
-            const newPatient = {
-                id: tempId,
+            // Add to Firestore
+            const docRef = await addDoc(collection(db, "patients"), {
                 name: `${formData.firstName} ${formData.lastName}`,
-                age: new Date().getFullYear() - new Date(formData.dob).getFullYear(),
+                age: Number(new Date().getFullYear() - new Date(formData.dob).getFullYear()),
                 gender: formData.gender,
+                dob: formData.dob,
+                bloodType: formData.bloodType,
                 condition: formData.condition,
                 status: formData.status,
-                lastVisit: 'Just now'
+                allergies: formData.allergies,
+                phone: formData.phone,
+                email: formData.email,
+                address: formData.address,
+                lastVisit: 'Just now',
+                createdAt: serverTimestamp()
+            });
+
+            const newPatient = {
+                id: docRef.id,
+                ...formData,
+                name: `${formData.firstName} ${formData.lastName}`,
+                age: Number(new Date().getFullYear() - new Date(formData.dob).getFullYear())
             };
 
             onAddPatient(newPatient);
