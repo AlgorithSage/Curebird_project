@@ -118,28 +118,28 @@ const AddPatientModal = ({ isOpen, onClose, onAddPatient }) => {
                             <div className="space-y-6">
                                 <div className="flex items-center gap-3 mb-2">
                                     <User size={18} className="text-amber-500" />
-                                    <h3 className="text-sm font-black text-stone-400 uppercase tracking-[0.25em]">Personal Demographics</h3>
+                                    <h3 className="text-sm font-black text-stone-300 uppercase tracking-[0.25em]">Personal Demographics</h3>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                                     <div className="lg:col-span-2 space-y-2">
-                                        <label className="text-[11px] font-bold text-stone-500 ml-1">First & Last Name</label>
+                                        <label className="text-xs font-bold text-stone-300 ml-1 uppercase tracking-wider">First & Last Name</label>
                                         <div className="grid grid-cols-2 gap-4">
                                             <input
                                                 required type="text" placeholder="First Name" value={formData.firstName}
                                                 onChange={e => setFormData({ ...formData, firstName: e.target.value })}
-                                                className="w-full h-14 bg-stone-900/50 border border-white/5 focus:border-amber-500/40 rounded-xl px-5 text-white outline-none transition-all placeholder:text-stone-700 font-medium"
+                                                className="w-full h-14 bg-stone-900/50 border border-white/5 focus:border-amber-500/40 rounded-xl px-5 text-white outline-none transition-all placeholder:text-stone-600 font-medium"
                                             />
                                             <input
                                                 required type="text" placeholder="Last Name" value={formData.lastName}
                                                 onChange={e => setFormData({ ...formData, lastName: e.target.value })}
-                                                className="w-full h-14 bg-stone-900/50 border border-white/5 focus:border-amber-500/40 rounded-xl px-5 text-white outline-none transition-all placeholder:text-stone-700 font-medium"
+                                                className="w-full h-14 bg-stone-900/50 border border-white/5 focus:border-amber-500/40 rounded-xl px-5 text-white outline-none transition-all placeholder:text-stone-600 font-medium"
                                             />
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-bold text-stone-500 ml-1">Date of Birth</label>
+                                        <label className="text-xs font-bold text-stone-300 ml-1 uppercase tracking-wider">Date of Birth</label>
                                         <div className="relative">
-                                            <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-600" size={18} />
+                                            <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-500" size={18} />
                                             <input
                                                 required type="date" value={formData.dob}
                                                 onChange={e => setFormData({ ...formData, dob: e.target.value })}
@@ -148,7 +148,7 @@ const AddPatientModal = ({ isOpen, onClose, onAddPatient }) => {
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-bold text-stone-500 ml-1">Biological Gender</label>
+                                        <label className="text-xs font-bold text-stone-300 ml-1 uppercase tracking-wider">Biological Gender</label>
                                         <select
                                             value={formData.gender} onChange={e => setFormData({ ...formData, gender: e.target.value })}
                                             className="w-full h-14 bg-stone-900/50 border border-white/5 focus:border-amber-500/40 rounded-xl px-4 text-white outline-none cursor-pointer font-medium appearance-none"
@@ -165,22 +165,22 @@ const AddPatientModal = ({ isOpen, onClose, onAddPatient }) => {
                             <div className="space-y-6">
                                 <div className="flex items-center gap-3 mb-2">
                                     <Activity size={18} className="text-amber-500" />
-                                    <h3 className="text-sm font-black text-stone-400 uppercase tracking-[0.25em]">Clinical Profile</h3>
+                                    <h3 className="text-sm font-black text-stone-300 uppercase tracking-[0.25em]">Clinical Profile</h3>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-bold text-stone-500 ml-1">Primary Diagnosis</label>
+                                        <label className="text-xs font-bold text-stone-300 ml-1 uppercase tracking-wider">Primary Diagnosis</label>
                                         <div className="relative">
                                             <FileText className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-600" size={18} />
                                             <input
                                                 required type="text" placeholder="e.g. Hypertension" value={formData.condition}
                                                 onChange={e => setFormData({ ...formData, condition: e.target.value })}
-                                                className="w-full h-14 bg-stone-900/50 border border-white/5 focus:border-amber-500/40 rounded-xl pl-12 pr-4 text-white outline-none transition-all placeholder:text-stone-700 font-medium"
+                                                className="w-full h-14 bg-stone-900/50 border border-white/5 focus:border-amber-500/40 rounded-xl pl-12 pr-4 text-white outline-none transition-all placeholder:text-stone-600 font-medium"
                                             />
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-bold text-stone-500 ml-1">Blood Type</label>
+                                        <label className="text-xs font-bold text-stone-300 ml-1 uppercase tracking-wider">Blood Type</label>
                                         <div className="relative">
                                             <Droplet className="absolute left-4 top-1/2 -translate-y-1/2 text-rose-500/50" size={18} />
                                             <select
@@ -192,7 +192,7 @@ const AddPatientModal = ({ isOpen, onClose, onAddPatient }) => {
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-bold text-stone-500 ml-1">Triage Status</label>
+                                        <label className="text-xs font-bold text-stone-300 ml-1 uppercase tracking-wider">Triage Status</label>
                                         <select
                                             value={formData.status} onChange={e => setFormData({ ...formData, status: e.target.value })}
                                             className="w-full h-14 bg-stone-900/50 border border-white/5 focus:border-amber-500/40 rounded-xl px-4 text-white outline-none cursor-pointer font-medium appearance-none"
@@ -201,11 +201,11 @@ const AddPatientModal = ({ isOpen, onClose, onAddPatient }) => {
                                         </select>
                                     </div>
                                     <div className="md:col-span-3 space-y-2">
-                                        <label className="text-[11px] font-bold text-stone-500 ml-1">Known Allergies</label>
+                                        <label className="text-xs font-bold text-stone-300 ml-1 uppercase tracking-wider">Known Allergies</label>
                                         <input
                                             type="text" placeholder="Separate with commas (e.g. Penicillin, Peanuts)" value={formData.allergies}
                                             onChange={e => setFormData({ ...formData, allergies: e.target.value })}
-                                            className="w-full h-14 bg-stone-900/50 border border-white/5 focus:border-amber-500/40 rounded-xl px-5 text-white outline-none transition-all placeholder:text-stone-700 font-medium"
+                                            className="w-full h-14 bg-stone-900/50 border border-white/5 focus:border-amber-500/40 rounded-xl px-5 text-white outline-none transition-all placeholder:text-stone-600 font-medium"
                                         />
                                     </div>
                                 </div>
@@ -217,39 +217,39 @@ const AddPatientModal = ({ isOpen, onClose, onAddPatient }) => {
                             <div className="space-y-6">
                                 <div className="flex items-center gap-3 mb-2">
                                     <Phone size={18} className="text-amber-500" />
-                                    <h3 className="text-sm font-black text-stone-400 uppercase tracking-[0.25em]">Contact Information</h3>
+                                    <h3 className="text-sm font-black text-stone-300 uppercase tracking-[0.25em]">Contact Information</h3>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-bold text-stone-500 ml-1">Phone Number</label>
+                                        <label className="text-xs font-bold text-stone-300 ml-1 uppercase tracking-wider">Phone Number</label>
                                         <div className="relative">
                                             <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-600" size={18} />
                                             <input
                                                 type="tel" placeholder="(555) 000-0000" value={formData.phone}
                                                 onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                                                className="w-full h-14 bg-stone-900/50 border border-white/5 focus:border-amber-500/40 rounded-xl pl-12 pr-4 text-white outline-none transition-all placeholder:text-stone-700 font-medium"
+                                                className="w-full h-14 bg-stone-900/50 border border-white/5 focus:border-amber-500/40 rounded-xl pl-12 pr-4 text-white outline-none transition-all placeholder:text-stone-600 font-medium"
                                             />
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-bold text-stone-500 ml-1">Email Address</label>
+                                        <label className="text-xs font-bold text-stone-300 ml-1 uppercase tracking-wider">Email Address</label>
                                         <div className="relative">
                                             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-600" size={18} />
                                             <input
                                                 type="email" placeholder="patient@example.com" value={formData.email}
                                                 onChange={e => setFormData({ ...formData, email: e.target.value })}
-                                                className="w-full h-14 bg-stone-900/50 border border-white/5 focus:border-amber-500/40 rounded-xl pl-12 pr-4 text-white outline-none transition-all placeholder:text-stone-700 font-medium"
+                                                className="w-full h-14 bg-stone-900/50 border border-white/5 focus:border-amber-500/40 rounded-xl pl-12 pr-4 text-white outline-none transition-all placeholder:text-stone-600 font-medium"
                                             />
                                         </div>
                                     </div>
                                     <div className="md:col-span-2 space-y-2">
-                                        <label className="text-[11px] font-bold text-stone-500 ml-1">Residential Address</label>
+                                        <label className="text-xs font-bold text-stone-300 ml-1 uppercase tracking-wider">Residential Address</label>
                                         <div className="relative">
                                             <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-600" size={18} />
                                             <input
                                                 type="text" placeholder="Full Street Address, City, Zip Code" value={formData.address}
                                                 onChange={e => setFormData({ ...formData, address: e.target.value })}
-                                                className="w-full h-14 bg-stone-900/50 border border-white/5 focus:border-amber-500/40 rounded-xl pl-12 pr-4 text-white outline-none transition-all placeholder:text-stone-700 font-medium"
+                                                className="w-full h-14 bg-stone-900/50 border border-white/5 focus:border-amber-500/40 rounded-xl pl-12 pr-4 text-white outline-none transition-all placeholder:text-stone-600 font-medium"
                                             />
                                         </div>
                                     </div>
