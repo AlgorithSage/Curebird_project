@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { X, Upload, FileText, User, Calendar, AlertTriangle, CheckCircle, Loader } from 'lucide-react';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { auth } from '../App'; // Import auth from main App
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db, auth } from '../App'; // Import auth from main App
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 const TabButton = ({ children, active, onClick, colorClass = "text-amber-400" }) => {
@@ -42,7 +42,6 @@ const TabButton = ({ children, active, onClick, colorClass = "text-amber-400" })
 const AddClinicalRecordModal = ({ isOpen, onClose, patients = [], doctorId, doctorName }) => {
     // Firebase instances
     const storage = getStorage();
-    const db = getFirestore();
 
     const [loading, setLoading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);

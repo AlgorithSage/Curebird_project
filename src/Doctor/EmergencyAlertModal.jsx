@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { X, Siren, AlertTriangle, CheckCircle, Loader, User, Zap, Activity } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { auth } from '../App';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db, auth } from '../App';
 
 const EmergencyAlertModal = ({ isOpen, onClose, patients = [] }) => {
-    const db = getFirestore();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);

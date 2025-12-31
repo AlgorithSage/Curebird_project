@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { X, Microscope, CheckCircle, AlertTriangle, Loader, User, Calendar, FileText } from 'lucide-react';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
-import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { auth } from '../App';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db, auth } from '../App';
 
 const ModalTabButton = ({ children, active, onClick, colorClass = "text-amber-400" }) => {
     const mouseX = useMotionValue(0);
@@ -39,7 +39,6 @@ const ModalTabButton = ({ children, active, onClick, colorClass = "text-amber-40
 };
 
 const LabRequestModal = ({ isOpen, onClose, patients = [] }) => {
-    const db = getFirestore();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);

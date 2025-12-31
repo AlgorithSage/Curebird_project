@@ -6,8 +6,8 @@ import {
     Image as ImageIcon, Pill, Clipboard, X,
     Copy, Repeat, Edit2, Lock, Loader, Activity
 } from 'lucide-react';
-import { getFirestore, collectionGroup, query, where, orderBy, onSnapshot } from 'firebase/firestore';
-import { auth } from '../App';
+import { collectionGroup, query, where, orderBy, onSnapshot } from 'firebase/firestore';
+import { auth, db } from '../App';
 
 const MedicalRecordManager = ({ onAddAction }) => {
     const [activeTab, setActiveTab] = useState('overview');
@@ -15,8 +15,6 @@ const MedicalRecordManager = ({ onAddAction }) => {
     const [loading, setLoading] = useState(true);
     const [records, setRecords] = useState([]);
     const [error, setError] = useState(null);
-
-    const db = getFirestore();
 
     // Fetch Records Live
     useEffect(() => {
