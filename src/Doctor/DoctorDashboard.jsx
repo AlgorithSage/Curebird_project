@@ -418,6 +418,7 @@ const DoctorDashboard = ({ user }) => {
                             if (type === 'emergency') setIsEmergencyModalOpen(true);
                         }}
                         onViewOversight={(type) => setActiveOversightModal(type)}
+                        onNavigateToHistory={() => handleNavigate('medical_records')}
                     />
                 </>
             );

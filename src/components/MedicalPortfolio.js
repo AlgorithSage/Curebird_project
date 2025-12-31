@@ -202,7 +202,10 @@ const MedicalPortfolio = ({ user, db, storage, appId, formatDate, capitalize, on
 
                     {/* Dashboard Overview Banner */}
                     <div className="mb-12 px-2 sm:px-6">
-                        <DashboardOverview user={user} />
+                        <DashboardOverview
+                            user={user}
+                            onNavigateToHistory={() => medicalHistoryRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                        />
                     </div>
 
                     {isLoading ? <SkeletonDashboard /> : (

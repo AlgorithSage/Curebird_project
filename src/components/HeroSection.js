@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
-import { HeartPulse, Sparkles, Activity, ShieldPlus, FileText, Pill, Calendar, Bot, BarChart2, CheckCircle2, Volume2, VolumeX } from 'lucide-react';
+import { HeartPulse, Sparkles, Activity, ShieldPlus, FileText, Pill, Calendar, Bot, BarChart2, CheckCircle2, Volume2, VolumeX, MessageSquare, Microscope } from 'lucide-react';
 
 const HeroSection = ({ onOverviewClick, onAddClick, onNavigate, healthScore }) => {
     const [isMobile, setIsMobile] = React.useState(false);
@@ -242,55 +242,75 @@ const HeroSection = ({ onOverviewClick, onAddClick, onNavigate, healthScore }) =
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            {/* Cure AI */}
                             <div
                                 onClick={() => onNavigate && onNavigate('Cure AI')}
-                                className="glass-card flex flex-col items-center cursor-pointer text-center h-full group"
+                                className="glass-card flex flex-col items-center cursor-pointer text-center h-full group py-10 px-6 relative overflow-hidden"
                             >
-                                <div className="mb-4 p-3 rounded-2xl bg-amber-500/10 border border-amber-500/20 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_-3px_rgba(245,158,11,0.2)]">
-                                    <Bot size={28} className="text-amber-400" />
+                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent opacity-50 group-hover:opacity-100 transition-opacity" />
+                                <div className="mb-6 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center gap-2 group-hover:scale-105 transition-transform">
+                                    <MessageSquare size={14} className="text-amber-400" />
+                                    <span className="text-[10px] font-bold text-amber-400 uppercase tracking-widest">AI Consultant</span>
                                 </div>
-                                <h3 className="text-amber-100 font-bold text-xl leading-tight mb-2 group-hover:text-amber-400 transition-colors">Cure AI</h3>
-                                <p className="text-white font-bold text-sm leading-relaxed">
-                                    Your dedicated 24/7 health consultant. Ask anything, anytime, and get intelligent answers based on your medical history.
+                                <h3 className="text-3xl font-bold text-white mb-4">
+                                    Cure <span className="text-amber-400">AI</span>
+                                </h3>
+                                <p className="text-slate-300 text-sm leading-relaxed max-w-[250px]">
+                                    Your dedicated <span className="text-white font-bold">24/7 health consultant</span>. Get <span className="text-amber-200">intelligent answers</span> based on your history.
                                 </p>
                             </div>
 
+                            {/* Cure Analyzer */}
                             <div
                                 onClick={() => onNavigate && onNavigate('Cure Analyzer')}
-                                className="glass-card flex flex-col items-center cursor-pointer text-center h-full group"
+                                className="glass-card flex flex-col items-center cursor-pointer text-center h-full group py-10 px-6 relative overflow-hidden"
                             >
-                                <div className="mb-4 p-3 rounded-2xl bg-sky-500/10 border border-sky-500/20 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_-3px_rgba(14,165,233,0.2)]">
-                                    <Activity size={28} className="text-sky-400" />
+                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-sky-500 to-transparent opacity-50 group-hover:opacity-100 transition-opacity" />
+                                <div className="mb-6 px-4 py-1.5 rounded-full bg-sky-500/10 border border-sky-500/20 flex items-center gap-2 group-hover:scale-105 transition-transform">
+                                    <Bot size={14} className="text-sky-400" />
+                                    <span className="text-[10px] font-bold text-sky-400 uppercase tracking-widest">Lab Analysis</span>
                                 </div>
-                                <h3 className="text-amber-100 font-bold text-xl leading-tight mb-2 group-hover:text-sky-400 transition-colors">Cure Analyzer</h3>
-                                <p className="text-white font-bold text-sm leading-relaxed">
-                                    Instantly decodes complex lab reports into clear, actionable insights, highlighting critical values and trends.
+                                <h3 className="text-3xl font-bold text-white mb-4">
+                                    Cure <span className="text-sky-400">Analyzer</span>
+                                </h3>
+                                <p className="text-slate-300 text-sm leading-relaxed max-w-[250px]">
+                                    Instantly decodes <span className="text-white font-bold">complex lab reports</span> into clear, <span className="text-sky-200">actionable insights</span>.
                                 </p>
                             </div>
 
+                            {/* Cure Stat */}
                             <div
                                 onClick={() => onNavigate && onNavigate('Cure Stat')}
-                                className="glass-card flex flex-col items-center cursor-pointer text-center h-full group"
+                                className="glass-card flex flex-col items-center cursor-pointer text-center h-full group py-10 px-6 relative overflow-hidden"
                             >
-                                <div className="mb-4 p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_-3px_rgba(16,185,129,0.2)]">
-                                    <BarChart2 size={28} className="text-emerald-400" />
+                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-50 group-hover:opacity-100 transition-opacity" />
+                                <div className="mb-6 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-2 group-hover:scale-105 transition-transform">
+                                    <Activity size={14} className="text-emerald-400" />
+                                    <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Global Stats</span>
                                 </div>
-                                <h3 className="text-amber-100 font-bold text-xl leading-tight mb-2 group-hover:text-emerald-400 transition-colors">Cure Stat</h3>
-                                <p className="text-white font-bold text-sm leading-relaxed">
-                                    Visualizes real-time disease trends and epidemic data globally, keeping you informed about public health risks.
+                                <h3 className="text-3xl font-bold text-white mb-4">
+                                    Cure <span className="text-emerald-400">Stat</span>
+                                </h3>
+                                <p className="text-slate-300 text-sm leading-relaxed max-w-[250px]">
+                                    Visualizes <span className="text-white font-bold">real-time disease trends</span> and <span className="text-emerald-200">epidemic data</span> globally.
                                 </p>
                             </div>
 
+                            {/* Cure Tracker */}
                             <div
                                 onClick={() => onNavigate && onNavigate('Cure Tracker')}
-                                className="glass-card flex flex-col items-center cursor-pointer text-center h-full group"
+                                className="glass-card flex flex-col items-center cursor-pointer text-center h-full group py-10 px-6 relative overflow-hidden"
                             >
-                                <div className="mb-4 p-3 rounded-2xl bg-purple-500/10 border border-purple-500/20 shrink-0 group-hover:scale-110 transition-transform shadow-[0_0_15px_-3px_rgba(168,85,247,0.2)]">
-                                    <Calendar size={28} className="text-purple-400" />
+                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent opacity-50 group-hover:opacity-100 transition-opacity" />
+                                <div className="mb-6 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 flex items-center gap-2 group-hover:scale-105 transition-transform">
+                                    <Microscope size={14} className="text-purple-400" />
+                                    <span className="text-[10px] font-bold text-purple-400 uppercase tracking-widest">Live Tracker</span>
                                 </div>
-                                <h3 className="text-amber-100 font-bold text-xl leading-tight mb-2 group-hover:text-purple-400 transition-colors">Cure Tracker</h3>
-                                <p className="text-white font-bold text-sm leading-relaxed">
-                                    Log and monitor your daily symptoms, medications, and vitals to build a comprehensive health timeline.
+                                <h3 className="text-3xl font-bold text-white mb-4">
+                                    Cure <span className="text-purple-400">Tracker</span>
+                                </h3>
+                                <p className="text-slate-300 text-sm leading-relaxed max-w-[250px]">
+                                    Track <span className="text-white font-bold">conditions</span>, monitor <span className="text-purple-200">vitals</span>, and managed <span className="text-white font-bold">daily insights</span>.
                                 </p>
                             </div>
                         </div>
