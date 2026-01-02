@@ -50,17 +50,17 @@ const PatientRosterModal = ({ isOpen, onClose, patients = [], onViewPatient, onA
                         {/* Search & Filters */}
                         <div className="p-8 bg-white/[0.02] border-b border-white/5 flex gap-4 items-center relative z-10">
                             <div className="flex-1 relative group">
-                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-500 group-hover:text-amber-500 transition-colors" size={20} />
+                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.5)] transition-colors" size={20} />
                                 <input
                                     type="text"
                                     placeholder="Execute query: Patient Name, ID, or Condition..."
-                                    className="w-full bg-slate-900 border-none rounded-xl py-4 pl-12 pr-4 text-white placeholder:text-stone-600 focus:ring-1 focus:ring-amber-500/50 transition-all font-medium"
+                                    className="w-full bg-amber-900/20 border border-amber-500/30 rounded-xl py-4 pl-12 pr-4 text-white placeholder:text-amber-100/30 focus:border-amber-500/60 focus:ring-1 focus:ring-amber-500/50 shadow-[0_0_30px_rgba(245,158,11,0.05)] focus:shadow-[0_0_30px_rgba(245,158,11,0.2)] transition-all font-medium"
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                 />
                             </div>
                             <div className="flex gap-2">
-                                <button className="p-4 bg-slate-900 text-stone-400 hover:text-amber-400 rounded-xl border border-white/5 transition-all">
+                                <button className="p-4 bg-amber-900/20 text-amber-500 hover:bg-amber-500 hover:text-black rounded-xl border border-amber-500/30 hover:border-amber-500 hover:shadow-[0_0_20px_rgba(245,158,11,0.4)] transition-all duration-300">
                                     <Filter size={20} />
                                 </button>
                                 <button
