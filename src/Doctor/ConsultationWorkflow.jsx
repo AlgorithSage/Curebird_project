@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
     Mic, MicOff, Video, VideoOff, PhoneOff, Monitor,
     MoreVertical, FileText, Pill, Activity, ChevronRight,
-    Wifi, Users, Clock, Shield, Zap
+    Wifi, Users, Clock, Shield, Zap, AlertCircle, PhoneIncoming, Check, X
 } from 'lucide-react';
 
 const TelehealthSession = () => {
@@ -22,6 +22,32 @@ const TelehealthSession = () => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    };
+
+    // Mock Data for Waiting Room / Queue
+    const [waitingQueue, setWaitingQueue] = useState([
+        { id: 1, name: "Suresh Raina", reason: "Chest Pain & Breathing Difficulty", urgency: "Critical", time: "2m ago" },
+        { id: 2, name: "Priya Sharma", reason: "High Fever (104°F)", urgency: "Urgent", time: "10m ago" },
+        { id: 3, name: "Rahul Verma", reason: "Follow-up: Diabetes", urgency: "Routine", time: "15m ago" },
+        { id: 4, name: "Anjali Gupta", reason: "Mild Skin Rash", urgency: "Routine", time: "25m ago" }
+    ]);
+
+    const handleAccept = (id) => {
+        // Logic to switch call would go here
+        alert(`Connecting to patient #${id}...`);
+        setWaitingQueue(prev => prev.filter(p => p.id !== id));
+    };
+
+    const handleDecline = (id) => {
+        setWaitingQueue(prev => prev.filter(p => p.id !== id));
+    };
+
+    const getUrgencyColor = (u) => {
+        switch (u) {
+            case 'Critical': return 'text-rose-500 bg-rose-500/10 border-rose-500/20';
+            case 'Urgent': return 'text-amber-500 bg-amber-500/10 border-amber-500/20';
+            default: return 'text-blue-400 bg-blue-500/10 border-blue-500/20';
+        }
     };
 
     return (
@@ -108,31 +134,86 @@ const TelehealthSession = () => {
                 </div>
             </div>
 
-            {/* --- Clinical Cockpit (30%) --- */}
+            {/* --- Clinical Cockpit & Side Queue (30%) --- */}
             <div className="w-96 flex flex-col gap-6">
                 {/* Cockpit Tabs */}
                 <div className="flex p-1 bg-black/40 rounded-xl border border-white/5 backdrop-blur-md">
                     {[
+                        { id: 'queue', icon: PhoneIncoming, label: 'Queue', count: waitingQueue.length },
                         { id: 'notes', icon: FileText, label: 'Notes' },
                         { id: 'rx', icon: Pill, label: 'Meds' },
-                        { id: 'history', icon: Clock, label: 'History' }
+                        { id: 'history', icon: Clock, label: 'Hist' }
                     ].map(tab => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveSideTab(tab.id)}
-                            className={`flex-1 flex flex-col items-center justify-center py-3 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${activeSideTab === tab.id
+                            className={`flex-1 flex flex-col items-center justify-center py-3 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all relative ${activeSideTab === tab.id
                                 ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20'
                                 : 'text-stone-500 hover:text-stone-300 hover:bg-white/5'
                                 }`}
                         >
                             <tab.icon size={16} className="mb-1" />
                             {tab.label}
+                            {tab.count > 0 && (
+                                <span className="absolute top-1 right-2 w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+                            )}
                         </button>
                     ))}
                 </div>
 
                 {/* Cockpit Content */}
                 <div className="flex-1 glass-card p-6 rounded-[2rem] border border-amber-500/10 bg-black/40 backdrop-blur-xl relative overflow-hidden flex flex-col">
+
+                    {/* --- QUEUE TAB --- */}
+                    {activeSideTab === 'queue' && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="flex flex-col h-full"
+                        >
+                            <div className="flex justify-between items-center mb-4">
+                                <h3 className="text-amber-500 font-bold uppercase tracking-widest text-xs flex items-center gap-2">
+                                    <Users size={14} /> Waiting Room ({waitingQueue.length})
+                                </h3>
+                                <button className="text-[10px] text-stone-500 hover:text-white uppercase font-bold">Sort by Urgency</button>
+                            </div>
+
+                            <div className="flex-1 overflow-y-auto custom-scrollbar space-y-3 pr-2">
+                                {waitingQueue.length === 0 && (
+                                    <div className="text-center py-10 text-stone-600 italic text-xs">
+                                        No pending requests.
+                                    </div>
+                                )}
+                                {waitingQueue.map(patient => (
+                                    <div key={patient.id} className="p-4 rounded-xl bg-stone-900/40 border border-white/5 hover:bg-stone-900/60 transition-colors group">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <h4 className="font-bold text-white text-sm">{patient.name}</h4>
+                                            <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider border ${getUrgencyColor(patient.urgency)}`}>
+                                                {patient.urgency}
+                                            </span>
+                                        </div>
+                                        <p className="text-xs text-stone-400 mb-1">{patient.reason}</p>
+                                        <p className="text-[10px] text-stone-600 font-mono mb-3">{patient.time}</p>
+
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => handleAccept(patient.id)}
+                                                className="flex-1 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-[10px] font-black uppercase hover:bg-emerald-500 hover:text-black transition-all flex items-center justify-center gap-1">
+                                                <Check size={12} /> Accept
+                                            </button>
+                                            <button
+                                                onClick={() => handleDecline(patient.id)}
+                                                className="px-3 py-1.5 rounded-lg bg-stone-800 border border-white/5 text-stone-400 text-[10px] font-bold hover:text-rose-400 hover:bg-rose-500/10 transition-all">
+                                                <X size={12} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </motion.div>
+                    )}
+
+                    {/* --- NOTES TAB --- */}
                     {activeSideTab === 'notes' && (
                         <motion.div
                             initial={{ opacity: 0 }}
@@ -153,6 +234,7 @@ const TelehealthSession = () => {
                         </motion.div>
                     )}
 
+                    {/* --- RX TAB --- */}
                     {activeSideTab === 'rx' && (
                         <motion.div
                             initial={{ opacity: 0 }}
@@ -174,6 +256,14 @@ const TelehealthSession = () => {
                                 Authorize Rx
                             </button>
                         </motion.div>
+                    )}
+
+                    {/* --- HISTORY TAB --- */}
+                    {activeSideTab === 'history' && (
+                        <div className="flex flex-col items-center justify-center h-full text-stone-500">
+                            <Clock size={32} className="mb-2 opacity-50" />
+                            <p className="text-xs font-bold uppercase tracking-wider">Loading History...</p>
+                        </div>
                     )}
                 </div>
 
