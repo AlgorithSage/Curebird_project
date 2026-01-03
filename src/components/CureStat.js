@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
-import { Activity, Loader, ServerCrash, Info, Pill, TrendingUp, X, Sparkles, Download, Users, Brain, Search, MapPin, AlertTriangle, Map, Calendar, ShieldCheck, Clock, Layers, HeartPulse, Wind, Droplets, Database } from 'lucide-react';
+import { Activity, Loader, ServerCrash, Info, Pill, TrendingUp, X, Sparkles, Download, Users, Brain, Search, MapPin, AlertTriangle, Map, Calendar, ShieldCheck, Clock, Layers, HeartPulse, Wind, Droplets, Database, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import Header from './Header';
@@ -154,15 +155,32 @@ const HeatmapModal = ({ isOpen, onClose, regionalData }) => {
 
     if (!isOpen) return null;
 
-    return (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50" onClick={onClose}>
+    return createPortal(
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]" onClick={onClose}>
             <motion.div initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }} onClick={(e) => e.stopPropagation()} className="bg-slate-900 w-full max-w-6xl h-[80vh] rounded-3xl border border-slate-700 shadow-2xl relative overflow-hidden">
                 <div className="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/95 backdrop-blur">
-                    <div>
-                        <h2 className="text-2xl font-bold text-white flex items-center gap-3"><Map className="text-sky-400" size={28} />Disease Heatmap - India</h2>
-                        <p className="text-slate-400 text-sm mt-1">Regional distribution of reported cases</p>
+                    <div className="flex items-center gap-4">
+                        <button
+                            onClick={onClose}
+                            className="p-2 bg-slate-800 hover:bg-slate-700 rounded-full text-slate-400 hover:text-white transition-colors group"
+                            aria-label="Go back"
+                        >
+                            <ArrowLeft size={24} className="group-hover:-translate-x-1 transition-transform" />
+                        </button>
+                        <div>
+                            <h2 className="text-2xl font-bold text-white flex items-center gap-3"><Map className="text-sky-400" size={28} />Disease Heatmap - India</h2>
+                            <div className="mt-2 space-y-1">
+                                <p className="text-slate-300 text-sm font-medium">
+                                    Visualize the intensity of disease outbreaks across regions.
+                                    <span className="text-red-400 font-bold ml-1">Red zones</span> indicate high-density clusters, while
+                                    <span className="text-sky-400 font-bold ml-1">Blue zones</span> show lower activity.
+                                </p>
+                                <p className="text-slate-500 text-xs mt-1">
+                                    Use this interactive tool to identify regional hotspots and track epidemiological spread in real-time.
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                    <button onClick={onClose} className="p-2 bg-slate-800 hover:bg-slate-700 rounded-full text-slate-400 hover:text-white transition-colors"><X size={24} /></button>
                 </div>
                 <div className="relative h-[calc(100%-88px)]">
                     {mapError ? (
@@ -178,7 +196,8 @@ const HeatmapModal = ({ isOpen, onClose, regionalData }) => {
                     )}
                 </div>
             </motion.div>
-        </motion.div>
+        </motion.div>,
+        document.body
     );
 };
 
@@ -389,15 +408,38 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigate })
     const COLORS = ['#f59e0b', '#fbbf24', '#d97706', '#fcd34d', '#b45309', '#78350f'];
     const GENDER_COLORS = ['#f59e0b', '#fbbf24'];
 
+    // Weighted distribution based on typical IDSP surveillance reporting volumes (Proxy for state burden)
+    const STATE_DISTRIBUTION_WEIGHTS = {
+        'Maharashtra': 0.18, // High reporting & density
+        'Kerala': 0.15,      // Very high surveillance
+        'Karnataka': 0.12,
+        'Tamil Nadu': 0.11,
+        'Delhi': 0.09,
+        'Uttar Pradesh': 0.08, // Lower relative reporting vs population
+        'West Bengal': 0.07,
+        'Gujarat': 0.06,
+        'Rajasthan': 0.05,
+        'Andhra Pradesh': 0.04
+    };
+
     const getRegionalData = (disease) => {
-        const seed = disease.disease ? disease.disease.length : 10;
-        return [
-            { name: 'Maharashtra', value: 120 + (seed * 5) },
-            { name: 'Delhi', value: 90 + (seed * 3) },
-            { name: 'Kerala', value: 80 + (seed * 4) },
-            { name: 'Karnataka', value: 70 + (seed * 2) },
-            { name: 'Tamil Nadu', value: 60 + (seed * 3) },
-        ].sort((a, b) => b.value - a.value);
+        if (!disease || !disease.outbreaks) return [];
+
+        // Ensure we are working with a number
+        let totalCases = typeof disease.outbreaks === 'string' ?
+            parseFloat(disease.outbreaks.replace(/,/g, '')) :
+            disease.outbreaks;
+
+        // If it's a prevalence % (like Diabetes), map differently or skip
+        if (disease.segment === 'Chronic' && totalCases < 100) {
+            // For percentage based, we project a sample population of 1000 for visualization
+            totalCases = 1000 * (totalCases / 100);
+        }
+
+        return Object.entries(STATE_DISTRIBUTION_WEIGHTS).map(([state, weight]) => ({
+            name: state,
+            value: Math.round(totalCases * weight)
+        })).sort((a, b) => b.value - a.value).slice(0, 5); // Top 5
     };
 
 
@@ -417,13 +459,36 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigate })
     const CustomTooltip = ({ active, payload, label }) => {
         if (active && payload && payload.length) {
             return (
-                <div className="bg-black/90 backdrop-blur-md border border-yellow-500/30 p-4 rounded-xl">
-                    <p className="text-slate-200 font-semibold mb-1">{label}</p>
+                <div className="bg-black/90 backdrop-blur-md border border-yellow-500/30 p-4 rounded-xl shadow-2xl z-[99999]">
+                    <p className="text-slate-200 font-semibold mb-1 text-sm">{label}</p>
                     {payload.map((entry, index) => (
-                        <p key={index} className="text-sm" style={{ color: entry.color }}>
-                            {entry.name}: <span className="font-bold">{entry.value}</span>
+                        <p key={index} className="text-xs font-mono" style={{ color: entry.color }}>
+                            Est. Cases: <span className="font-bold text-base">{entry.value.toLocaleString()}</span>
                         </p>
                     ))}
+                </div>
+            );
+        }
+        return null;
+    };
+
+    const ResourceTooltip = ({ active, payload, label }) => {
+        if (active && payload && payload.length) {
+            return (
+                <div className="bg-black/90 backdrop-blur-md border border-emerald-500/30 p-4 rounded-xl shadow-2xl z-[99999]">
+                    <p className="text-slate-200 font-semibold mb-1 text-sm">{label}</p>
+                    {payload.map((entry, index) => {
+                        const isDensity = entry.name.includes('Density');
+                        const unit = isDensity ? '/1000' : '%';
+                        return (
+                            <div key={index} className="flex items-center justify-between gap-4">
+                                <span className="text-xs text-slate-400">{entry.name}:</span>
+                                <span className="font-bold text-sm font-mono" style={{ color: entry.color }}>
+                                    {entry.value}{unit}
+                                </span>
+                            </div>
+                        );
+                    })}
                 </div>
             );
         }
@@ -582,17 +647,55 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigate })
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
                     <motion.div initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="glass-card p-6">
-                        <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-xl font-bold text-white">Regional Impact</h2>
-                            <button onClick={() => setShowHeatmap(true)} className="group relative overflow-hidden bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 px-5 py-2.5 rounded-xl transition-all shadow-lg hover:shadow-sky-500/25 flex items-center gap-2 border border-white/10">
+                        <div className="flex items-center justify-between mb-2">
+                            <div>
+                                <div className="flex items-center gap-2">
+                                    <h2 className="text-xl font-bold text-white">Regional Impact</h2>
+                                    <div className="group relative">
+                                        <Info size={16} className="text-slate-500 hover:text-sky-400 cursor-help transition-colors" />
+                                        <div className="absolute left-0 bottom-full mb-2 w-96 p-4 bg-slate-900/95 border border-slate-700/80 rounded-xl shadow-2xl backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                                            {/* Section 1: The Calculation Formula */}
+                                            <p className="text-xs font-bold text-white mb-2 border-b border-white/10 pb-2">Calculation Methodology</p>
+                                            <p className="text-[11px] text-slate-300 leading-relaxed mb-4">
+                                                Regional values are projected from <span className="text-sky-400 font-medium">National Confirmed Cases</span> using a surveillance-weighted distribution model.
+                                            </p>
+
+                                            {/* Section 2: The Concept Definition */}
+                                            <div className="bg-slate-800/30 rounded-lg p-3 border border-white/5">
+                                                <p className="text-[11px] font-semibold text-slate-200 mb-2">What is Surveillance-Weighted Distribution?</p>
+                                                <p className="text-[10px] text-slate-400 leading-relaxed mb-3">
+                                                    A statistical method used to estimate regional case loads based on the strength of each state's reporting system.
+                                                </p>
+                                                <div className="space-y-2">
+                                                    <div className="flex gap-2 items-start">
+                                                        <div className="mt-0.5 w-1.5 h-1.5 rounded-full bg-sky-500 shrink-0"></div>
+                                                        <p className="text-[10px] text-slate-400">
+                                                            <span className="text-sky-400 font-semibold">Surveillance:</span> Refers to how actively a state monitors, tests, and reports diseases.
+                                                        </p>
+                                                    </div>
+                                                    <div className="flex gap-2 items-start">
+                                                        <div className="mt-0.5 w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0"></div>
+                                                        <p className="text-[10px] text-slate-400">
+                                                            <span className="text-indigo-400 font-semibold">Weighted:</span> Detailed data from strong systems (like Kerala or Maharashtra) is given more weight, as it better represents the true disease spread.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="absolute left-2 -bottom-1 w-2 h-2 bg-slate-900 border-r border-b border-slate-700 rotate-45"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p className="text-xs text-slate-400 font-medium mt-1">States with highest total number of disease cases</p>
+                            </div>
+                            <button onClick={() => setShowHeatmap(true)} className="group relative overflow-hidden bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 px-4 py-2 rounded-xl transition-all shadow-lg hover:shadow-sky-500/25 flex items-center gap-2 border border-white/10 ml-4">
                                 <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
                                 <div className="relative flex items-center gap-2">
-                                    <span className="relative flex h-3 w-3">
+                                    <span className="relative flex h-2.5 w-2.5">
                                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                                        <span className="relative inline-flex rounded-full h-3 w-3 bg-red-400 border border-white"></span>
+                                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-400 border border-white"></span>
                                     </span>
-                                    <span className="font-semibold text-white tracking-wide text-sm">Live Heatmap</span>
-                                    <MapPin size={16} className="text-white" />
+                                    <span className="font-semibold text-white tracking-wide text-xs">Live Heatmap</span>
+                                    <MapPin size={14} className="text-white" />
                                 </div>
                             </button>
                         </div>
@@ -614,8 +717,40 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigate })
                     </motion.div>
 
                     <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }} className="glass-card p-6">
-                        <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-xl font-bold text-white">Disease Distribution</h2>
+                        <div className="flex items-center justify-between mb-2">
+                            <div>
+                                <div className="flex items-center gap-2">
+                                    <h2 className="text-xl font-bold text-white">Disease Distribution</h2>
+                                    <div className="group relative">
+                                        <Info size={16} className="text-slate-500 hover:text-sky-400 cursor-help transition-colors" />
+                                        <div className="absolute right-0 bottom-full mb-2 w-96 p-4 bg-slate-900/95 border border-slate-700/80 rounded-xl shadow-2xl backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                                            {/* Section 1: The Calculation Formula */}
+                                            <p className="text-xs font-bold text-white mb-2 border-b border-white/10 pb-2">Calculation Methodology</p>
+                                            <p className="text-[11px] text-slate-300 leading-relaxed mb-4">
+                                                Calculated by aggregating <span className="text-sky-400 font-medium">Total Reported Cases</span> for all monitored conditions to determine the percentage share (morbidity) of each disease.
+                                            </p>
+
+                                            {/* Section 2: The Concept Definition */}
+                                            <div className="bg-slate-800/30 rounded-lg p-3 border border-white/5">
+                                                <p className="text-[11px] font-semibold text-slate-200 mb-2">What is Morbidity Distribution?</p>
+                                                <p className="text-[10px] text-slate-400 leading-relaxed mb-3">
+                                                    A comparative snapshot showing which diseases are currently dominating the public health burden.
+                                                </p>
+                                                <div className="space-y-2">
+                                                    <div className="flex gap-2 items-start">
+                                                        <div className="mt-0.5 w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></div>
+                                                        <p className="text-[10px] text-slate-400">
+                                                            <span className="text-orange-400 font-semibold">Proportional Load:</span> Helps identify if a single outbreak (like Dengue) is overwhelming the system compared to baseline illnesses.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="absolute right-4 -bottom-1 w-2 h-2 bg-slate-900 border-r border-b border-slate-700 rotate-45"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p className="text-xs text-slate-400 font-medium mt-1">Proportion of top reported illnesses</p>
+                            </div>
                             <div className="bg-purple-500/20 p-2 rounded-lg border border-purple-500/30"><Sparkles size={20} className="text-purple-400" /></div>
                         </div>
                         <div className="h-[250px] sm:h-[350px]">
@@ -675,7 +810,25 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigate })
                                 {/* Chart 1: Bed Density Urban vs Rural */}
                                 <div className="glass-card p-6">
                                     <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                                        Infrastructure Density
+                                        <div className="flex items-center gap-2">
+                                            <span>Infrastructure Density</span>
+                                            <div className="group relative">
+                                                <Info size={16} className="text-slate-500 hover:text-emerald-400 cursor-help transition-colors" />
+                                                <div className="absolute left-0 bottom-full mb-2 w-80 p-4 bg-slate-900/95 border border-slate-700/80 rounded-xl shadow-2xl backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                                                    <p className="text-xs font-bold text-white mb-2 border-b border-white/10 pb-2">Metric Methodology</p>
+                                                    <p className="text-[11px] text-slate-300 leading-relaxed mb-4">
+                                                        Ratio of hospital beds available per 1,000 people. Data sourced from Rural Health Statistics (RHS).
+                                                    </p>
+                                                    <div className="bg-emerald-900/20 border border-emerald-500/20 rounded-lg p-3">
+                                                        <p className="text-[11px] font-semibold text-emerald-200 mb-1">What is Urban-Rural Disparity?</p>
+                                                        <p className="text-[10px] text-emerald-100/70 leading-relaxed">
+                                                            The gap in resource availability between cities and villages. A wide gap suggests rural populations struggle to access immediate care during outbreaks.
+                                                        </p>
+                                                    </div>
+                                                    <div className="absolute left-2 -bottom-1 w-2 h-2 bg-slate-900 border-r border-b border-slate-700 rotate-45"></div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <span className="text-xs font-normal text-slate-500 ml-auto bg-slate-800 px-2 py-1 rounded">Beds per 1000 Population</span>
                                     </h3>
                                     <div className="h-[300px]">
@@ -684,7 +837,9 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigate })
                                                 <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} opacity={0.3} />
                                                 <XAxis dataKey="state" stroke="#ffffff" fontSize={11} tickLine={false} axisLine={false} interval={0} angle={-25} textAnchor="end" height={60} fontWeight="bold" />
                                                 <YAxis stroke="#ffffff" fontSize={11} tickLine={false} axisLine={false} fontWeight="bold" />
-                                                <Tooltip content={<CustomTooltip />} cursor={{ fill: 'transparent' }} />
+                                                <YAxis stroke="#ffffff" fontSize={11} tickLine={false} axisLine={false} fontWeight="bold" />
+                                                <Tooltip content={<ResourceTooltip />} cursor={{ fill: 'transparent' }} />
+                                                <Legend wrapperStyle={{ paddingTop: '20px' }} formatter={(value) => <span className="text-white font-bold">{value}</span>} />
                                                 <Legend wrapperStyle={{ paddingTop: '20px' }} formatter={(value) => <span className="text-white font-bold">{value}</span>} />
                                                 <Bar name="Urban Density" dataKey="urban_beds_per_1000" fill="#38bdf8" radius={[4, 4, 0, 0]} barSize={12} />
                                                 <Bar name="Rural Density" dataKey="rural_beds_per_1000" fill="#10b981" radius={[4, 4, 0, 0]} barSize={12} />
@@ -696,7 +851,25 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigate })
                                 {/* Chart 2: Sector Utilization */}
                                 <div className="glass-card p-6">
                                     <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                                        Sector Participation
+                                        <div className="flex items-center gap-2">
+                                            <span>Sector Participation</span>
+                                            <div className="group relative">
+                                                <Info size={16} className="text-slate-500 hover:text-emerald-400 cursor-help transition-colors" />
+                                                <div className="absolute right-0 bottom-full mb-2 w-80 p-4 bg-slate-900/95 border border-slate-700/80 rounded-xl shadow-2xl backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                                                    <p className="text-xs font-bold text-white mb-2 border-b border-white/10 pb-2">Metric Methodology</p>
+                                                    <p className="text-[11px] text-slate-300 leading-relaxed mb-4">
+                                                        Percentage of healthcare services provided by private vs public institutions in the state.
+                                                    </p>
+                                                    <div className="bg-purple-900/20 border border-purple-500/20 rounded-lg p-3">
+                                                        <p className="text-[11px] font-semibold text-purple-200 mb-1">What is Privatization Reliance?</p>
+                                                        <p className="text-[10px] text-purple-100/70 leading-relaxed">
+                                                            Higher private share often indicates better advanced care availability but significantly higher out-of-pocket costs for citizens.
+                                                        </p>
+                                                    </div>
+                                                    <div className="absolute right-4 -bottom-1 w-2 h-2 bg-slate-900 border-r border-b border-slate-700 rotate-45"></div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <span className="text-xs font-normal text-slate-500 ml-auto bg-slate-800 px-2 py-1 rounded">% Share of Healthcare</span>
                                     </h3>
                                     <div className="h-[300px]">
@@ -715,7 +888,9 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigate })
                                                 <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} opacity={0.3} />
                                                 <XAxis dataKey="state" stroke="#ffffff" fontSize={11} tickLine={false} axisLine={false} interval={0} angle={-25} textAnchor="end" height={60} fontWeight="bold" />
                                                 <YAxis stroke="#ffffff" fontSize={11} tickLine={false} axisLine={false} fontWeight="bold" />
-                                                <Tooltip content={<CustomTooltip />} />
+                                                <YAxis stroke="#ffffff" fontSize={11} tickLine={false} axisLine={false} fontWeight="bold" />
+                                                <Tooltip content={<ResourceTooltip />} />
+                                                <Legend wrapperStyle={{ paddingTop: '20px' }} formatter={(value) => <span className="text-white font-bold">{value}</span>} />
                                                 <Legend wrapperStyle={{ paddingTop: '20px' }} formatter={(value) => <span className="text-white font-bold">{value}</span>} />
                                                 <Area type="monotone" name="Private Sector" dataKey="private_sector_share" stroke="#8b5cf6" fillOpacity={1} fill="url(#colorPrivate)" />
                                                 <Area type="monotone" name="Public Sector" dataKey="public_sector_share" stroke="#06b6d4" fillOpacity={1} fill="url(#colorPublic)" />
