@@ -7,6 +7,7 @@ import time
 import base64
 from groq import Groq
 from dotenv import load_dotenv
+from vision_service import extract_json, VisionError
 
 # Load environment variables
 load_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env'))
@@ -178,20 +179,15 @@ def perform_ocr(file_stream):
 
 def analyze_clinical_groq(file_stream):
     """
-    Analyze clinical document using Groq Llama 3.2 Vision with strict JSON schema.
-    Fallback for when Gemini is unavailable.
+    Analyze clinical document with a strict JSON schema.
+    Runs on the shared VLM helper (Groq vision, Gemini fallback).
     """
     try:
         api_key = os.getenv('GROQ_API_KEY')
-        if not api_key:
-            raise ValueError("Groq API key missing")
-            
-        client = Groq(api_key=api_key)
-        
-        # Encode image
+
         file_stream.seek(0)
-        base64_image = base64.b64encode(file_stream.read()).decode('utf-8')
-        
+        file_bytes = file_stream.read()
+
         prompt = """
         You are a Senior Chief Medical Officer. Analyze this medical document with extreme attention to detail.
         
@@ -222,27 +218,10 @@ def analyze_clinical_groq(file_stream):
         4. Return ONLY valid JSON.
         """
         
-        completion = client.chat.completions.create(
-            model="meta-llama/llama-4-scout-17b-16e-instruct",
-            messages=[
-                {
-                    "role": "user", 
-                    "content": [
-                        {"type": "text", "text": prompt},
-                        {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}}
-                    ]
-                }
-            ],
-            temperature=0.1,
-            max_tokens=2048,
-            response_format={"type": "json_object"}
-        )
-        
-        content = completion.choices[0].message.content
-        return json.loads(content)
-        
+        return extract_json(prompt, image_bytes=file_bytes, api_key=api_key)
+
     except Exception as e:
-        print(f"Groq Analysis Error (CRITICAL): {e}")
+        print(f"Clinical Analysis Error (CRITICAL): {e}")
         # Return a cleaner error to frontend
         return {
             "summary": "Analysis failed. Please try again or enter details manually.",
@@ -254,30 +233,18 @@ def analyze_clinical_groq(file_stream):
 
 def analyze_with_vlm(file_stream, custom_api_key=None):
     """
-    Directly analyze medical report images using Groq VLM.
+    Directly analyze medical report images.
+    Runs on the shared VLM helper (Groq vision, Gemini fallback).
+
+    Raises VisionError if every provider failed, so callers can tell an outage
+    apart from a document that genuinely contained nothing.
     """
-    try:
-        # 1. Setup Groq Client
-        api_key = custom_api_key or os.getenv('GROQ_API_KEY_VISION') or os.getenv('GROQ_API_KEY')
-        if not api_key:
-            raise ValueError("Groq API key not found in environment variables.")
-        
-        client = Groq(api_key=api_key)
-        
-        # 2. Encode image to Base64
-        file_stream.seek(0)
-        base64_image = base64.b64encode(file_stream.read()).decode('utf-8')
-        
-        # 3. Call Groq VLM
-        completion = client.chat.completions.create(
-            model="meta-llama/llama-4-scout-17b-16e-instruct",
-            messages=[
-                {
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "text", 
-                            "text": """You are a Senior Chief Medical Officer and Document Digitization Expert. Analyze this medical image with extreme attention to detail and high precision.
+    api_key = custom_api_key or os.getenv('GROQ_API_KEY_VISION') or os.getenv('GROQ_API_KEY')
+
+    file_stream.seek(0)
+    file_bytes = file_stream.read()
+
+    prompt = """You are a Senior Chief Medical Officer and Document Digitization Expert. Analyze this medical image with extreme attention to detail and high precision.
                             Determine if it is a "prescription" or a "lab_report".
                             
                             Extract the following data into strict JSON format:
@@ -303,40 +270,21 @@ def analyze_with_vlm(file_stream, custom_api_key=None):
                             4. If it is likely NOT a medical image, set is_medical: false.
                             5. If date is not found, use null.
                             6. Return ONLY valid JSON."""
-                        },
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                                "url": f"data:image/jpeg;base64,{base64_image}",
-                            },
-                        },
-                    ],
-                }
-            ],
-            temperature=0.1,
-            max_tokens=4096,
-            response_format={"type": "json_object"}
-        )
-        
-        raw_response = completion.choices[0].message.content
-        structured_data = json.loads(raw_response)
-        
-        return {
-            "is_medical": structured_data.get("is_medical", True),
-            "patient_name": structured_data.get("patient_name", ""),
-            "doctor_name": structured_data.get("doctor_name", ""),
-            "hospital_name": structured_data.get("hospital_name", "") or structured_data.get("clinic_name", ""),
-            "date": structured_data.get("date", ""),
-            "medications": structured_data.get("medications", []),
-            "diseases": structured_data.get("diseases", []) or structured_data.get("conditions", []),
-            "digital_copy": structured_data.get("digital_copy", ""),
-            "document_type": structured_data.get("document_type", "prescription"),
-            "test_results": structured_data.get("test_results", [])
-        }
-    except Exception as e:
-        print(f"VLM ERROR (CRITICAL): {e}")
-        # Return empty dict so logs show failure but app doesn't crash
-        return {"is_medical": False, "medications": [], "diseases": [], "digital_copy": "", "test_results": []}
+
+    structured_data = extract_json(prompt, image_bytes=file_bytes, api_key=api_key)
+
+    return {
+        "is_medical": structured_data.get("is_medical", True),
+        "patient_name": structured_data.get("patient_name", ""),
+        "doctor_name": structured_data.get("doctor_name", ""),
+        "hospital_name": structured_data.get("hospital_name", "") or structured_data.get("clinic_name", ""),
+        "date": structured_data.get("date", ""),
+        "medications": structured_data.get("medications", []),
+        "diseases": structured_data.get("diseases", []) or structured_data.get("conditions", []),
+        "digital_copy": structured_data.get("digital_copy", ""),
+        "document_type": structured_data.get("document_type", "prescription"),
+        "test_results": structured_data.get("test_results", [])
+    }
 
 def verify_and_correct_medical_data(extracted_data):
     """
@@ -528,8 +476,18 @@ def analyze_comprehensive(file_stream):
         analyzer_key = os.getenv('GROQ_API_KEY_ANALYZER') or os.getenv('GROQ_API_KEY')
         
         # Phase 1: Structured Extraction (Core 1)
-        extracted_data = analyze_with_vlm(file_stream, custom_api_key=analyzer_key)
-        
+        try:
+            extracted_data = analyze_with_vlm(file_stream, custom_api_key=analyzer_key)
+        except VisionError as e:
+            # Never report an outage as "not a medical document" — that sends
+            # users off re-scanning a perfectly good report.
+            print(f"VLM ERROR (CRITICAL): {e}")
+            return {
+                "analysis": {"medications": [], "diseases": [], "test_results": []},
+                "error": str(e),
+                "summary": "Document analysis is temporarily unavailable because the AI vision service could not be reached. Your document was not read — please try again in a moment."
+            }
+
         # Guardrail: Check if it's medical
         if not extracted_data.get('is_medical', True):
              return {

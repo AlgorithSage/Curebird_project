@@ -5,6 +5,7 @@ import random
 from groq import Groq, RateLimitError, APIError
 from datetime import datetime, timezone, timedelta
 from dotenv import load_dotenv
+from vision_service import extract_json, VisionError
 
 # Load environment variables explicitly
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
@@ -320,35 +321,12 @@ CRITICAL SAFETY:
     def analyze_clinical_document(self, file_stream):
         """
         Analyze a clinical document/image and extract structured metrics.
-        Uses Llama 3.2 90B Vision for high precision extraction.
+        Runs on the shared VLM helper (Groq vision, Gemini fallback).
         """
         try:
-            import base64
-            import mimetypes
-            
-            # Determine mime type
-            # file_stream is likely a SpooledTemporaryFile from Flask
-            # We can't easily get the filename usage here unless passed, 
-            # so we'll try to guess or read header, but simplest is to assume common formats
-            # or pass filename from route.
-            # For now, let's just peek? No, simple hack:
-            # Most safe bet for APIs is often accepting generic or specific.
-            # Let's try to detect from the stream if possible or just use image/jpeg as most robust default 
-            # BUT if input is PNG, explicit png mime is better.
-            
-            # Let's default to jpeg but if it fails we might need better handling.
-            # Actually, standard way is:
-            mime_type = "image/jpeg" # Default
-            
-            # Encode image
             file_stream.seek(0)
             file_bytes = file_stream.read()
-            base64_image = base64.b64encode(file_bytes).decode('utf-8')
-            
-            # Simple magic number check for PNG
-            if file_bytes.startswith(b'\x89PNG'):
-                mime_type = "image/png"
-            
+
             system_prompt = """You are an expert Clinical Data Extractor.
             Your job is to extract quantitative medical test results from lab reports with 100% precision.
             
@@ -376,28 +354,21 @@ CRITICAL SAFETY:
             
             user_prompt = "Extract data from this medical report image."
             
-            completion = self.client.chat.completions.create(
-                model="meta-llama/llama-4-scout-17b-16e-instruct",
-                messages=[
-                    {
-                        "role": "user",
-                        "content": [
-                            {"type": "text", "text": system_prompt},
-                            {"type": "image_url", "image_url": {"url": f"data:{mime_type};base64,{base64_image}"}}
-                        ]
-                    }
-                ],
-                temperature=0.1,
-                max_tokens=2048,
-                response_format={"type": "json_object"}
-            )
-            
-            return json.loads(completion.choices[0].message.content)
+            return extract_json(f"{system_prompt}\n\n{user_prompt}", image_bytes=file_bytes)
 
+        except VisionError as e:
+            print(f"Clinical Extraction Error (all providers failed): {e}")
+            return {
+                "error": f"Document analysis is temporarily unavailable: {e}",
+                "extraction_failed": True,
+                "test_results": [],
+                "summary": "Failed to extract data."
+            }
         except Exception as e:
             print(f"Groq Extraction Error: {e}")
             return {
                 "error": str(e),
+                "extraction_failed": True,
                 "test_results": [],
                 "summary": "Failed to extract data."
             }
