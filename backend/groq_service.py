@@ -19,9 +19,9 @@ class GroqHealthAssistant:
         
         self.client = Groq(api_key=api_key)
         
-        # Models
-        self.MODEL_70B = "llama-3.3-70b-versatile"
-        self.MODEL_8B = "llama-3.1-8b-instant"
+        # Models (Groq retired the llama-3.x chat lineup; gpt-oss is the current tier)
+        self.MODEL_70B = "openai/gpt-oss-120b"
+        self.MODEL_8B = "openai/gpt-oss-20b"
         
         # Initialize conversation history
         self.conversations = {}
@@ -183,6 +183,7 @@ Current Date: {datetime.now(ist).strftime('%B %d, %Y')}
                     max_tokens=1024, # Increased for detailed Feedback AI responses
                     top_p=1,
                     stream=False,
+                    reasoning_effort="low", # gpt-oss models: bound hidden reasoning so it doesn't eat the token budget
                 )
                 
                 response_text = completion.choices[0].message.content
@@ -308,8 +309,9 @@ CRITICAL SAFETY:
                     {"role": "user", "content": user_prompt}
                 ],
                 temperature=0.5,
-                max_tokens=500,
-                response_format={"type": "json_object"} 
+                max_tokens=800,
+                response_format={"type": "json_object"},
+                reasoning_effort="low",
             )
             
             return json.loads(completion.choices[0].message.content)

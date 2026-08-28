@@ -15,7 +15,7 @@ class PatientPersonaService:
             print("Warning: GROQ_API_KEY not found in environment for Patient Service")
         
         self.client = Groq(api_key=api_key)
-        self.MODEL = "llama-3.1-8b-instant" # Fast, efficient model for chat
+        self.MODEL = "openai/gpt-oss-20b" # Fast, efficient model for chat (llama-3.1-8b-instant retired by Groq)
 
     def generate_patient_reply(self, history, patient_context):
         """
@@ -63,9 +63,10 @@ ROLEPLAY RULES:
                 model=self.MODEL,
                 messages=formatted_messages,
                 temperature=0.7, # Slightly creative for variations
-                max_tokens=150,
+                max_tokens=250, # headroom above hidden reasoning tokens
                 top_p=1,
                 stream=False,
+                reasoning_effort="low",
             )
             
             return completion.choices[0].message.content.strip()

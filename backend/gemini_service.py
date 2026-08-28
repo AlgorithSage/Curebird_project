@@ -16,9 +16,9 @@ class GeminiHealthAssistant:
         
         genai.configure(api_key=api_key)
         
-        # Use Gemini 2.5 Flash (Available Model)
+        # gemini-2.5-flash was retired for new API keys (404); gemini-3.6-flash is current
         self.model = genai.GenerativeModel(
-            model_name='gemini-2.5-flash',
+            model_name='gemini-3.6-flash',
             generation_config={
                 'temperature': 0.7,
                 'top_p': 0.95,

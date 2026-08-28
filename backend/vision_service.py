@@ -3,7 +3,7 @@ Shared VLM helper for medical document extraction.
 
 Primary:  Groq (qwen/qwen3.6-27b) — keeps document analysis on the same stack
           as the rest of the AI features.
-Fallback: Gemini (gemini-2.5-flash) — used when Groq rate-limits or errors.
+Fallback: Gemini (gemini-3.6-flash) — used when Groq rate-limits or errors.
           Groq's vision tier allows 8k tokens/min and a single report costs
           ~4.5k, so concurrent uploads hit 429 quickly.
 
@@ -23,7 +23,7 @@ from dotenv import load_dotenv
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 GROQ_VISION_MODEL = os.getenv('GROQ_VISION_MODEL', 'qwen/qwen3.6-27b')
-GEMINI_VISION_MODEL = os.getenv('GEMINI_VISION_MODEL', 'gemini-2.5-flash')
+GEMINI_VISION_MODEL = os.getenv('GEMINI_VISION_MODEL', 'gemini-3.6-flash')
 
 # Reasoning models wrap their scratchpad in <think> tags, which is not valid JSON.
 _THINK_BLOCK = re.compile(r'<think>.*?</think>', re.DOTALL)
@@ -78,6 +78,7 @@ def _groq_vision(prompt, image_bytes, api_key):
         max_tokens=4096,
         response_format={"type": "json_object"},
         reasoning_format="hidden",
+        reasoning_effort="none",  # 'default' burns the whole max_tokens budget on hidden reasoning for dense documents, leaving empty content
     )
     return _parse_json(completion.choices[0].message.content)
 

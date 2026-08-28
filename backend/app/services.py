@@ -426,14 +426,15 @@ def verify_and_correct_medical_data(extracted_data):
         """
         
         completion = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="openai/gpt-oss-120b",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
             ],
-            temperature=0.1, 
+            temperature=0.1,
             max_tokens=2048,
-            response_format={"type": "json_object"}
+            response_format={"type": "json_object"},
+            reasoning_effort="low",
         )
         
         result_json = json.loads(completion.choices[0].message.content)
@@ -609,10 +610,11 @@ If no warnings: **"No drug conflicts, interactions, or mismatches detected."**
 """
 
         summary_completion = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="openai/gpt-oss-120b",
             messages=[{"role": "user", "content": summary_prompt}],
             temperature=0.4,
-            max_tokens=1200
+            max_tokens=1200,
+            reasoning_effort="low",
         )
         
         summary_text = summary_completion.choices[0].message.content
