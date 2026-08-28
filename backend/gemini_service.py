@@ -49,26 +49,9 @@ class GeminiHealthAssistant:
         self.conversations = {}
     
     def load_disease_context(self):
-        """Load current disease trends from cache."""
-        try:
-            cache_file = os.path.join(os.path.dirname(__file__), 'disease_data_cache.json')
-            with open(cache_file, 'r') as f:
-                data = json.load(f)
-            
-            # Data is an array of disease objects
-            diseases = data[:10] if isinstance(data, list) else []
-            
-            context = "Current Disease Trends in India:\n"
-            for i, disease in enumerate(diseases, 1):
-                name = disease.get('disease', 'Unknown')
-                cases = disease.get('outbreaks', 0)
-                year = disease.get('year', 'N/A')
-                context += f"{i}. {name}: {cases:,} cases ({year})\n"
-            
-            return context
-        except Exception as e:
-            print(f"Error loading disease context: {e}")
-            return "Disease trend data temporarily unavailable."
+        """Load current disease trends from the surveillance pipeline."""
+        from disease_context import build_context_string
+        return build_context_string()
     
     def create_system_prompt(self):
         """Create system prompt with disease context."""
@@ -140,24 +123,12 @@ Remember: You are an informational assistant, not a replacement for professional
     
     def get_disease_context(self):
         """Get formatted disease context for frontend display."""
+        from disease_context import get_disease_records
+
         try:
-            cache_file = os.path.join(os.path.dirname(__file__), 'disease_data_cache.json')
-            with open(cache_file, 'r') as f:
-                data = json.load(f)
-            
-            # Data is an array, format it for frontend
-            diseases = []
-            for disease in data[:10]:
-                diseases.append({
-                    'name': disease.get('disease', 'Unknown'),
-                    'cases': disease.get('outbreaks', 0),
-                    'risk_level': 'High' if disease.get('outbreaks', 0) > 100000 else 'Medium' if disease.get('outbreaks', 0) > 10000 else 'Low',
-                    'year': disease.get('year', 'N/A')
-                })
-            
             return {
                 'success': True,
-                'diseases': diseases,
+                'diseases': get_disease_records(),
                 'last_updated': 'Recently'
             }
         except Exception as e:
