@@ -907,6 +907,14 @@ body {
   font-family: 'Garet', 'Space Grotesk', sans-serif;
 }
 
+/* ─── Tertiary / Meta Text Utility ───────────────────────
+   Labels, units and captions. Space Mono (Google Fonts) is the
+   monospace sibling of Space Grotesk, so meta text stays on the
+   type system instead of falling back to the OS monospace face. */
+.font-tertiary {
+  font-family: 'Space Mono', 'Space Grotesk', ui-monospace, monospace;
+}
+
 /* ─── Unified Button Shimmer Animation ──────────────── */
 
 @keyframes shimmer-sweep {
@@ -1070,6 +1078,114 @@ a:hover .hover-shimmer {
   filter: blur(12px);
   opacity: 0.8;
   transform: scale(1.15);
+}
+
+/* ─── Medication Card (Cure Analyzer) ────────────────────
+   Solid amber panel with black text. Deliberately opts out of the
+   glass treatment used elsewhere: no backdrop blur, no glow, no
+   translucent gradient — a flat, opaque surface. Scoped to its own
+   class so the shared .glass-card-amber used by other views is
+   untouched. */
+.med-card {
+  position: relative;
+  border-radius: 1rem;
+  background: #fbbf24;
+  border: 1px solid #d97706;
+  color: #0a0a0a;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+  filter: none;
+  overflow: hidden;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.med-card:hover {
+  background: #fcd34d;
+  border-color: #b45309;
+}
+
+/* Black icon tile — maximum contrast against the amber field. */
+.med-icon-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.75rem;
+  background: #0a0a0a;
+  color: #fbbf24;
+  box-shadow: none;
+  flex-shrink: 0;
+}
+
+/* Dosage / frequency chips: translucent black on amber. */
+.med-meta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.75rem;
+  background: rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  color: #0a0a0a;
+  box-shadow: none;
+}
+
+.med-badge-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  background: #0a0a0a;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  color: #fbbf24;
+  box-shadow: none;
+}
+
+/* Nested alternatives panel — a deeper amber step so it separates
+   from the card without reintroducing blur or shadow. */
+.med-alt-panel {
+  border-radius: 1rem;
+  background: #f59e0b;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  color: #0a0a0a;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.med-alt-panel-head {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.22);
+}
+
+/* Brand-alternative pills: cream on the deeper amber panel, black
+   text, flat — no glow layer, no blur, no drop shadow. */
+.amber-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  padding: 0.375rem 0.75rem;
+  background: #fffbeb;
+  border: 1px solid #92400e;
+  color: #0a0a0a;
+  font-family: 'Garet', 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+  box-shadow: none;
+  filter: none;
+  user-select: none;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.amber-pill:hover {
+  background: #ffffff;
+  transform: translateY(-1px);
 }
 
 /* Red / Destructive Glass Button Styles */

@@ -562,7 +562,7 @@ const CureAnalyzer = ({
                       </span>{" "}
                       or drag file
                     </p>
-                    <p className="text-xs text-slate-500 font-mono mb-4">
+                    <p className="text-xs text-slate-500 font-tertiary mb-4">
                       SUPPORTED: PNG, JPG, GIF (MAX 10MB)
                     </p>
 
@@ -610,7 +610,7 @@ const CureAnalyzer = ({
               <div className="mt-6 p-4 bg-slate-900 border border-emerald-500/30 rounded-xl flex items-center gap-3 shadow-lg z-10 relative overflow-hidden group/file">
                 <div className="absolute inset-0 bg-emerald-500/5 group-hover/file:bg-emerald-500/10 transition-colors"></div>
                 <div className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_10px_#34d399] animate-pulse"></div>
-                <p className="text-sm text-emerald-200 truncate font-mono tracking-wide">
+                <p className="text-sm text-emerald-200 truncate font-tertiary tracking-wide">
                   {selectedFile.name}
                 </p>
               </div>
@@ -683,7 +683,7 @@ const CureAnalyzer = ({
                     <p className="text-amber-400 font-bold tracking-widest text-sm animate-pulse">
                       PROCESSING DATA...
                     </p>
-                    <p className="text-slate-500 text-xs font-mono">
+                    <p className="text-slate-500 text-xs font-tertiary">
                       Running VLM Sequence v2.2
                     </p>
                   </div>
@@ -829,7 +829,7 @@ const CureAnalyzer = ({
                           ))}
                         </div>
                       ) : (
-                        <p className="text-slate-600 text-xs italic font-mono pl-2">
+                        <p className="text-slate-600 text-xs italic font-tertiary pl-2">
                           -- No specific conditions detected --
                         </p>
                       )}
@@ -863,12 +863,12 @@ const CureAnalyzer = ({
                               </div>
                               <div className="flex items-baseline gap-2">
                                 <span className="text-xl font-black text-white">{test.result_value}</span>
-                                <span className="text-xs text-slate-500 font-mono">{test.unit}</span>
+                                <span className="text-xs text-slate-500 font-tertiary">{test.unit}</span>
                               </div>
                               {test.reference_range && (
                                 <div className="mt-2 text-[10px] text-slate-500 flex items-center gap-1">
                                   <span>Ref:</span>
-                                  <span className="font-mono bg-slate-800 px-1.5 py-0.5 rounded text-slate-400">
+                                  <span className="font-tertiary bg-slate-800 px-1.5 py-0.5 rounded text-slate-400">
                                     {test.reference_range}
                                   </span>
                                 </div>
@@ -899,76 +899,70 @@ const CureAnalyzer = ({
                         {analysisResult.analysis.medications.map((med, i) => (
                           <div
                             key={i}
-                            className="glass-card-amber !rounded-2xl !p-0 !hover:translate-y-0 group/med"
+                            className="med-card group/med"
                           >
                             <div className="p-4">
                               {/* Medicine name + verified badge */}
                               <div className="flex items-start justify-between gap-3 mb-3">
                                 <div className="flex items-center gap-3 min-w-0">
-                                  <div className="glass-button-wrap shrink-0">
-                                    <span className="glass-button !rounded-xl !w-9 !h-9 !p-0 flex items-center justify-center">
-                                      <Pill size={15} />
-                                    </span>
-                                    <span className="glass-button-shadow" />
-                                  </div>
+                                  <span className="med-icon-chip">
+                                    <Pill size={15} />
+                                  </span>
                                   <div className="min-w-0">
-                                    <p className="font-garet font-black text-white text-sm leading-tight tracking-tight truncate">
+                                    <p className="font-garet font-black text-black text-sm leading-tight tracking-tight truncate">
                                       {med.name || med.medicine_name || med.input || "Unknown Medicine"}
                                     </p>
-                                    <p className="font-mono text-[9px] text-amber-500/50 mt-0.5 uppercase tracking-widest">
+                                    <p className="font-tertiary text-[9px] text-black/60 mt-0.5 uppercase tracking-widest">
                                       Prescribed Medication
                                     </p>
                                   </div>
                                 </div>
                                 {med.is_corrected && (
-                                  <div className="flex items-center gap-1.5 shrink-0 px-2.5 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/10">
-                                    <ShieldCheck size={10} className="text-emerald-400" />
-                                    <span className="font-garet text-[10px] text-emerald-400 font-bold tracking-wider uppercase">Verified</span>
+                                  <div className="med-badge-verified shrink-0">
+                                    <ShieldCheck size={10} />
+                                    <span className="font-garet text-[10px] font-bold tracking-wider uppercase">Verified</span>
                                   </div>
                                 )}
                               </div>
 
                               {/* Dosage + Frequency chips */}
                               <div className="flex flex-wrap gap-2 mb-4">
-                                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/[0.07] bg-white/[0.03]">
-                                  <Info size={10} className="text-amber-500/60 shrink-0" />
-                                  <span className="font-mono text-[11px] text-slate-300">
+                                <div className="med-meta-chip">
+                                  <Info size={10} className="shrink-0" />
+                                  <span className="font-tertiary text-[11px]">
                                     {med.dosage && typeof med.dosage === 'object'
                                       ? (med.dosage.dosage || JSON.stringify(med.dosage))
                                       : med.dosage || 'N/A'}
                                   </span>
                                 </div>
-                                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/[0.07] bg-white/[0.03]">
-                                  <Clock size={10} className="text-amber-500/60 shrink-0" />
-                                  <span className="font-mono text-[11px] text-slate-300">
+                                <div className="med-meta-chip">
+                                  <Clock size={10} className="shrink-0" />
+                                  <span className="font-tertiary text-[11px]">
                                     {med.frequency || 'N/A'}
                                   </span>
                                 </div>
                               </div>
 
                               {/* Alternatives — primary focal section */}
-                              <div className="rounded-2xl border border-amber-500/20 bg-gradient-to-br from-amber-500/10 to-black/40 overflow-hidden">
-                                <div className="flex items-center gap-2 px-3 pt-3 pb-2 border-b border-amber-500/10">
-                                  <RefreshCw size={11} className="text-amber-400 shrink-0" />
-                                  <span className="font-garet text-[10px] font-black uppercase tracking-[0.2em] text-amber-300/90">
+                              <div className="med-alt-panel">
+                                <div className="med-alt-panel-head flex items-center gap-2 px-3 pt-3 pb-2">
+                                  <RefreshCw size={11} className="shrink-0" />
+                                  <span className="font-garet text-[10px] font-black uppercase tracking-[0.2em] text-black">
                                     Approved Brand Alternatives
                                   </span>
-                                  <span className="ml-auto font-mono text-[9px] text-slate-600 italic">same active salt</span>
+                                  <span className="ml-auto font-tertiary text-[9px] text-black/55 italic">same active salt</span>
                                 </div>
                                 <div className="p-3">
                                   {med.alternatives && med.alternatives.length > 0 ? (
                                     <div className="flex flex-wrap gap-2">
                                       {med.alternatives.map((alt, idx) => (
-                                        <span key={idx} className="glass-button-wrap cursor-default">
-                                          <span className="glass-button !rounded-xl px-3 py-1.5 font-garet text-xs font-bold tracking-wide">
-                                            <span className="glass-button-text">{alt}</span>
-                                          </span>
-                                          <span className="glass-button-shadow" />
+                                        <span key={idx} className="amber-pill cursor-default">
+                                          {alt}
                                         </span>
                                       ))}
                                     </div>
                                   ) : (
-                                    <p className="font-garet text-[10px] text-slate-600 italic text-center py-1">
+                                    <p className="font-tertiary text-[10px] text-black/60 italic text-center py-1">
                                       No alternatives on record
                                     </p>
                                   )}
@@ -979,7 +973,7 @@ const CureAnalyzer = ({
                         ))}
                       </div>
                     ) : (
-                      <p className="text-slate-600 text-xs italic font-mono pl-2">
+                      <p className="text-slate-600 text-xs italic font-tertiary pl-2">
                         -- No medications detected --
                       </p>
                     )}
@@ -992,7 +986,7 @@ const CureAnalyzer = ({
                   <div className="w-24 h-24 rounded-full border border-dashed border-slate-500 flex items-center justify-center">
                     <Bot size={40} className="text-slate-500" />
                   </div>
-                  <p className="text-white font-bold font-mono text-xs tracking-widest uppercase">
+                  <p className="text-white font-bold font-tertiary text-xs tracking-widest uppercase">
                     System Standby // Awaiting Input
                   </p>
                 </div>
@@ -1273,7 +1267,7 @@ const CureAnalyzer = ({
                     </div>
                   </div>
                   {/* Footer */}
-                  <div className="mt-12 pt-6 border-t border-slate-100 flex justify-between items-center text-[10px] text-slate-400 font-mono uppercase tracking-widest">
+                  <div className="mt-12 pt-6 border-t border-slate-100 flex justify-between items-center text-[10px] text-slate-400 font-tertiary uppercase tracking-widest">
                     <span>Generated by CureBird AI</span>
                     <span>{new Date().toLocaleDateString()}</span>
                   </div>
