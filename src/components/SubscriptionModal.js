@@ -53,9 +53,16 @@ const SubscriptionModal = ({ isOpen, onClose, onSubscribe }) => {
                 return;
             }
 
+            // The backend derives the account from this token rather than from
+            // the body, so a promo can only ever be redeemed for the caller.
+            const idToken = await currentUser.getIdToken();
+
             const response = await fetch(`${API_BASE_URL}/api/pay/verify-promo`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${idToken}`
+                },
                 body: JSON.stringify({
                     code: promoCode,
                     uid: currentUser.uid

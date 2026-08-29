@@ -10,8 +10,8 @@ import SocialDeterminants from './SocialDeterminants';
 import EnvironmentalHealth from './EnvironmentalHealth';
 import RareDisease from './RareDisease';
 import StateHealthProfile from './StateHealthProfile';
-import NationalHealthNews from './NationalHealthNews';
 import { API_BASE_URL } from '../config';
+import NationalHealthNews from './NationalHealthNews';
 import { Button } from './ui/button';
 
 
@@ -35,44 +35,7 @@ const loadGoogleMapsScript = (apiKey) => {
 
 // Geographic coordinates for Indian states
 // Geographic coordinates for Indian states and UTs
-const STATE_COORDINATES = {
-    'Andaman and Nicobar Islands': { lat: 11.7401, lng: 92.6586 },
-    'Andhra Pradesh': { lat: 15.9129, lng: 79.7400 },
-    'Arunachal Pradesh': { lat: 28.2180, lng: 94.7278 },
-    'Assam': { lat: 26.2006, lng: 92.9376 },
-    'Bihar': { lat: 25.0961, lng: 85.3131 },
-    'Chandigarh': { lat: 30.7333, lng: 76.7794 },
-    'Chhattisgarh': { lat: 21.2787, lng: 81.8661 },
-    'Dadra and Nagar Haveli and Daman and Diu': { lat: 20.1809, lng: 73.0169 },
-    'Delhi': { lat: 28.7041, lng: 77.1025 },
-    'Goa': { lat: 15.2993, lng: 74.1240 },
-    'Gujarat': { lat: 22.2587, lng: 71.1924 },
-    'Haryana': { lat: 29.0588, lng: 76.0856 },
-    'Himachal Pradesh': { lat: 31.1048, lng: 77.1734 },
-    'Jammu and Kashmir': { lat: 33.7782, lng: 76.5762 },
-    'Jharkhand': { lat: 23.6102, lng: 85.2799 },
-    'Karnataka': { lat: 15.3173, lng: 75.7139 },
-    'Kerala': { lat: 10.8505, lng: 76.2711 },
-    'Ladakh': { lat: 34.1526, lng: 77.5770 },
-    'Lakshadweep': { lat: 10.5667, lng: 72.6417 },
-    'Madhya Pradesh': { lat: 22.9734, lng: 78.6569 },
-    'Maharashtra': { lat: 19.7515, lng: 75.7139 },
-    'Manipur': { lat: 24.6637, lng: 93.9063 },
-    'Meghalaya': { lat: 25.4670, lng: 91.3662 },
-    'Mizoram': { lat: 23.1645, lng: 92.9376 },
-    'Nagaland': { lat: 26.1584, lng: 94.5624 },
-    'Odisha': { lat: 20.9517, lng: 85.0985 },
-    'Puducherry': { lat: 11.9416, lng: 79.8083 },
-    'Punjab': { lat: 31.1471, lng: 75.3412 },
-    'Rajasthan': { lat: 27.0238, lng: 74.2179 },
-    'Sikkim': { lat: 27.5330, lng: 88.5122 },
-    'Tamil Nadu': { lat: 11.1271, lng: 78.6569 },
-    'Telangana': { lat: 18.1124, lng: 79.0193 },
-    'Tripura': { lat: 23.9408, lng: 91.9882 },
-    'Uttar Pradesh': { lat: 26.8467, lng: 80.9462 },
-    'Uttarakhand': { lat: 30.0668, lng: 79.0193 },
-    'West Bengal': { lat: 22.9868, lng: 87.8550 }
-};
+
 
 const LOADING_FACTS = [
     "Use our 'Cure Analyzer' to instantly interpret complex medical prescriptions.",
@@ -85,6 +48,8 @@ const LOADING_FACTS = [
 const HeatmapModal = ({ isOpen, onClose, regionalData }) => {
     const mapRef = React.useRef(null);
     const [mapError, setMapError] = useState(null);
+    const [legend, setLegend] = useState([]);
+    const [meta, setMeta] = useState(null);
 
     useEffect(() => {
         if (!isOpen) return;
@@ -96,72 +61,131 @@ const HeatmapModal = ({ isOpen, onClose, regionalData }) => {
             return;
         }
 
-        loadGoogleMapsScript(GOOGLE_MAPS_API_KEY)
-            .then(() => {
-                if (!mapRef.current) return;
+        let cancelled = false;
+
+        Promise.all([
+            loadGoogleMapsScript(GOOGLE_MAPS_API_KEY),
+            fetch(`${API_BASE_URL}/api/disease-geography?scope=dominant`).then(r => r.json()),
+        ])
+            .then(([, payload]) => {
+                if (cancelled || !mapRef.current) return;
+
+                if (!payload || payload.success === false || !payload.dominant) {
+                    setMapError(payload?.error || 'State-wise disease data is unavailable right now.');
+                    return;
+                }
+
+                setMeta({ note: payload.note, source: payload.source });
+
+                // Same normalisation the backend applies, so the GeoJSON join
+                // cannot silently half-fail and leave states grey.
+                const norm = (name) => (name || '')
+                    .replace(/[*#]/g, '')
+                    .trim()
+                    .replace(/\s+/g, ' ')
+                    .replace(/ & /g, ' and ')
+                    .toLowerCase()
+                    .replace(/^orissa$/, 'odisha')
+                    .replace(/^uttaranchal$/, 'uttarakhand')
+                    .replace(/^andaman and nicobar$/, 'andaman and nicobar islands')
+                    .replace(/^(dadra and nagar haveli|daman and diu)$/, 'dadra and nagar haveli and daman and diu');
+
+                const byState = {};
+                payload.dominant.forEach(d => { byState[norm(d.state)] = d; });
+
+                const diseases = [...new Set(payload.dominant.map(d => d.disease))].sort();
+                const palette = ['#f59e0b', '#ef4444', '#38bdf8', '#a855f7', '#10b981', '#ec4899'];
+                const colorOf = {};
+                diseases.forEach((d, i) => { colorOf[d] = palette[i % palette.length]; });
+                setLegend(diseases.map(d => ({ disease: d, color: colorOf[d] })));
 
                 const map = new window.google.maps.Map(mapRef.current, {
-                    zoom: 5,
-                    center: { lat: 20.5937, lng: 78.9629 },
+                    zoom: 4.6,
+                    center: { lat: 22.5, lng: 80.0 },
                     mapTypeId: 'roadmap',
+                    disableDefaultUI: true,
+                    zoomControl: true,
                     styles: [
-                        { "elementType": "geometry", "stylers": [{ "color": "#1e293b" }] },
-                        { "elementType": "labels.text.stroke", "stylers": [{ "color": "#0f172a" }] },
-                        { "elementType": "labels.text.fill", "stylers": [{ "color": "#94a3b8" }] },
-                        { "featureType": "water", "elementType": "geometry", "stylers": [{ "color": "#0f172a" }] }
+                        { elementType: 'geometry', stylers: [{ color: '#0f172a' }] },
+                        { elementType: 'labels', stylers: [{ visibility: 'off' }] },
+                        { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#020617' }] },
+                        { featureType: 'administrative', elementType: 'geometry', stylers: [{ visibility: 'off' }] }
                     ]
                 });
 
-                const heatmapData = [];
-                regionalData.forEach(region => {
-                    const coords = STATE_COORDINATES[region.name];
-                    if (coords) {
-                        const intensity = Math.ceil(region.value / 10);
-                        for (let i = 0; i < intensity; i++) {
-                            heatmapData.push(
-                                new window.google.maps.LatLng(
-                                    coords.lat + (Math.random() - 0.5) * 0.5,
-                                    coords.lng + (Math.random() - 0.5) * 0.5
-                                )
-                            );
-                        }
+                map.data.loadGeoJson('/india_states.geojson', { idPropertyName: 'state' });
 
-                        const marker = new window.google.maps.Marker({
-                            position: coords,
-                            map: map,
-                            title: region.name,
-                            icon: {
-                                path: window.google.maps.SymbolPath.CIRCLE,
-                                scale: 8,
-                                fillColor: '#38bdf8',
-                                fillOpacity: 0.8,
-                                strokeColor: '#0ea5e9',
-                                strokeWeight: 2
-                            }
-                        });
-
-                        const infoWindow = new window.google.maps.InfoWindow({
-                            content: `<div style="color: #1e293b; padding: 8px;"><h3 style="margin: 0 0 4px 0; font-weight: bold;">${region.name}</h3><p style="margin: 0; font-size: 14px;">${region.value} cases</p></div>`
-                        });
-
-                        marker.addListener('click', () => {
-                            infoWindow.open(map, marker);
-                        });
-                    }
+                map.data.setStyle(feature => {
+                    const hit = byState[norm(feature.getProperty('state'))];
+                    return {
+                        fillColor: hit ? colorOf[hit.disease] : '#334155',
+                        // Opacity carries the location quotient: the stronger a
+                        // state's specialisation, the more solid its fill.
+                        fillOpacity: hit ? Math.min(0.85, 0.3 + (hit.location_quotient - 1) * 0.28) : 0.12,
+                        strokeColor: '#0b1220',
+                        strokeWeight: 0.8,
+                    };
                 });
 
-                new window.google.maps.visualization.HeatmapLayer({
-                    data: heatmapData,
-                    map: map,
-                    radius: 50,
-                    gradient: ['rgba(0, 255, 255, 0)', 'rgba(0, 255, 255, 1)', 'rgba(0, 191, 255, 1)', 'rgba(0, 127, 255, 1)', 'rgba(0, 63, 255, 1)', 'rgba(0, 0, 255, 1)', 'rgba(63, 0, 91, 1)', 'rgba(127, 0, 63, 1)', 'rgba(191, 0, 31, 1)', 'rgba(255, 0, 0, 1)']
+                const info = new window.google.maps.InfoWindow();
+
+                map.data.addListener('mouseover', e => {
+                    map.data.overrideStyle(e.feature, { strokeColor: '#ffffff', strokeWeight: 2 });
+                });
+                map.data.addListener('mouseout', () => map.data.revertStyle());
+
+                map.data.addListener('click', e => {
+                    const stateName = e.feature.getProperty('state');
+                    const hit = byState[norm(stateName)];
+
+                    if (!hit) {
+                        info.setContent(
+                            `<div style="color:#0f172a;padding:8px;font-family:system-ui">
+                               <strong>${stateName}</strong>
+                               <div style="font-size:12px;color:#64748b;margin-top:4px">No state-wise data published</div>
+                             </div>`);
+                        info.setPosition(e.latLng);
+                        info.open(map);
+                        return;
+                    }
+
+                    const rows = Object.entries(hit.breakdown)
+                        .sort((a, b) => b[1].lq - a[1].lq)
+                        .map(([name, v]) =>
+                            `<tr>
+                               <td style="padding:2px 8px 2px 0">${name}</td>
+                               <td style="text-align:right;padding:2px 8px 2px 0">${v.cases.toLocaleString()}</td>
+                               <td style="text-align:right;color:#64748b">${v.lq}x</td>
+                             </tr>`).join('');
+
+                    info.setContent(
+                        `<div style="color:#0f172a;padding:10px;font-family:system-ui;min-width:250px">
+                           <strong style="font-size:15px">${stateName}</strong>
+                           <div style="color:${colorOf[hit.disease]};font-weight:700;margin:4px 0 8px">
+                             ${hit.disease}
+                           </div>
+                           <table style="font-size:12px;border-collapse:collapse">
+                             <tr style="color:#64748b;font-size:10px;text-transform:uppercase">
+                               <td>Disease</td><td style="text-align:right">Cases</td><td style="text-align:right">Index</td>
+                             </tr>
+                             ${rows}
+                           </table>
+                           <div style="font-size:10px;color:#94a3b8;margin-top:8px">
+                             ${hit.share_of_national_pct}% of national total &middot; ${hit.year}
+                           </div>
+                         </div>`);
+                    info.setPosition(e.latLng);
+                    info.open(map);
                 });
             })
             .catch(err => {
-                console.error('Error loading Google Maps:', err);
-                setMapError('Failed to load Google Maps.');
+                if (cancelled) return;
+                console.error('Disease map failed to load:', err);
+                setMapError('Failed to load the disease map.');
             });
-    }, [isOpen, regionalData]);
+
+        return () => { cancelled = true; };
+    }, [isOpen]);
 
     if (!isOpen) return null;
 
@@ -178,15 +202,15 @@ const HeatmapModal = ({ isOpen, onClose, regionalData }) => {
                             <ArrowLeft size={24} className="group-hover:-translate-x-1 transition-transform" />
                         </button>
                         <div>
-                            <h2 className="text-2xl font-bold text-white flex items-center gap-3"><Map className="text-sky-400" size={28} />Disease Heatmap - India</h2>
+                            <h2 className="text-2xl font-bold text-white flex items-center gap-3"><Map className="text-sky-400" size={28} />Disease Map - India</h2>
                             <div className="mt-2 space-y-1">
                                 <p className="text-slate-300 text-sm font-medium">
-                                    Visualize the intensity of disease outbreaks across regions.
-                                    <span className="text-red-400 font-bold ml-1">Red zones</span> indicate high-density clusters, while
-                                    <span className="text-sky-400 font-bold ml-1">Blue zones</span> show lower activity.
+                                    Each state is coloured by the disease most <span className="text-white font-bold">over-represented</span> there —
+                                    its share of that disease's national total, relative to the state's own reporting volume.
+                                    Deeper shading means stronger concentration. Click a state for the full breakdown.
                                 </p>
                                 <p className="text-slate-500 text-xs mt-1">
-                                    Use this interactive tool to identify regional hotspots and track epidemiological spread in real-time.
+                                    {meta?.source || 'Government state-wise releases via data.gov.in'} &middot; annual reported cases, not live surveillance &middot; not population-adjusted.
                                 </p>
                             </div>
                         </div>
@@ -202,7 +226,28 @@ const HeatmapModal = ({ isOpen, onClose, regionalData }) => {
                             </div>
                         </div>
                     ) : (
-                        <div ref={mapRef} className="w-full h-full" />
+                        <>
+                            <div ref={mapRef} className="w-full h-full" />
+                            {legend.length > 0 && (
+                                <div className="absolute bottom-4 left-4 bg-slate-900/90 backdrop-blur border border-slate-700 rounded-2xl p-4 max-w-xs">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">
+                                        Most over-represented disease
+                                    </p>
+                                    <div className="space-y-1.5">
+                                        {legend.map(({ disease, color }) => (
+                                            <div key={disease} className="flex items-center gap-2">
+                                                <span className="w-3 h-3 rounded-sm shrink-0" style={{ backgroundColor: color }} />
+                                                <span className="text-xs text-slate-200">{disease}</span>
+                                            </div>
+                                        ))}
+                                        <div className="flex items-center gap-2 pt-1">
+                                            <span className="w-3 h-3 rounded-sm shrink-0 bg-slate-700" />
+                                            <span className="text-xs text-slate-500 italic">No data published</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </>
                     )}
                 </div>
             </motion.div>
@@ -613,8 +658,6 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigate, o
     // --- Dynamic Loading Screen Logic ---
     const [currentFactIndex, setCurrentFactIndex] = useState(0);
 
-
-
     useEffect(() => {
         if (!loading) return;
         const interval = setInterval(() => {
@@ -1020,8 +1063,6 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigate, o
                     </motion.div>
                 </div>
 
-
-
                 {/* --- NEW SECTION: Environmental Health (Corrected Position) --- */}
                 <motion.div
                     initial="hidden"
@@ -1177,8 +1218,6 @@ const CureStat = ({ user, onLogout, onLoginClick, onToggleSidebar, onNavigate, o
                 >
                     <SocialDeterminants />
                 </motion.div>
-
-
 
                 {/* --- NEW SECTION: Rare Diseases --- */}
                 <motion.div

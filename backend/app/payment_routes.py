@@ -42,14 +42,35 @@ except Exception as e:
 
 # --- Helpers -------------------------------------------------------------
 def _get_db():
-    """Lazily initialize firebase-admin and return a Firestore client (or None)."""
+    """Lazily initialize firebase-admin and return a Firestore client (or None).
+
+    Credentials are resolved in this order:
+      1. FIREBASE_SERVICE_ACCOUNT_JSON  — the whole service-account JSON pasted
+         into one env var. This is the path for Render and any host without a
+         persistent disk or a metadata server.
+      2. GOOGLE_APPLICATION_CREDENTIALS — a path to a key file, for local dev.
+      3. Application Default Credentials — works on Cloud Run / GCE, which
+         supply the service account automatically. Was the only path before,
+         which is why Firestore writes silently no-opped after the move to
+         Render: no metadata server, so ADC had nothing to find.
+    """
     try:
         import firebase_admin
-        from firebase_admin import firestore
+        from firebase_admin import credentials, firestore
 
         if not firebase_admin._apps:
-            # Cloud Run supplies the service account automatically.
-            firebase_admin.initialize_app()
+            raw = os.getenv('FIREBASE_SERVICE_ACCOUNT_JSON')
+            key_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
+
+            if raw:
+                import json as _json
+                firebase_admin.initialize_app(
+                    credentials.Certificate(_json.loads(raw))
+                )
+            elif key_path and os.path.exists(key_path):
+                firebase_admin.initialize_app(credentials.Certificate(key_path))
+            else:
+                firebase_admin.initialize_app()
 
         return firestore.client()
     except Exception as e:
@@ -74,6 +95,30 @@ def _persist_subscription(uid, fields):
     except Exception as e:
         print(f"persist_subscription error: {e}")
         return False
+
+
+def _verify_caller_uid():
+    """Return the uid proven by the caller's Firebase ID token, else None.
+
+    The promo endpoint used to trust a uid supplied in the request body, which
+    let anyone grant Premium to any account. The uid now has to be proven.
+    """
+    header = request.headers.get('Authorization', '')
+    if not header.startswith('Bearer '):
+        return None
+
+    token = header.split(' ', 1)[1].strip()
+    if not token:
+        return None
+
+    try:
+        if not _get_db():          # ensures firebase-admin is initialised
+            return None
+        from firebase_admin import auth as fb_auth
+        return fb_auth.verify_id_token(token).get('uid')
+    except Exception as e:
+        print(f"ID token verification failed: {e}")
+        return None
 
 
 def _resolve_plan_id(plan_type, selected_plan):
@@ -205,12 +250,30 @@ def verify_subscription():
 
         if hmac.compare_digest(generated_signature, razorpay_signature):
             # SUCCESS — persist the authenticated subscription to Firestore.
-            _persist_subscription(uid, {
+            persisted = _persist_subscription(uid, {
                 'subscriptionId': razorpay_subscription_id,
                 'subscriptionStatus': 'authenticated',
                 'lastPaymentId': razorpay_payment_id,
                 'subscriptionDate': datetime.now().isoformat(),
             })
+
+            if not persisted:
+                # The payment is genuine but we could not record it. Reporting
+                # "active" here would leave the user paying for entitlements the
+                # app has no record of, so surface it instead of swallowing it.
+                print(f"CRITICAL: payment {razorpay_payment_id} verified but NOT persisted "
+                      f"(uid={uid or 'missing'}). Subscription {razorpay_subscription_id} "
+                      f"needs manual reconciliation.")
+                return jsonify({
+                    'success': False,
+                    'status': 'unrecorded',
+                    'subscription_id': razorpay_subscription_id,
+                    'payment_id': razorpay_payment_id,
+                    'error': ('Your payment was authenticated but we could not save your '
+                              'subscription. Please contact support with this payment ID — '
+                              'you have not been charged again.'),
+                }), 500
+
             return jsonify({'success': True, 'status': 'active'})
         else:
             return jsonify({'error': 'Invalid Signature'}), 400
@@ -318,35 +381,54 @@ def verify_promo():
         promo_code = data.get('code')
         user_uid = data.get('uid')
 
-        if not promo_code or not user_uid:
-            return jsonify({'success': False, 'error': 'Missing code or uid'}), 400
+        if not promo_code:
+            return jsonify({'success': False, 'error': 'Missing code'}), 400
 
-        # Hardcoded Developer Secret
-        DEV_CODE = "CUREBIRD_DEV_2025"
+        # The code lives in the environment, never in the source. With no code
+        # configured the endpoint is closed rather than falling back to a
+        # default — a shipped default is the same as no secret at all.
+        dev_code = os.getenv('DEV_PROMO_CODE')
+        if not dev_code:
+            print("verify-promo called but DEV_PROMO_CODE is not configured; refusing.")
+            return jsonify({'success': False, 'error': 'Promo codes are not enabled'}), 403
 
-        if promo_code.strip() == DEV_CODE:
-            # Grant Premium Access
-            db = _get_db()
-            if not db:
-                return jsonify({'success': False, 'error': "Database connection failed"}), 500
+        # The caller must prove who they are. Previously the uid came straight
+        # from the request body, so anyone holding the code could grant Premium
+        # to any account — including accounts that are not theirs.
+        caller_uid = _verify_caller_uid()
+        if not caller_uid:
+            return jsonify({'success': False,
+                            'error': 'Authentication required'}), 401
 
-            from firebase_admin import firestore
-            user_ref = db.collection('users').document(user_uid)
-            user_ref.update({
-                'subscriptionTier': 'Premium',
-                'subscriptionStatus': 'active',
-                'planId': 'developer_promo_lifetime',
-                'subscriptionDate': firestore.SERVER_TIMESTAMP,
-                'paymentMethod': 'PROMO_CODE'
-            })
+        if user_uid and user_uid != caller_uid:
+            print(f"verify-promo: caller {caller_uid} tried to redeem for {user_uid}; refused.")
+            return jsonify({'success': False,
+                            'error': 'You can only redeem a promo code for your own account'}), 403
 
-            return jsonify({
-                'success': True,
-                'message': 'Developer Access Granted',
-                'tier': 'Premium'
-            }), 200
-        else:
+        if not hmac.compare_digest(promo_code.strip(), dev_code):
             return jsonify({'success': False, 'error': 'Invalid Promo Code'}), 400
+
+        db = _get_db()
+        if not db:
+            return jsonify({'success': False, 'error': "Database connection failed"}), 500
+
+        from firebase_admin import firestore
+        # set(merge=True), not update(): update() raises if the user document
+        # does not exist yet.
+        db.collection('users').document(caller_uid).set({
+            'subscriptionTier': 'Premium',
+            'subscriptionStatus': 'active',
+            'planId': 'developer_promo_lifetime',
+            'subscriptionDate': firestore.SERVER_TIMESTAMP,
+            'paymentMethod': 'PROMO_CODE'
+        }, merge=True)
+
+        print(f"verify-promo: Premium granted to {caller_uid}")
+        return jsonify({
+            'success': True,
+            'message': 'Developer Access Granted',
+            'tier': 'Premium'
+        }), 200
 
     except Exception as e:
         print(f"Promo Error: {e}")

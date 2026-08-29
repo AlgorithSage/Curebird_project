@@ -221,6 +221,51 @@ def get_resource_distribution():
         return jsonify({"error": "Data unavailable"}), 500
 
 
+@app.route('/api/disease-geography', methods=['GET'])
+def get_disease_geography_route():
+    """State-wise disease burden from government releases.
+
+    ?disease=<name>  one disease's state ranking
+    ?scope=dominant  only the comparative "which disease characterises each
+                     state" view, for the choropleth
+    """
+    from disease_geography_service import get_disease_geography, DiseaseGeographyError
+
+    try:
+        data = get_disease_geography()
+
+        requested = (request.args.get('disease') or '').strip()
+        disease = requested.lower()
+        if disease:
+            match = next((k for k in data['by_disease'] if k.lower() == disease), None)
+            if match is None:
+                match = next((k for k in data['by_disease'] if disease in k.lower()), None)
+            if match is None:
+                return jsonify({
+                    'success': False,
+                    'error': 'No state-wise data published for "{}"'.format(requested),
+                    'available_diseases': data['available_diseases'],
+                }), 404
+            return jsonify({'success': True, **data['by_disease'][match], 'note': data['note']})
+
+        if (request.args.get('scope') or '').strip().lower() == 'dominant':
+            return jsonify({
+                'success': True,
+                'dominant': data['dominant'],
+                'available_diseases': data['available_diseases'],
+                'source': data['source'],
+                'note': data['note'],
+            })
+
+        return jsonify(data)
+
+    except DiseaseGeographyError as e:
+        return jsonify({'success': False, 'error': str(e)}), 503
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
 @app.route('/api/air-quality', methods=['GET'])
 def get_air_quality_route():
     """Real-time CPCB air quality, aggregated by station, city and state.
