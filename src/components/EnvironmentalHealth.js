@@ -5,6 +5,7 @@ import {
     Search, RefreshCw, Signal, Hourglass, FlaskConical, Skull, Activity,
     Timer, AlertOctagon, HeartPulse
  } from './Icons';
+import { API_BASE_URL } from '../config';
 
 // Scientific conversion constants
 const CIGARETTE_FACTOR = 22; // ~22ug/m3 PM2.5 = 1 Cigarette
@@ -57,59 +58,57 @@ const EnvironmentalHealth = () => {
     const [liveData, setLiveData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isLive, setIsLive] = useState(false);
+    const [noStation, setNoStation] = useState(false);
     const [activeView, setActiveView] = useState('smoker');
-
-    useEffect(() => {
-        console.log("Debug - Environment Variables Check:");
-        console.log("WAQI Token Present:", !!process.env.REACT_APP_WAQI_API_TOKEN);
-        console.log("Maps Key Present:", !!process.env.REACT_APP_GOOGLE_MAPS_API_KEY);
-        console.log("Current Origin:", window.location.origin);
-        
-        if (!process.env.REACT_APP_WAQI_API_TOKEN) {
-            console.error("WAQI API Key is missing from process.env");
-            console.log("Please ensure REACT_APP_WAQI_API_TOKEN is set in your .env file and you have restarted the development server.");
-        }
-    }, []);
 
     const filteredCities = CITIES_DATA.filter(city =>
         city.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const fetchAQI = async (city) => {
-        const apiKey = process.env.REACT_APP_WAQI_API_TOKEN;
-        if (!apiKey) {
-            setIsLive(false);
-            setLiveData(null);
-            return;
-        }
-
         setIsLoading(true);
+        setNoStation(false);
+
         try {
-            const response = await fetch(`https://api.waqi.info/feed/geo:${city.lat};${city.lng}/?token=${apiKey}`);
+            // CPCB / data.gov.in via our backend: ~500 stations with real state
+            // and city coverage, and the API key stays server-side.
+            const response = await fetch(
+                `${API_BASE_URL}/api/air-quality?scope=cities&city=${encodeURIComponent(city.name)}`
+            );
             const data = await response.json();
 
-            if (data.status !== 'ok') throw new Error('API Error');
+            const match = (data.cities || [])[0];
 
-            const result = data.data;
-            let aqi = result.aqi;
-            let pm25 = 0;
-
-            if (result.iaqi && result.iaqi.pm25) pm25 = result.iaqi.pm25.v;
-
-            if (aqi && !isNaN(aqi)) {
-                if (!pm25 || isNaN(pm25)) pm25 = aqi * 0.75;
-                setLiveData({
-                    aqi: Math.round(aqi),
-                    pm25: pm25,
-                    description: getAQIDescription(aqi)
-                });
-                setIsLive(true);
-            } else {
+            if (!match) {
+                // A genuine coverage gap, not a failure — some cities have no
+                // CPCB station. Say so instead of showing estimates as live.
+                setNoStation(true);
                 setIsLive(false);
                 setLiveData(null);
+                return;
             }
+
+            // Modelled regions have no station; show the reading but never
+            // badge it "Live", so nobody reads a model as a measurement.
+            setNoStation(!!match.modelled);
+
+            // Fall back to deriving PM2.5 from the index only if the station
+            // reported every pollutant except PM2.5.
+            const pm25 = match.pm25 != null ? match.pm25 : match.aqi * 0.75;
+
+            setLiveData({
+                aqi: match.aqi,
+                pm25: pm25,
+                description: match.category || getAQIDescription(match.aqi),
+                station_count: match.station_count,
+                last_update: match.last_update,
+                dominant_pollutant: match.dominant_pollutant,
+                modelled: !!match.modelled,
+                data_source: match.data_source,
+            });
+            setIsLive(!match.modelled);
         } catch (error) {
-            console.error("Error:", error);
+            console.error("Air quality fetch failed:", error);
             setIsLive(false);
             setLiveData(null);
         } finally {
@@ -370,6 +369,14 @@ const EnvironmentalHealth = () => {
                                             </span>
                                             <span className="text-[0.6rem] font-bold text-emerald-400 tracking-wide uppercase">Live</span>
                                         </div>
+                                    ) : noStation ? (
+                                        <span
+                                            title={liveData?.data_source
+                                                ? `${liveData.data_source} — indicative only, not a measured reading.`
+                                                : 'No CPCB monitoring station covers this location.'}
+                                            className="text-[0.6rem] text-amber-500/80 font-medium tracking-wide uppercase border border-amber-600/40 px-1.5 rounded bg-amber-900/20">
+                                            {liveData?.modelled ? 'Modelled' : 'No Station'}
+                                        </span>
                                     ) : (
                                         <span className="text-[0.6rem] text-slate-600 font-medium tracking-wide uppercase border border-slate-700 px-1.5 rounded bg-slate-800/50">Est.</span>
                                     )}

@@ -221,6 +221,54 @@ def get_resource_distribution():
         return jsonify({"error": "Data unavailable"}), 500
 
 
+@app.route('/api/air-quality', methods=['GET'])
+def get_air_quality_route():
+    """Real-time CPCB air quality, aggregated by station, city and state.
+
+    Optional ?city= / ?state= narrow the response; ?scope=cities|states|stations
+    trims the payload for callers that only need one view.
+    """
+    from air_quality_service import get_air_quality, AirQualityError, resolve_city_name
+
+    try:
+        data = get_air_quality()
+
+        # CPCB publishes "Delhi" for New Delhi, "Bengaluru" for Bangalore, etc.
+        city = resolve_city_name(request.args.get('city') or '').strip().lower()
+        state = (request.args.get('state') or '').strip().lower()
+
+        if city or state:
+            def matches(item, key, wanted):
+                return wanted == (item.get(key) or '').lower()
+
+            result = dict(data)
+            if city:
+                result['cities'] = [c for c in data['cities'] if matches(c, 'name', city)]
+                result['stations'] = [s for s in data['stations'] if matches(s, 'city', city)]
+            if state:
+                result['states'] = [s for s in data['states'] if matches(s, 'name', state)]
+                result['stations'] = [s for s in result['stations'] if matches(s, 'state', state)]
+            data = result
+
+        scope = (request.args.get('scope') or '').strip().lower()
+        if scope in ('cities', 'states', 'stations'):
+            data = {
+                'success': True,
+                scope: data[scope],
+                'source': data['source'],
+                'station_count': data['station_count'],
+            }
+
+        return jsonify(data)
+
+    except AirQualityError as e:
+        # Explicit failure — never let an outage look like clean air.
+        return jsonify({'success': False, 'error': str(e)}), 503
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
 # Cure AI Endpoints
 @app.route('/api/health-assistant/chat', methods=['POST'])
 def health_assistant_chat():
