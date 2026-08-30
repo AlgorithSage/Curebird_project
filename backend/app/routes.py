@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 import traceback
 import re
+import json
 from gemini_service import get_health_assistant as get_gemini_assistant
 
 app = Blueprint('health_routes', __name__)
@@ -317,23 +318,79 @@ def get_air_quality_route():
 # Cure AI Endpoints
 @app.route('/api/health-assistant/chat', methods=['POST'])
 def health_assistant_chat():
-    """Handle chat messages to Health Assistant AI."""
+    """Handle chat messages to Health Assistant AI with optional document/VLM extraction."""
     try:
-        data = request.get_json()
-        
-        if not data or 'message' not in data:
-            return jsonify({'error': 'Message is required'}), 400
-        
-        user_message = data['message']
-        conversation_id = data.get('conversation_id')
-        medical_context = data.get('medicalContext')
-        
-        # Get health assistant instance
+        user_message = ""
+        conversation_id = None
+        medical_context = None
+        file = None
+
+        if request.content_type and 'multipart/form-data' in request.content_type:
+            user_message = request.form.get('message', '').strip()
+            conversation_id = request.form.get('conversation_id')
+            medical_context = request.form.get('medicalContext')
+            file = request.files.get('file')
+        else:
+            data = request.get_json(silent=True) or {}
+            user_message = data.get('message', '').strip()
+            conversation_id = data.get('conversation_id')
+            medical_context = data.get('medicalContext')
+
+        if not user_message and not file:
+            return jsonify({'error': 'Message or document file is required'}), 400
+
         assistant = get_health_assistant()
-        
-        # Generate response
+
+        # If a document file is attached, process it through the VLM pipeline
+        extracted_doc_context = ""
+        doc_analysis = None
+        if file and file.filename != '':
+            print(f"--- [Cure AI VLM] Processing document upload: {file.filename} ---")
+            try:
+                # Step 1: Run comprehensive VLM extraction & medical verification
+                doc_analysis = services.analyze_comprehensive(file.stream)
+                doc_analysis_data = doc_analysis.get('analysis', {})
+                doc_summary = doc_analysis.get('summary', '')
+                digital_copy = doc_analysis_data.get('digital_copy', '')
+                meds = doc_analysis_data.get('medications', [])
+                diseases = doc_analysis_data.get('diseases', [])
+                test_results = doc_analysis_data.get('test_results', [])
+
+                context_blocks = []
+                if digital_copy:
+                    context_blocks.append(f"Full Document OCR / Digital Copy:\n{digital_copy}")
+                if diseases:
+                    context_blocks.append(f"Identified Medical Conditions: {', '.join(diseases)}")
+                if meds:
+                    context_blocks.append(f"Medications & Dosages: {json.dumps(meds)}")
+                if test_results:
+                    context_blocks.append(f"Lab & Diagnostic Test Results: {json.dumps(test_results)}")
+                if doc_summary:
+                    context_blocks.append(f"Clinical Extraction Summary: {doc_summary}")
+
+                extracted_doc_context = "\n\n".join(context_blocks)
+
+                if medical_context:
+                    medical_context = f"{medical_context}\n\n[UPLOADED DOCUMENT ANALYSIS]\n{extracted_doc_context}"
+                else:
+                    medical_context = f"[UPLOADED DOCUMENT ANALYSIS]\n{extracted_doc_context}"
+
+            except Exception as e:
+                print(f"VLM document processing error in Cure AI chat: {e}")
+                traceback.print_exc()
+
+            if not user_message:
+                user_message = "Please analyze this uploaded medical document in detail. Extract and explain all findings, test results, and prescribed medications, and provide clinical insights with next steps."
+
+        # Generate response using Groq / Dual-Core Assistant
         result = assistant.generate_response(user_message, conversation_id, medical_context)
-        
+
+        if extracted_doc_context:
+            result['document_analyzed'] = True
+            result['extracted_context'] = extracted_doc_context
+            if doc_analysis and doc_analysis.get('summary'):
+                result['doc_summary'] = doc_analysis.get('summary')
+
         return jsonify(result)
     
     except Exception as e:

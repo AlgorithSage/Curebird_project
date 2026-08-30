@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Bot, User, Brain, ShieldCheck } from './Icons';
+import { FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -94,7 +95,23 @@ const ChatMessage = ({ message, isUser }) => {
                 {isUser ? <User size={16} className="text-white sm:w-5 sm:h-5" /> : <Bot size={16} className="text-white sm:w-5 sm:h-5" />}
             </div>
 
-            <div className={`max-w-[95%] sm:max-w-[80%] ${isUser ? 'items-end' : 'items-start'} flex flex-col gap-1`}>
+            <div className={`max-w-[95%] sm:max-w-[80%] ${isUser ? 'items-end' : 'items-start'} flex flex-col gap-1.5`}>
+                {message.file && (
+                    <div className="mb-0.5">
+                        {message.file.url ? (
+                            <img
+                                src={message.file.url}
+                                alt={message.file.name || 'Uploaded document'}
+                                className="max-w-[220px] max-h-[160px] rounded-2xl object-cover border border-amber-500/30 shadow-lg"
+                            />
+                        ) : (
+                            <div className="inline-flex items-center gap-2 bg-slate-900/90 border border-amber-500/30 rounded-xl px-3 py-2 text-xs text-amber-200 shadow-md">
+                                <FileText size={16} className="text-amber-400 shrink-0" />
+                                <span className="truncate max-w-[200px] font-medium">{message.file.name}</span>
+                            </div>
+                        )}
+                    </div>
+                )}
                 <div className={`px-3 py-2.5 sm:px-4 sm:py-3.5 rounded-2xl ${isUser
                     ? 'bg-gradient-to-r from-amber-500 to-yellow-600 text-black'
                     : 'bg-slate-900/80 border border-slate-700/50 shadow-lg text-slate-100'
@@ -326,9 +343,11 @@ const CureAI = ({ user, onLogout, onLoginClick, onAddRecordClick, onToggleSideba
         }
     };
 
-    const sendMessage = async (messageText) => {
-        const textToSend = typeof messageText === 'string' ? messageText : inputMessage;
-        if (!textToSend.trim() || isLoading) return;
+    const sendMessage = async (messageText, attachedFiles = []) => {
+        const textToSend = (typeof messageText === 'string' ? messageText : inputMessage).trim();
+        const fileToUpload = (Array.isArray(attachedFiles) && attachedFiles.length > 0) ? attachedFiles[0] : null;
+
+        if ((!textToSend && !fileToUpload) || isLoading) return;
 
         // FREE TIER LIMIT CHECK (50 messages/day)
         try {
@@ -372,9 +391,14 @@ const CureAI = ({ user, onLogout, onLoginClick, onAddRecordClick, onToggleSideba
         }
 
         const userMessage = {
-            text: textToSend,
+            text: textToSend || (fileToUpload ? `Uploaded document: ${fileToUpload.name}` : ""),
             isUser: true,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
+            file: fileToUpload ? {
+                name: fileToUpload.name,
+                type: fileToUpload.type,
+                url: fileToUpload.type.startsWith('image/') ? URL.createObjectURL(fileToUpload) : null
+            } : null
         };
 
         setMessages(prev => [...prev, userMessage]);
@@ -382,17 +406,31 @@ const CureAI = ({ user, onLogout, onLoginClick, onAddRecordClick, onToggleSideba
         setIsLoading(true);
 
         try {
-            const response = await fetch(`${API_BASE_URL}/api/health-assistant/chat`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    message: textToSend,
-                    conversation_id: conversationId,
-                    medicalContext: medicalSummary // Pass the summary context to the chat
-                })
-            });
+            let response;
+            if (fileToUpload) {
+                const formData = new FormData();
+                formData.append('file', fileToUpload);
+                formData.append('message', textToSend || "Please analyze this uploaded medical document in detail. Extract and explain all findings, test results, and prescribed medications, and provide clinical insights with next steps.");
+                if (conversationId) formData.append('conversation_id', conversationId);
+                if (medicalSummary) formData.append('medicalContext', medicalSummary);
+
+                response = await fetch(`${API_BASE_URL}/api/health-assistant/chat`, {
+                    method: 'POST',
+                    body: formData
+                });
+            } else {
+                response = await fetch(`${API_BASE_URL}/api/health-assistant/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: textToSend,
+                        conversation_id: conversationId,
+                        medicalContext: medicalSummary
+                    })
+                });
+            }
 
             const data = await response.json();
 
@@ -404,7 +442,9 @@ const CureAI = ({ user, onLogout, onLoginClick, onAddRecordClick, onToggleSideba
                 };
                 setMessages(prev => [...prev, aiMessage]);
                 setConversationId(prev => prev || data.conversation_id);
-
+                if (data.doc_summary && !medicalSummary) {
+                    setMedicalSummary(data.doc_summary);
+                }
             } else {
                 throw new Error(data.error || 'Failed to get response');
             }

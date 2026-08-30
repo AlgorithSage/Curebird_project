@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, forwardRef, createContext, useContext } from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { ArrowUp, Paperclip, Square, X, StopCircle, Mic, Globe, BrainCog, FolderCode, Trash2 } from "lucide-react";
+import { ArrowUp, Paperclip, Square, X, StopCircle, Mic, Globe, BrainCog, FolderCode, Trash2, FileText } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -362,21 +362,25 @@ export const PromptInputBox = forwardRef((props, ref) => {
 
 
 
-  const isImageFile = (file) => file.type.startsWith("image/");
+  const isDocumentOrImageFile = (file) => file.type.startsWith("image/") || file.type === "application/pdf" || file.name?.endsWith(".pdf");
 
   const processFile = (file) => {
-    if (!isImageFile(file)) {
-      console.log("Only image files are allowed");
+    if (!isDocumentOrImageFile(file)) {
+      console.log("Only image and PDF files are allowed");
       return;
     }
-    if (file.size > 10 * 1024 * 1024) {
-      console.log("File too large (max 10MB)");
+    if (file.size > 20 * 1024 * 1024) {
+      console.log("File too large (max 20MB)");
       return;
     }
     setFiles([file]);
-    const reader = new FileReader();
-    reader.onload = (e) => setFilePreviews({ [file.name]: e.target?.result });
-    reader.readAsDataURL(file);
+    if (file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onload = (e) => setFilePreviews({ [file.name]: e.target?.result });
+      reader.readAsDataURL(file);
+    } else {
+      setFilePreviews({ [file.name]: "pdf" });
+    }
   };
 
   const handleDragOver = React.useCallback((e) => {
@@ -393,8 +397,8 @@ export const PromptInputBox = forwardRef((props, ref) => {
     e.preventDefault();
     e.stopPropagation();
     const droppedFiles = Array.from(e.dataTransfer.files);
-    const imageFiles = droppedFiles.filter((file) => isImageFile(file));
-    if (imageFiles.length > 0) processFile(imageFiles[0]);
+    const validFiles = droppedFiles.filter((file) => isDocumentOrImageFile(file));
+    if (validFiles.length > 0) processFile(validFiles[0]);
   }, []);
 
   const handleRemoveFile = (index) => {
@@ -466,9 +470,9 @@ export const PromptInputBox = forwardRef((props, ref) => {
           <div className="flex flex-wrap gap-2 p-0 pb-2 transition-all duration-300">
             {files.map((file, index) => (
               <div key={index} className="relative group">
-                {file.type.startsWith("image/") && filePreviews[file.name] && (
+                {file.type.startsWith("image/") && filePreviews[file.name] && filePreviews[file.name] !== "pdf" ? (
                   <div
-                    className="w-16 h-16 rounded-xl overflow-hidden cursor-pointer transition-all duration-300 border border-slate-700"
+                    className="w-16 h-16 rounded-xl overflow-hidden cursor-pointer transition-all duration-300 border border-slate-700 hover:border-amber-500/50 shadow-md"
                     onClick={() => openImageModal(filePreviews[file.name])}
                   >
                     <img
@@ -481,9 +485,23 @@ export const PromptInputBox = forwardRef((props, ref) => {
                         e.stopPropagation();
                         handleRemoveFile(index);
                       }}
-                      className="absolute top-1 right-1 rounded-full bg-black/70 p-0.5 opacity-100 transition-opacity"
+                      className="absolute top-1 right-1 rounded-full bg-black/80 p-1 opacity-100 hover:bg-rose-600 transition-colors"
                     >
                       <X className="h-3 w-3 text-white" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 bg-slate-900/90 border border-amber-500/30 rounded-xl px-3 py-2 text-xs text-amber-200 shadow-md max-w-[220px]">
+                    <FileText className="h-5 w-5 text-amber-400 shrink-0" />
+                    <span className="truncate font-medium">{file.name}</span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveFile(index);
+                      }}
+                      className="rounded-full bg-black/60 p-1 hover:bg-rose-600 transition-colors text-white ml-1 shrink-0"
+                    >
+                      <X className="h-3 w-3" />
                     </button>
                   </div>
                 )}
@@ -519,8 +537,9 @@ export const PromptInputBox = forwardRef((props, ref) => {
               isRecording ? "opacity-0 invisible h-0" : "opacity-100 visible"
             )}
           >
-            <PromptInputAction tooltip="Upload image">
+            <PromptInputAction tooltip="Upload document / prescription / report">
               <button
+                type="button"
                 onClick={() => uploadInputRef.current?.click()}
                 className="flex h-8 w-8 text-[#9CA3AF] cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-slate-800 hover:text-[#D1D5DB]"
                 disabled={isRecording}
@@ -534,7 +553,7 @@ export const PromptInputBox = forwardRef((props, ref) => {
                     if (e.target.files && e.target.files.length > 0) processFile(e.target.files[0]);
                     if (e.target) e.target.value = "";
                   }}
-                  accept="image/*"
+                  accept="image/*,application/pdf"
                 />
               </button>
             </PromptInputAction>

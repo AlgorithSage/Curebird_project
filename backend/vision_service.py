@@ -56,15 +56,16 @@ def _parse_json(text):
     return json.loads(text)
 
 
-def _groq_vision(prompt, image_bytes, api_key):
+def _groq_vision(prompt, image_bytes, api_key, model=None):
     if not api_key:
-        raise ValueError("Groq API key not found in environment variables.")
+        raise ValueError("Groq API key not found.")
 
+    model_to_use = model or GROQ_VISION_MODEL
     client = Groq(api_key=api_key)
     data_url = f"data:{_mime_type(image_bytes)};base64,{base64.b64encode(image_bytes).decode('utf-8')}"
 
     completion = client.chat.completions.create(
-        model=GROQ_VISION_MODEL,
+        model=model_to_use,
         messages=[
             {
                 "role": "user",
@@ -78,7 +79,7 @@ def _groq_vision(prompt, image_bytes, api_key):
         max_tokens=4096,
         response_format={"type": "json_object"},
         reasoning_format="hidden",
-        reasoning_effort="none",  # 'default' burns the whole max_tokens budget on hidden reasoning for dense documents, leaving empty content
+        reasoning_effort="none",
     )
     return _parse_json(completion.choices[0].message.content)
 
@@ -112,7 +113,8 @@ def extract_json(prompt, file_stream=None, api_key=None, image_bytes=None):
     """
     Run `prompt` against a document image and return the parsed JSON response.
 
-    Tries Groq first, falls back to Gemini. Raises VisionError if both fail.
+    Tries all available Groq Vision keys (GROQ_API_KEY_VISION, GROQ_API_KEY),
+    then falls back to Gemini. Raises VisionError if all providers fail.
     """
     if image_bytes is None:
         if file_stream is None:
@@ -120,22 +122,40 @@ def extract_json(prompt, file_stream=None, api_key=None, image_bytes=None):
         file_stream.seek(0)
         image_bytes = file_stream.read()
 
+    # Collect available Groq keys in priority order
+    groq_keys = []
+    # Prioritize dedicated vision key first
+    vision_key = os.getenv('GROQ_API_KEY_VISION')
+    if vision_key and vision_key not in groq_keys:
+        groq_keys.append(vision_key)
+
+    if api_key and api_key not in groq_keys:
+        groq_keys.append(api_key)
+
+    for env_name in ['GROQ_API_KEY_ANALYZER', 'GROQ_API_KEY']:
+        k = os.getenv(env_name)
+        if k and k not in groq_keys:
+            groq_keys.append(k)
+
     failures = []
 
-    try:
-        return _groq_vision(
-            prompt,
-            image_bytes,
-            api_key or os.getenv('GROQ_API_KEY_VISION') or os.getenv('GROQ_API_KEY'),
-        )
-    except Exception as e:
-        failures.append(f"Groq/{GROQ_VISION_MODEL}: {e}")
-        print(f"VLM: Groq failed, falling back to Gemini -> {e}")
+    # Try each available Groq key
+    for k in groq_keys:
+        for vision_model in [GROQ_VISION_MODEL, 'qwen/qwen3.8-27b']:
+            try:
+                return _groq_vision(prompt, image_bytes, k, model=vision_model)
+            except Exception as e:
+                failures.append(f"Groq/{vision_model}: {e}")
+                print(f"VLM: Groq vision attempt failed with {vision_model} -> {e}")
 
-    try:
-        return _gemini_vision(prompt, image_bytes)
-    except Exception as e:
-        failures.append(f"Gemini/{GEMINI_VISION_MODEL}: {e}")
-        print(f"VLM: Gemini fallback also failed -> {e}")
+    # Fallback to Gemini if configured
+    if os.getenv('GEMINI_API_KEY'):
+        try:
+            return _gemini_vision(prompt, image_bytes)
+        except Exception as e:
+            failures.append(f"Gemini/{GEMINI_VISION_MODEL}: {e}")
+            print(f"VLM: Gemini fallback also failed -> {e}")
+    else:
+        failures.append("Gemini: GEMINI_API_KEY not configured in environment")
 
     raise VisionError(" | ".join(failures))
