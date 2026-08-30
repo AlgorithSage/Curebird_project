@@ -2,12 +2,85 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Bot, User, Brain, ShieldCheck } from './Icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { useLocation } from 'react-router-dom';
 import Header from './Header';
 import { API_BASE_URL } from '../config';
 import { PromptInputBox } from './PromptInputBox';
 
-// ... (ChatMessage and TypingIndicator components remain unchanged)
+// Helper to ensure markdown tables have proper newlines and spacing if LLM collapsed them
+const formatMarkdownContent = (text) => {
+    if (!text || typeof text !== 'string') return '';
+
+    // Split code blocks out to avoid mutating code contents
+    const segments = text.split(/(```[\s\S]*?```)/g);
+
+    const formattedSegments = segments.map((segment) => {
+        if (segment.startsWith('```')) {
+            return segment;
+        }
+
+        // Process line-by-line to uncollapse inline tables safely
+        const rawLines = segment.split(/\r?\n/);
+        const uncollapsedLines = [];
+
+        for (let line of rawLines) {
+            let cur = line;
+
+            // 1. Separate divider rows glued to headers on same line (e.g. "| col1 | col2 | |---|---|")
+            cur = cur.replace(/(\|\s*)\|\s*(\s*[-:]{2,}\s*(?:\|\s*[-:]{2,}\s*)+\|?)/g, '$1\n|$2');
+
+            // 2. Separate data row glued to divider on same line (e.g. "|---|---| | val1 | val2 |")
+            cur = cur.replace(/(\|\s*[-:]{2,}\s*\|\s*)\|\s*([^|\r\n]+)/g, '$1\n| $2');
+
+            // 3. Separate consecutive complete table rows on same line (e.g. "| a | b | | c | d |")
+            cur = cur.replace(/(\|(?:\s*[^|\r\n]+\s*\|){2,}\s*)\|\s*([^|\r\n]+)/g, '$1\n| $2');
+
+            // 4. Split trailing non-pipe text glued directly after table row on same line
+            cur = cur.replace(/(\|(?:\s*[^|\r\n]+\s*\|)+)[ \t]+([^|\r\n]+)$/, '$1\n\n$2');
+
+            // 5. Split leading non-pipe text glued directly before table row on same line
+            cur = cur.replace(/^([^|\r\n]+)[ \t]+(\|(?:\s*[^|\r\n]+\s*\|)+)/, '$1\n\n$2');
+
+            // Split into any newly created sub-lines
+            uncollapsedLines.push(...cur.split(/\r?\n/));
+        }
+
+        // Now ensure proper blank lines before and after tables for remark-gfm parser
+        const finalLines = [];
+        let inTable = false;
+
+        for (let i = 0; i < uncollapsedLines.length; i++) {
+            const line = uncollapsedLines[i];
+            const trimmed = line.trim();
+            const isTableRow = /^\|(.+)\|$/.test(trimmed);
+
+            if (isTableRow) {
+                if (!inTable) {
+                    // Entering a table: ensure preceding line is blank if it had text
+                    if (finalLines.length > 0 && finalLines[finalLines.length - 1].trim() !== '') {
+                        finalLines.push('');
+                    }
+                    inTable = true;
+                }
+                finalLines.push(line);
+            } else {
+                if (inTable) {
+                    // Exiting a table: ensure this line is blank if it had text
+                    if (trimmed !== '') {
+                        finalLines.push('');
+                    }
+                    inTable = false;
+                }
+                finalLines.push(line);
+            }
+        }
+
+        return finalLines.join('\n');
+    });
+
+    return formattedSegments.join('');
+};
 
 const ChatMessage = ({ message, isUser }) => {
     return (
@@ -21,20 +94,70 @@ const ChatMessage = ({ message, isUser }) => {
                 {isUser ? <User size={16} className="text-white sm:w-5 sm:h-5" /> : <Bot size={16} className="text-white sm:w-5 sm:h-5" />}
             </div>
 
-            <div className={`max-w-[90%] sm:max-w-[70%] ${isUser ? 'items-end' : 'items-start'} flex flex-col gap-1`}>
-                <div className={`px-3 py-2 sm:px-4 sm:py-3 rounded-2xl ${isUser
+            <div className={`max-w-[95%] sm:max-w-[80%] ${isUser ? 'items-end' : 'items-start'} flex flex-col gap-1`}>
+                <div className={`px-3 py-2.5 sm:px-4 sm:py-3.5 rounded-2xl ${isUser
                     ? 'bg-gradient-to-r from-amber-500 to-yellow-600 text-black'
-                    : 'bg-slate-900/50 border border-slate-700/50 shadow-none text-slate-100'
+                    : 'bg-slate-900/80 border border-slate-700/50 shadow-lg text-slate-100'
                     }`}>
                     {isUser ? (
                         <p className="text-xs sm:text-sm font-medium">{message.text}</p>
                     ) : (
                         <div className="prose prose-invert prose-sm max-w-none text-xs sm:text-sm leading-relaxed">
-                            <ReactMarkdown>{message.text}</ReactMarkdown>
+                            <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+                                components={{
+                                    table: ({ node, ...props }) => (
+                                        <div className="overflow-x-auto my-4 rounded-xl border border-amber-500/20 bg-slate-950/60 shadow-md">
+                                            <table className="w-full border-collapse text-left text-xs sm:text-sm" {...props} />
+                                        </div>
+                                    ),
+                                    thead: ({ node, ...props }) => (
+                                        <thead className="bg-amber-500/10 text-amber-300 font-bold border-b border-amber-500/20" {...props} />
+                                    ),
+                                    th: ({ node, ...props }) => (
+                                        <th className="px-3.5 py-2.5 text-amber-200 font-semibold border-b border-amber-500/20 whitespace-nowrap" {...props} />
+                                    ),
+                                    td: ({ node, ...props }) => (
+                                        <td className="px-3.5 py-2.5 border-b border-slate-800/80 text-slate-200" {...props} />
+                                    ),
+                                    tr: ({ node, ...props }) => (
+                                        <tr className="hover:bg-amber-500/5 transition-colors border-b border-slate-800/50 last:border-b-0" {...props} />
+                                    ),
+                                    p: ({ node, ...props }) => (
+                                        <p className="mb-2.5 last:mb-0 leading-relaxed" {...props} />
+                                    ),
+                                    ul: ({ node, ...props }) => (
+                                        <ul className="list-disc list-inside space-y-1 my-2" {...props} />
+                                    ),
+                                    ol: ({ node, ...props }) => (
+                                        <ol className="list-decimal list-inside space-y-1 my-2" {...props} />
+                                    ),
+                                    li: ({ node, ...props }) => (
+                                        <li className="text-slate-200" {...props} />
+                                    ),
+                                    h1: ({ node, ...props }) => (
+                                        <h1 className="text-base sm:text-lg font-bold text-amber-300 mt-4 mb-2 first:mt-0" {...props} />
+                                    ),
+                                    h2: ({ node, ...props }) => (
+                                        <h2 className="text-sm sm:text-base font-bold text-amber-400 mt-3 mb-1.5 first:mt-0" {...props} />
+                                    ),
+                                    h3: ({ node, ...props }) => (
+                                        <h3 className="text-xs sm:text-sm font-semibold text-amber-400/90 mt-3 mb-1.5 first:mt-0" {...props} />
+                                    ),
+                                    strong: ({ node, ...props }) => (
+                                        <strong className="font-bold text-amber-200" {...props} />
+                                    ),
+                                    blockquote: ({ node, ...props }) => (
+                                        <blockquote className="border-l-2 border-amber-500/40 pl-3 italic my-2 text-slate-400" {...props} />
+                                    )
+                                }}
+                            >
+                                {formatMarkdownContent(message.text)}
+                            </ReactMarkdown>
                         </div>
                     )}
                 </div>
-                <span className="text-[10px] sm:text-xs text-white px-2">
+                <span className="text-[10px] sm:text-xs text-slate-400 px-2">
                     {new Date(message.timestamp).toLocaleTimeString('en-US', {
                         hour: '2-digit',
                         minute: '2-digit'
